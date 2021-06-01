@@ -4,7 +4,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of MicroVis is to ...
+MicroVis is a package for flexible analysis of metagenomic data and generation of customizable, publication-ready figures
 
 ## Installation
 
