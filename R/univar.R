@@ -1,5 +1,27 @@
-#### Significance Testing ####
-#----------------------------#
+#' Perform Univariate Analysis
+#'
+#' @param dataset (Optional) MicroVis dataset. Defaults to the active dataset.
+#'     Must either provide a "dataset" or "data" argument
+#' @param data (Optional) Data table containing metadata and count values with samples as
+#'     rows and metadata factors or features as columns
+#' @param factor Factor along which to form groups from the samples and perform
+#'     the statistical analysis
+#' @param stratifiers  (Optional) One or two factors to stratify the groups by
+#' @param rank Rank at which to perform the dataset. Defaults to the active rank
+#' @param features List of features to analyze. Defaults to all
+#' @param pairwise_comparisons For 3 or more groups, list of vectors of pairwise
+#'     comparisons to conduct. Defaults to all possible pairwise comparisons
+#' @param param Run parametrized or nonparametrized univariate analysis? Default
+#'     is FALSE
+#' @param dataset_name (Not recommended) Name of the dataset to save statistics
+#'     to. This should not need to be used by users since this function returns
+#'     the dataset with its statistics results. This arg is only for use within
+#'     functions so that the results are not lost once the parent function ends
+#'
+#' @return MicroVis dataset containing the statistics results in its "stats"
+#'     attribute
+#' @export
+#'
 univar <- function(dataset=NULL,
                    data=NULL,
                    factor=NULL,
@@ -106,6 +128,23 @@ univar <- function(dataset=NULL,
   return(stat_results)
 }
 
+#' Core Univariate Analysis Function
+#'
+#' @param data Data table containing metadata and count values with samples as
+#'     rows and metadata factors or features as columns
+#' @param factor Factor along which to form groups from the samples and perform
+#'     the statistical analysis
+#' @param stratifiers (Optional) One or two factors to stratify the groups by
+#' @param features List of features to analyze. Defaults to all
+#' @param param Run parametrized or nonparametrized univariate analysis? Default
+#'     is FALSE
+#' @param pairwise_comparisons For 3 or more groups, list of vectors of pairwise
+#'     comparisons to conduct. Defaults to all possible pairwise comparisons
+#'
+#' @return List containing a table for overall statistics results and the features
+#'     that were skipped due to having the same mean. For analyses with 3 or more
+#'     groups, also contains a second table with the pairwise statistics results
+#'
 calcUniVar <- function(data,factor,stratifiers=NULL,features,
                        param=F,pairwise_comparisons=NULL) {
   # Figure out the number of groups being compared in the main factor
