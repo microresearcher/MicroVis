@@ -1,6 +1,6 @@
 #' Save Dataset in its Current State
 #'
-#' @param dataset (Optional) MicroVis dataset (mvdata object). If not specified,
+#' @param dataset_name (Optional) MicroVis dataset (mvdata object). If not specified,
 #'     defaults to active dataset.
 #'
 #' @return MicroVis dataset (mvdata object)
@@ -9,13 +9,10 @@
 mvsave <- function(dataset_name=NULL) {
   if(is.null(dataset_name)) dataset_name <- 'active_dataset'
 
-  if(!exists(dataset_name, inherits = T)) {
-    stop('"',dataset_name,'" does not exist')
-  } else if(class(get(dataset_name,envir = mvEnv))!='mvdata') {
+  dataset <- get(dataset_name,envir = mvEnv)
+  if(class(dataset)!='mvdata') {
     message('"',dataset_name,'" is not a MicroVis dataset object')
   }
-
-  dataset <- get(dataset_name,envir = mvEnv)
 
   print(dataset)
 

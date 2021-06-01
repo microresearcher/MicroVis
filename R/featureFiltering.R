@@ -154,7 +154,7 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
     }
 
     taxaranks <- c('species','genus','family','order','class','phylum','single_rank','pathways')
-    lowest_rank <- taxaranks[taxaranks %in% names(ft_data$proc)][[1]]
+    lowest_rank <- getLowestRank(dataset)
 
     ### Identify Taxa with NAs ###
     #----------------------------#
