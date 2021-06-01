@@ -1,4 +1,3 @@
-
 #' @title MicroVis Data Loading
 #'
 #' @description Initial function for loading taxonomy and/or pathway data with

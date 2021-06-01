@@ -6,13 +6,16 @@
 #' @return MicroVis dataset (mvdata object)
 #' @export
 #'
-mvsave <- function(dataset=NULL) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
+mvsave <- function(dataset_name=NULL) {
+  if(is.null(dataset_name)) dataset_name <- 'active_dataset'
+
+  if(!exists(dataset_name, inherits = T)) {
+    stop('"',dataset_name,'" does not exist')
+  } else if(class(get(dataset_name,envir = mvEnv))!='mvdata') {
+    message('"',dataset_name,'" is not a MicroVis dataset object')
   }
+
+  dataset <- get(dataset_name,envir = mvEnv)
 
   print(dataset)
 
