@@ -1,7 +1,7 @@
 #' Save Dataset in its Current State
 #'
-#' @param dataset_name (Optional) MicroVis dataset (mvdata object). If not specified,
-#'     defaults to active dataset.
+#' @param dataset_name (Optional) MicroVis dataset (mvdata object). Defaults to
+#'     active dataset
 #'
 #' @return MicroVis dataset (mvdata object)
 #' @export
