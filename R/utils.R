@@ -11,7 +11,7 @@ mvsave <- function(dataset_name=NULL) {
 
   dataset <- get(dataset_name,envir = mvEnv)
   if(class(dataset)!='mvdata') {
-    message('"',dataset_name,'" is not a MicroVis dataset object')
+    message('Note: "',dataset_name,'" is not a MicroVis dataset object')
   }
 
   print(dataset)
