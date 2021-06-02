@@ -22,6 +22,8 @@
 #'     attribute
 #' @export
 #'
+# TODO: Figure out how to incorporate Tukey and Games-Howell post-hoc tests as
+#       options
 univar <- function(dataset=NULL,
                    data=NULL,
                    factor=NULL,

@@ -39,9 +39,9 @@ comparisons to conduct. Defaults to all possible pairwise comparisons}
 is FALSE}
 
 \item{dataset_name}{(Not recommended) Name of the dataset to save statistics
-to. This should not need to be used by users since this function returns
-the dataset with its statistics results. This arg is only for use within
-functions so that the results are not lost once the parent function ends}
+to. This should not need to be used by users since the function can
+determine the name of the dataset directly passed to it, but not when
+it is called within another function.}
 }
 \value{
 MicroVis dataset containing the statistics results in its "stats"

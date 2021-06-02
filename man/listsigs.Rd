@@ -27,7 +27,7 @@ is the active rank of the dataset}
 \item{allRanks}{If set to TRUE, will get significant features at all ranks
 of the dataset}
 
-\item{alpha}{(Optional) Significance threshold. Default is 0.05.}
+\item{alpha}{(Optional) Significance threshold. Defaults to 0.05}
 
 \item{silent}{If set to TRUE, output text will not be printed}
 

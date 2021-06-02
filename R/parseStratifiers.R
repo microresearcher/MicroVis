@@ -19,6 +19,7 @@ parseStratifiers <- function(primary_factor, factors, stratify, facet.x, facet.y
   #   any time a facet is successfully assigned so that its length can be
   #   checked before trying to assign a second facet
   avail_factors <- unlist(names(factors)[names(factors) != primary_factor])
+  if(!length(avail_factors)) stratify <- F
 
   if(is.null(facet.x) & is.null(facet.y)) {
     if(stratify) {
@@ -37,7 +38,7 @@ parseStratifiers <- function(primary_factor, factors, stratify, facet.x, facet.y
         avail_factors <- avail_factors[avail_factors != facets$x]
 
         if(!length(avail_factors)) {
-          facets$txt <- nameStratifiers(c(facets$x,facets$y))
+          facets$txt <- nameStratification(c(facets$x,facets$y))
           return(facets)
         }
       } else {
@@ -54,7 +55,7 @@ parseStratifiers <- function(primary_factor, factors, stratify, facet.x, facet.y
         avail_factors <- avail_factors[avail_factors != facets$y]
 
         if(!length(avail_factors)) {
-          facets$txt <- nameStratifiers(c(facets$x,facets$y))
+          facets$txt <- nameStratification(c(facets$x,facets$y))
           return(facets)
         }
       } else {
@@ -77,7 +78,7 @@ parseStratifiers <- function(primary_factor, factors, stratify, facet.x, facet.y
 
     if(facets$x=='') {facets$x <- NULL}
     if(!length(avail_factors)) {
-      facets$txt <- nameStratifiers(c(facets$x,facets$y))
+      facets$txt <- nameStratification(c(facets$x,facets$y))
       return(facets)
     }
 
@@ -87,7 +88,7 @@ parseStratifiers <- function(primary_factor, factors, stratify, facet.x, facet.y
 
     if(facets$y=='') {facets$y <- NULL}
     if(!length(avail_factors)) {
-      facets$txt <- nameStratifiers(c(facets$x,facets$y))
+      facets$txt <- nameStratification(c(facets$x,facets$y))
       return(facets)
     }
 
@@ -95,7 +96,7 @@ parseStratifiers <- function(primary_factor, factors, stratify, facet.x, facet.y
     facets$x <- select.list(avail_factors,graphics = TRUE, title = 'Horizontal facet')
     avail_factors <- avail_factors[avail_factors != facets$x]
     if(!length(avail_factors)) {
-      facets$txt <- nameStratifiers(c(facets$x,facets$y))
+      facets$txt <- nameStratification(c(facets$x,facets$y))
       return(facets)
     }
 
@@ -103,7 +104,7 @@ parseStratifiers <- function(primary_factor, factors, stratify, facet.x, facet.y
     facets$y <- select.list(avail_factors,graphics = TRUE, title = 'Vertical facet')
     avail_factors <- avail_factors[avail_factors != facets$y]
     if(!length(avail_factors)) {
-      facets$txt <- nameStratifiers(c(facets$x,facets$y))
+      facets$txt <- nameStratification(c(facets$x,facets$y))
       return(facets)
     }
   }
@@ -115,7 +116,7 @@ parseStratifiers <- function(primary_factor, factors, stratify, facet.x, facet.y
     # If there is a valid facet that was selected, create a "txt" element of
     #   "facets" that will be printed out in the name of the figure file and
     #   the "stats.all" sub-list
-    facets$txt <- nameStratifiers(c(facets$x,facets$y))
+    facets$txt <- nameStratification(c(facets$x,facets$y))
   }
 
   return(facets)

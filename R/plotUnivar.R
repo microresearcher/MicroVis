@@ -35,6 +35,7 @@ plotUnivar <- function(dataset=NULL,
                        violin=F,
                        showStats=T,
                        raw=F,
+                       factor=NULL,
                        stratify=F, facet.x=NULL, facet.y=NULL,
                        flattenFactors=F,
                        rank=NULL,
@@ -195,12 +196,12 @@ plotUnivar <- function(dataset=NULL,
 
     ### Add Significance Markers ###
     #------------------------------#
-    # If statistical data is to be shown, AND this feature wasn't skipped in
-    #   statistical analysis, then add the statistical data to the plot
+    # If statistical data is to be shown AND this feature wasn't skipped in
+    #   statistical analysis then add the statistical data to the plot
     if(showStats & !(ft %in% stats$skipped)) {
       if(!is.null(stats$pw_stats)) {
         pw_stats <- stats$pw_stats[stats$pw_stats$.y.==ft,]
-        # pw_stats$y.position <- 1.1*pw_stats$y.position
+        pw_stats$y.position <- 1.1*pw_stats$y.position
         p <- p+stat_pvalue_manual(pw_stats,
                                   label='p.adj.signif',
                                   label.size = 9,
@@ -210,7 +211,7 @@ plotUnivar <- function(dataset=NULL,
                                   hide.ns = T)
       } else {
         tot_stats <- stats$stats[stats$stats$.y.==ft,]
-        # tot_stats$y.position <- 1.1*tot_stats$y.position
+        tot_stats$y.position <- 1.1*tot_stats$y.position
         p <- p+stat_pvalue_manual(tot_stats,
                                   label='p.adj.signif',
                                   label.size = 9,
