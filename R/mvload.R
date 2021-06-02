@@ -165,7 +165,7 @@ mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_
 
       assign('taxa_proc',taxa_ds,1)
     }
-    assign('active_dataset',taxa_ds,1)
+    assign('active_dataset',taxa_ds,envir = mvEnv)
     print(taxa_ds)
   }
 
