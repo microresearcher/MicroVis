@@ -26,7 +26,7 @@ if (!require("devtools")) install.packages("devtools")
 devtools::install_github("yiluheihei/microbiomeMarker") 
 ```
 
-You can then install the released version of MicroVis from [GitHub](https://github.com/) with:
+You can then install the released version of MicroVis from with:
 
 ``` r
 devtools::install_github("https://github.com/microresearcher/MicroVis.git")
