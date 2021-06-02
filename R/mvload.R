@@ -18,6 +18,7 @@
 #' @return List of successfully loaded datasets with/without processing.
 #' @export
 #'
+#' @importFrom graphics barplot
 #' @importFrom taxa parse_tax_data
 #' @importFrom metacoder calc_taxon_abund
 #' @importFrom phyloseq phyloseq otu_table tax_table sample_data merge_phyloseq ntaxa taxa_names UniFrac
