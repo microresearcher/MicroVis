@@ -48,6 +48,7 @@ mvdeseq <- function(dataset=NULL,
   }
 
   dataset$stats[[factor$name]][[rank]]$deseq <- deseq_res
+
   if(dataset_name=='active_dataset') assign(dataset_name,dataset,envir = mvEnv)
   else assign(dataset_name,dataset,1)
 
