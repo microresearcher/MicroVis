@@ -35,8 +35,10 @@
 #' @import rstatix
 #' @importFrom vegan rrarefy rarecurve diversity vegdist adonis adonis2
 #' @importFrom ape rtree pcoa biplot.pcoa
+#' @importFrom randomForest randomForest
+#' @importFrom Boruta Boruta TentativeRoughFix
 #' @importFrom grDevices dev.off png
-#' @importFrom utils View write.csv
+#' @importFrom utils View write.csv stack
 #' @importFrom S4Vectors unfactor
 #' @rawNamespace import(crayon,except=c('%+%'))
 #'
