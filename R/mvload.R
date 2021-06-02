@@ -38,6 +38,7 @@
 #' @importFrom grDevices dev.off png
 #' @importFrom utils View write.csv
 #' @importFrom S4Vectors unfactor
+#' @import crayon
 #'
 mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_to_fxnl=NA,
                    autoProcess=T,combineDupes=T,combineDataSets=F) {

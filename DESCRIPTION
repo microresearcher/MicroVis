@@ -28,4 +28,5 @@ Imports:
     taxa,
     phyloseq,
     metacoder,
-    DESeq2
+    DESeq2,
+    crayon

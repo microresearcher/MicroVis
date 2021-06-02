@@ -17,8 +17,8 @@ print.mvdata <- function(x, ...) {
   n_features <- ncol(x$data$proc[[rank]])
   if('Other' %in% colnames(x$data$proc[[rank]])) n_features <- n_features - 1
   if(x$features=='taxa') totn_features <- length(unique(ASVtoTaxa(x$data,
-                                                                        colnames(x$data$orig),
-                                                                        taxa_rank=rank)))
+                                                                  colnames(x$data$orig),
+                                                                  taxa_rank=rank)))
   else totn_features <- ncol(x$data$orig)
 
   factors <- x$factors
@@ -33,26 +33,29 @@ print.mvdata <- function(x, ...) {
 
   # Now print out the info
   cat('\n~~~\n')
-  cat(paste0(' | MicroVis Dataset:\n'))
+  cat(paste0(' | ',crayon::bold$underline('MicroVis Dataset:\n')))
 
   # Print number of included samples (and how many are specifically ignored, if any)
-  cat(paste0(' |   > ',n_samples,' samples '))
-  if(length(n_ignored_samples)) cat(paste0('(',n_ignored_samples,' ignored samples)\n'))
+  cat(paste0(' |   > ',crayon::green$bold(n_samples),' samples '))
+  if(length(n_ignored_samples)) cat(crayon::italic(paste0('(',crayon::yellow$bold(n_ignored_samples),
+                                                          ' ignored samples)\n')))
 
   # Print number of included features and what type (taxa or pathways), as well as total number of features
-  cat(paste0(' |   > ',n_features, ' ', feature_type,' out of ',totn_features,'\n'))
+  cat(paste0(' |   > ',crayon::green$bold(n_features), ' ',crayon::green(feature_type),
+             ' out of ',crayon::cyan$bold(totn_features),'\n'))
 
   # Print all the independent variables (factors)
   cat(paste0(' |   > ',length(factors),' independent variable(s):\n'))
   for(f in factors) {
     if(f$name==active_factor) bullet <- '-> '
     else bullet <- ' * '
-    cat(paste0(' |      ',bullet,f$name,' with ', length(f$subset),' out of ',length(f$groups),' groups\n'))
+    cat(paste0(' |      ',bullet,f$name,' with ',crayon::green$bold(length(f$subset)),
+               ' out of ',crayon::cyan$bold(length(f$groups)),' groups\n'))
   }
 
   # Print rarefaction minimum richness
   if(length(rarefied)) {
-    cat(paste0(' |   > Rarefied to ',rarefied,' reads\n'))
+    cat(paste0(' |   > Rarefied to ',crayon::yellow$bold(rarefied),' reads\n'))
   }
 
   # Print the normalization parameters
@@ -60,13 +63,16 @@ print.mvdata <- function(x, ...) {
     cat(paste0(' |   > Normalization:\n'))
     for(norm in names(normalization)) {
       if(norm=='sample_scale') {
-        cat(paste0(' |       * Samples scaled by ',normalization[[norm]][[1]],'\n'))
+        cat(paste0(' |       * Samples ',crayon::yellow('scaled by',
+                                                        normalization[[norm]][[1]]),'\n'))
       }
       if(norm=='feature_scale') {
-        cat(paste0(' |       * Features scaled by ',normalization[[norm]][[1]],'\n'))
+        cat(paste0(' |       * Features ',crayon::yellow('scaled by ',
+                                                         normalization[[norm]][[1]]),'\n'))
       }
       if(norm=='transformation') {
-        cat(paste0(' |       * Data transformed by ',normalization[[norm]][[1]],'\n'))
+        cat(paste0(' |       * Data ',crayon::yellow('transformed by ',
+                                                     normalization[[norm]][[1]]),'\n'))
       }
     }
   }
@@ -76,34 +82,45 @@ print.mvdata <- function(x, ...) {
     cat(paste0(' |   > Filtering (by ',filter_rank,'): \n'))
     for(filt in names(filtering)) {
       if(filt=='min_prevalence') {
-        cat(paste0(' |       * Low prevalence threshold: ',expression("\u2265"),' ',filtering[[filt]][[1]],'\n'))
+        cat(paste0(' |       * Low prevalence threshold: ',
+                   crayon::yellow(expression("\u2265"),filtering[[filt]][[1]]),'\n'))
       }
       if(filt=='top_prevalence') {
-        cat(paste0(' |       * Restricted to top ',filtering[[filt]],' features by prevalence\n'))
+        cat(paste0(' |       * Restricted to ',
+                   crayon::yellow('top',filtering[[filt]]),' features by prevalence\n'))
       }
       if(filt=='min_relabun') {
-        cat(paste0(' |       * Low relative abundance threshold: ',expression("\u2265"),' ',filtering[[filt]][[1]],'\n'))
+        cat(paste0(' |       * Low relative abundance threshold: ',
+                   crayon::yellow(expression("\u2265"),filtering[[filt]][[1]]),'\n'))
       }
       if(filt=='top_relabun') {
-        cat(paste0(' |       * Restricted to top ',filtering[[filt]],' features by relative abundance\n'))
+        cat(paste0(' |       * Restricted to ',
+                   crayon::yellow('top',filtering[[filt]]),' features by relative abundance\n'))
       }
       if(filt=='min_totabun') {
-        cat(paste0(' |       * Low total abundance threshold: ',expression("\u2265"),' ',filtering[[filt]][[1]],'\n'))
+        cat(paste0(' |       * Low total abundance threshold: ',
+                   crayon::yellow(expression("\u2265"),filtering[[filt]][[1]]),'\n'))
       }
       if(filt=='top_totabun') {
-        cat(paste0(' |       * Restricted to top ',filtering[[filt]],' features by total abundance\n'))
+        cat(paste0(' |       * Restricted to ',
+                   crayon::yellow('top',filtering[[filt]]),' features by total abundance\n'))
       }
       if(filt=='low_var_percentile') {
-        cat(paste0(' |       * Low variance percentile threshold: ',expression("\u2265"),' ',filtering[[filt]][[1]],'\n'))
+        cat(paste0(' |       * Low variance percentile threshold: ',
+                   crayon::yellow(expression("\u2265"),filtering[[filt]][[1]]),'\n'))
       }
       if(filt=='top_var') {
-        cat(paste0(' |       * Restricted to top ',filtering[[filt]],' features by standard deviation\n'))
+        cat(paste0(' |       * Restricted to ',
+                   crayon::yellow('top',filtering[[filt]]),' features by standard deviation\n'))
       }
       if(filt=='low_abun') {
-        cat(paste0(' |       * Abundance of at least ', filtering[[filt]][[1]], ' in at least ',filtering[[filt]][[2]],' percent of samples\n'))
+        cat(paste0(' |       * Abundance of at least ',
+                   crayon::yellow(filtering[[filt]][[1]]),' in at least ',
+                   crayon::yellow(filtering[[filt]][[2]]),' percent of samples\n'))
       }
       if(filt=='NAfilter') {
-        cat(paste0(' |       * Removed taxa with unassigned ', paste0(filtering[[filt]][[1]],collapse = ', '),'\n'))
+        cat(paste0(' |       * Removed taxa with unassigned ',
+                   crayon::yellow(paste0(filtering[[filt]][[1]],collapse = ', ')),'\n'))
       }
     }
   }
