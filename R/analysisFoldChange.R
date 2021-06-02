@@ -22,7 +22,7 @@ foldChange <- function(dataset=NULL, factor=NULL,
                        ranks=NULL, allRanks=F,
                        pairSamples=F) {
   if(is.null(dataset)) {
-    dataset <- active_dataset
+    dataset <- get('active_dataset',envir = mvEnv)
     dataset_name <- 'active_dataset'
   } else {
     dataset_name <- deparse(substitute(dataset))
