@@ -42,6 +42,8 @@ TRUE}
 \item{raw}{Show raw abundance values? Defaults to FALSE. If TRUE, showStats
 is forced to FALSE}
 
+\item{factor}{Factor along which to analyze data}
+
 \item{stratify}{Stratify the data along a second factor? Defaults to FALSE}
 
 \item{facet.x}{(Optional) Name of a factor to stratify horizontally}

@@ -81,13 +81,13 @@ mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_
      ifelse(select.list(title='\nWould you like to load a taxonomic dataset?',
                         choices=c('Yes','No'))=='Yes',T,F)) {
     taxadata <- loadTaxaFile(path_to_taxa=path_to_taxa,metadata=metadata,combineDupes=combineDupes)
-  }
 
-  if(!is.null(taxadata)) {
-    taxa_ds <- list(metadata=metadata,
-                    data=taxadata,
-                    features='taxa')
-    do_taxa <- T
+    if(!is.null(taxadata)) {
+      taxa_ds <- list(metadata=metadata,
+                      data=taxadata,
+                      features='taxa')
+      do_taxa <- T
+    }
   }
 
   add_ds_list <- list()
@@ -96,6 +96,7 @@ mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_
     if(get('.loading',envir = mvEnv)) {
       fxnldata <- loadFxnlFile(path_to_fxnl=path_to_fxnl,metadata=metadata)
     }
+
     if(!is.null(fxnldata)) {
       cat('\n')
       data_name <- str_replace_all(readline(prompt='What kind of data is this? Give a one-word name: '),
@@ -152,7 +153,7 @@ mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_
   if(do_taxa | do_fxnl) cat('\n\n>>>  DATA LOADED SUCCESSFULLY!  <<<\n')
 
   if(do_taxa) {
-    assign('taxa_raw',taxa_ds,envir = mvEnv)
+    assign('taxa_raw',taxa_ds,1)
     if(autoProcess) {
       taxa_ds <- scaleSamples(taxa_ds, scaling = 'sum', silent = T)
       taxa_ds <- transData(taxa_ds, transform_method = 'glog', silent = T)
@@ -161,37 +162,37 @@ mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_
       taxa_ds <- filterNAs(taxa_ds,ranks = 'domain',silent = T)
       taxa_ds <- processDataset(taxa_ds,temp = T)
 
-      assign('taxa_proc',taxa_ds,envir = mvEnv)
+      assign('taxa_proc',taxa_ds,1)
     }
-    assign('active_dataset',taxa_ds,envir = mvEnv)
+    assign('active_dataset',taxa_ds,1)
     print(taxa_ds)
   }
 
   if(do_fxnl) {
     for(ds in add_ds_list) {
       fxnl_ds <- get(ds,inherits = F)
-      assign(paste0(fxnl_ds$features,'_raw'),fxnl_ds,envir = mvEnv)
+      assign(paste0(fxnl_ds$features,'_raw'),fxnl_ds,1)
       if(autoProcess) {
         fxnl_ds <- filterLowPrev(fxnl_ds, silent = T)
         fxnl_ds <- filterLowRelAbun(fxnl_ds, silent = T)
         fxnl_ds <- scaleSamples(fxnl_ds, scaling = 'sum', silent = T)
         fxnl_ds <- processDataset(fxnl_ds,temp = T)
 
-        assign(paste0(fxnl_ds$features,'_proc'),fxnl_ds,envir = mvEnv)
+        assign(paste0(fxnl_ds$features,'_proc'),fxnl_ds,1)
         print(fxnl_ds)
       }
     }
     if(!do_taxa) {
       if(autoProcess) {
         assign('active_dataset',
-               get(paste0(sub('_([^_]*)$','',add_ds_list[[1]]),'_proc'),inherits = F),
+               get(paste0(sub('_([^_]*)$','',add_ds_list[[1]]),'_proc')),
                envir = mvEnv)
-        print(get(paste0(sub('_([^_]*)$','',add_ds_list[[1]]),'_proc'),inherits = F))
+        print(get(paste0(sub('_([^_]*)$','',add_ds_list[[1]]),'_proc')))
       } else {
         assign('active_dataset',
-               get(paste0(sub('_([^_]*)$','',add_ds_list[[1]]),'_raw'),inherits = F),
+               get(paste0(sub('_([^_]*)$','',add_ds_list[[1]]),'_raw')),
                envir = mvEnv)
-        print(get(paste0(sub('_([^_]*)$','',add_ds_list[[1]]),'_raw'),inherits = F))
+        print(get(paste0(sub('_([^_]*)$','',add_ds_list[[1]]),'_raw')))
       }
     }
   }

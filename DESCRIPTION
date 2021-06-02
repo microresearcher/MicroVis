@@ -27,6 +27,8 @@ Imports:
     S4Vectors,
     taxa,
     phyloseq,
+    randomForest,
+    Boruta,
     metacoder,
     DESeq2,
     crayon

@@ -8,6 +8,7 @@
 #'     TRUE
 #' @param raw Show raw abundance values? Defaults to FALSE. If TRUE, showStats
 #'     is forced to FALSE
+#' @param factor Factor along which to analyze data
 #' @param stratify Stratify the data along a second factor? Defaults to FALSE
 #' @param facet.x (Optional) Name of a factor to stratify horizontally
 #' @param facet.y (Optional) Name of a factor to stratify vertically
