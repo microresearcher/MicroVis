@@ -168,7 +168,7 @@ getFeatures <- function(dataset=NULL,ranks=NULL,allRanks=F) {
 #'     is the active rank of the dataset
 #' @param allRanks If set to TRUE, will get significant features at all ranks
 #'     of the dataset
-#' @param alpha (Optional) Significance threshold. Default is 0.05.
+#' @param alpha (Optional) Significance threshold. Defaults to 0.05
 #' @param silent If set to TRUE, output text will not be printed
 #' @param dataset_name (Optional) Name of the dataset being passed so that results
 #'     can be saved to that dataset
@@ -223,6 +223,60 @@ listsigs <- function(dataset=NULL,factor=NULL,
 
   if(!silent) cat('\n\n')
   return(sigs)
+}
+
+#' List features uniquely over/under-expressed in a specified group
+#'
+#' @param dataset MicroVis dataset. Defaults to the active dataset
+#' @param factor Factor along which to perform univariate analysis. Defaults to
+#'     the active factor
+#' @param groups Group(s) to identify unique features in. Cycles through all
+#'     groups by default
+#' @param rank Rank at which to analyze features
+#' @param alpha Significance threshold. Defaults to 0.05
+#' @param dataset_name (Not recommended) Name of the dataset to save statistics
+#'     to. This should not need to be used by users since the function can
+#'     determine the name of the dataset directly passed to it, but not when
+#'     it is called within another function.
+#'
+#' @return A grouped list of features unique to each group of a factor in a dataset
+#' @export
+#'
+listUniques <- function(dataset=NULL,factor=NULL,groups=NULL,
+                        rank=NULL,
+                        alpha=0.05,
+                        dataset_name=NULL) {
+  if(is.null(dataset)) {
+    dataset <- active_dataset
+    dataset_name <- 'active_dataset'
+  } else if(is.null(dataset_name)) {
+    dataset_name <- deparse(substitute(dataset))
+  }
+
+  factor <- factor[factor %in% names(dataset$factors)]
+  if(is.null(factor)) factor <- dataset$active_factor
+
+  if(length(dataset$factors[[factor]]$subset)<3) {
+    stop('There must be 3 or more groups')
+  }
+
+  rank <- rank[rank %in% getRanks(dataset)]
+  if(is.null(rank)) rank <- dataset$data$proc$active_rank
+
+  if(is.null(dataset$stats[[factor]][[rank]])) dataset <- univar(dataset=dataset,
+                                                                 factor=factor,
+                                                                 rank=rank,
+                                                                 param=param,
+                                                                 dataset_name=dataset_name)
+
+  pw_stats <- dataset$stats[[factor]][[rank]]$pw_stats
+
+  discriminators.bygroup <- list()
+  for(grp in dataset$factors[[factor]]$subset) {
+    discriminators.bygroup[[grp]] <- getDiscriminatingFeatures(pw_stats,grp,alpha=alpha)
+  }
+
+  return(discriminators.bygroup)
 }
 
 #' Standardized naming of the stratification of an analysis

@@ -1,3 +1,34 @@
+#' Plot box-plots of univariate analysis
+#'
+#' @param dataset MicroVis dataset. Defaults to the active dataset
+#' @param jitter Show "jitter" points for each sample? Defaults to TRUE
+#' @param dotplot Create dotplot? Defaults to FALSE
+#' @param violin Create violinplot? Defaults to FALSE
+#' @param showStats Show bars w/asterisks for significance labels? Defaults to
+#'     TRUE
+#' @param raw Show raw abundance values? Defaults to FALSE. If TRUE, showStats
+#'     is forced to FALSE
+#' @param stratify Stratify the data along a second factor? Defaults to FALSE
+#' @param facet.x (Optional) Name of a factor to stratify horizontally
+#' @param facet.y (Optional) Name of a factor to stratify vertically
+#' @param flattenFactors (Not ready) Combine two factors into one
+#' @param rank Rank at which to select features
+#' @param ftlist List of specific features to plot. Defaults to all features at
+#'     the given rank
+#' @param unique_groups (Optional) Only plot features that are uniquely over/under-
+#'     expressed in these groups
+#' @param plotAll Plot all features regardless of significance? Defaults to FALSE
+#' @param alpha Significance threshold. Defaults to 0.05
+#' @param param Perform parametrized analysis? Defaults to FALSE (non-parametrized
+#'     analysis by default)
+#' @param scalePlot Scale plot by log2? Defaults to FALSE
+#' @param add_xaxis Add group labels to the x-axis? Defaults to FALSE
+#' @param separateLegend Make one separate figure of just the legend instead of
+#'     including it in all the boxplots? Defaults to FALSE
+#'
+#' @return MicroVis dataset
+#' @export
+#'
 plotUnivar <- function(dataset=NULL,
                        jitter=T,
                        dotplot=F,
