@@ -7,8 +7,8 @@
 mvsave(dataset_name = NULL)
 }
 \arguments{
-\item{dataset_name}{(Optional) MicroVis dataset (mvdata object). If not specified,
-defaults to active dataset.}
+\item{dataset_name}{(Optional) MicroVis dataset (mvdata object). Defaults to
+active dataset}
 }
 \value{
 MicroVis dataset (mvdata object)

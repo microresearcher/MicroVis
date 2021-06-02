@@ -16,7 +16,7 @@
 bdiv <- function(dataset=NULL, factor=NULL, stratifier=NULL, method='bray', weighted=F) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
-  dataset <- transformData(dataset,temp=T,silent=T,transform_method = 'none')
+  dataset <- transData(dataset,temp=T,silent=T,transform_method = 'none')
 
   rank <- dataset$data$proc$active_rank
   abd <- dataset$data$proc[[rank]]
@@ -35,7 +35,7 @@ bdiv <- function(dataset=NULL, factor=NULL, stratifier=NULL, method='bray', weig
   sample_names <- rownames(abd)
 
   results <- list()
-  if(tolower(method)=='euclidean' & mga) {
+  if(tolower(method)=='euclidean' & get('mga',envir = mvEnv)) {
     PCoA <- prcomp(abd, center = F, scale = F)
     colnames(PCoA$x) <- c(paste0('Axis.',1:ncol(PCoA$x)))
     coord_tab <- data.frame(sample=sample_names,

@@ -2,7 +2,7 @@
 #'
 #' @param dataset MicroVis dataset. Defaults to active dataset
 #' @param method Method for alpha diversity calculation. One of either "chao1",
-#'     "shannon", "simpson", "invsimpson", or "pd". Defaults to "shannon"
+#'     "shannon", "simpson", "invsimpson", or "pd". Defaults to "chao1"
 #' @param rooted (Optional) If method is set to "pd", calculate rooted or unrooted
 #'     Faith's phylogenetic diversity index? Defaults to FALSE
 #'

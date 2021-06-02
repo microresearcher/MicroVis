@@ -33,7 +33,7 @@
 #' @import ggpubr
 #' @importFrom ggrepel geom_label_repel
 #' @import rstatix
-#' @importFrom vegan rrarefy rarecurve
+#' @importFrom vegan rrarefy rarecurve diversity vegdist
 #' @importFrom ape rtree
 #' @importFrom grDevices dev.off png
 #' @importFrom utils View write.csv
