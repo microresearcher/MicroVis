@@ -20,10 +20,10 @@
 #'
 #' @importFrom taxa parse_tax_data
 #' @importFrom metacoder calc_taxon_abund
-#' @importFrom phyloseq phyloseq otu_table tax_table sample_data merge_phyloseq ntaxa taxa_names
+#' @importFrom phyloseq phyloseq otu_table tax_table sample_data merge_phyloseq ntaxa taxa_names UniFrac
 #' @importFrom DESeq2 DESeqDataSetFromMatrix
 #' @import rstudioapi
-#' @importFrom stats IQR aggregate formula sd as.formula median na.exclude relevel p.adjust
+#' @importFrom stats IQR aggregate formula sd as.formula median na.exclude relevel p.adjust prcomp
 #' @importFrom utils head read.csv select.list type.convert
 #' @importFrom methods show
 #' @import stringr
@@ -33,8 +33,8 @@
 #' @import ggpubr
 #' @importFrom ggrepel geom_label_repel
 #' @import rstatix
-#' @importFrom vegan rrarefy rarecurve diversity vegdist
-#' @importFrom ape rtree
+#' @importFrom vegan rrarefy rarecurve diversity vegdist adonis adonis2
+#' @importFrom ape rtree pcoa biplot.pcoa
 #' @importFrom grDevices dev.off png
 #' @importFrom utils View write.csv
 #' @importFrom S4Vectors unfactor

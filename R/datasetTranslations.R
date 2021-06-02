@@ -16,7 +16,7 @@ makePS <- function(dataset=NULL) {
 
   if(dataset$features!='taxa') stop('Phyloseq is intended for taxonomic data only')
 
-  taxaranks <- get('taxaranks',envir = mvEnv)
+  taxaranks <- get('taxaRanks',envir = mvEnv)
 
   if(!(all(colnames(dataset$data$taxa_names) %in% taxaranks))) stop('Taxonomic ranks must be one or more of:\n   ',paste0(taxaranks,collapse = ', '))
 
