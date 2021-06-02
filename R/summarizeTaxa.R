@@ -12,7 +12,7 @@
 #' @return Table with the means +/- SE for features in each group of the dataset
 #' @export
 #'
-summariseTaxa <- function(dataset=NULL, factor=NULL,
+summarizeTaxa <- function(dataset=NULL, factor=NULL,
                           ranks=NULL, allRanks=F,
                           meansOnly=F, pivoted=T) {
 
