@@ -67,11 +67,11 @@ print.mvdata <- function(x, ...) {
                                                         normalization[[norm]][[1]]),'\n'))
       }
       if(norm=='feature_scale') {
-        cat(paste0(' |       * Features ',crayon::yellow('scaled by ',
+        cat(paste0(' |       * Features ',crayon::yellow('scaled by',
                                                          normalization[[norm]][[1]]),'\n'))
       }
       if(norm=='transformation') {
-        cat(paste0(' |       * Data ',crayon::yellow('transformed by ',
+        cat(paste0(' |       * Data ',crayon::yellow('transformed by',
                                                      normalization[[norm]][[1]]),'\n'))
       }
     }
