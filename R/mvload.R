@@ -21,7 +21,7 @@
 #' @importFrom taxa parse_tax_data
 #' @importFrom metacoder calc_taxon_abund
 #' @importFrom phyloseq phyloseq otu_table tax_table sample_data merge_phyloseq ntaxa taxa_names UniFrac
-#' @importFrom DESeq2 DESeqDataSetFromMatrix
+#' @importFrom DESeq2 DESeqDataSetFromMatrix DESeq resultsNames results
 #' @import rstudioapi
 #' @importFrom stats IQR aggregate formula sd as.formula median na.exclude relevel p.adjust prcomp
 #' @importFrom utils head read.csv select.list type.convert
