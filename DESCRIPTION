@@ -31,4 +31,5 @@ Imports:
     Boruta,
     metacoder,
     DESeq2,
-    crayon
+    crayon,
+    grid
