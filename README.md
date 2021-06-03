@@ -10,7 +10,7 @@ MicroVis is a package for flexible analysis of metagenomic data and generation o
 
 Before installing MicroVis, make sure to install these dependencies separately for full functionality:
 
-Install [phyloseq](https://joey711.github.io/phyloseq/) and [DESeq2](http://www.bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html):
+Install [phyloseq](https://joey711.github.io/phyloseq/) and [DESeq2](http://www.bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) with BiocManager:
 
 ``` r
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
@@ -19,14 +19,14 @@ BiocManager::install("phyloseq")
 BiocManager::install("DESeq2")
 ```
 
-Install [microbiomemarker]():
+Install [microbiomemarker]() from GitHub with devtools:
 ``` r
 if (!require("devtools")) install.packages("devtools")
 
 devtools::install_github("yiluheihei/microbiomeMarker") 
 ```
 
-You can then install the released version of MicroVis from with:
+You can then install the released version of MicroVis from GitHub with:
 
 ``` r
 devtools::install_github("https://github.com/microresearcher/MicroVis.git")
