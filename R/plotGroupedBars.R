@@ -52,7 +52,7 @@ plotGroupedBars <- function(dataset=NULL,
   for(rank in ranks) {
     if(rank=='domain') next
 
-    rankfts <- getFeatures(dataset, rank=rank)
+    rankfts <- getFeatures(dataset, ranks=rank)
 
     if(plotSigs) {
       if(is.null(dataset$stats[[factor]][[rank]])) dataset <- univar(dataset=dataset,

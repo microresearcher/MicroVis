@@ -32,4 +32,9 @@ Imports:
     metacoder,
     DESeq2,
     crayon,
-    grid
+    grid,
+    ComplexHeatmap,
+    circlize,
+    microbiomeMarker,
+    purrr,
+    scales

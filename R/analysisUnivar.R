@@ -61,7 +61,7 @@ univar <- function(dataset=NULL,
     if(is.null(rank)) rank <- dataset$data$proc$active_rank
 
     # Set the features to be compared
-    features <- features[features %in% getFeatures(dataset,rank=rank)]
+    features <- features[features %in% getFeatures(dataset,ranks=rank)]
     if(is.null(features)) features <- colnames(dataset$data$proc[[rank]])
 
     # Get the sizes of each group/stratified group

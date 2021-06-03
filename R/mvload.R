@@ -28,7 +28,7 @@
 #' @importFrom phyloseq phyloseq otu_table tax_table sample_data merge_phyloseq ntaxa taxa_names UniFrac
 #' @importFrom DESeq2 DESeqDataSetFromMatrix DESeq resultsNames results
 #' @import rstudioapi
-#' @importFrom stats IQR aggregate formula sd as.formula median na.exclude relevel p.adjust prcomp
+#' @importFrom stats IQR aggregate formula sd as.formula median na.exclude relevel p.adjust prcomp cor as.dist cutree hclust
 #' @importFrom utils head read.csv select.list type.convert
 #' @importFrom methods show
 #' @import stringr
@@ -36,7 +36,7 @@
 #' @importFrom tidyr pivot_longer pivot_wider
 #' @import ggplot2
 #' @import ggpubr
-#' @importFrom ggrepel geom_label_repel
+#' @importFrom ggrepel geom_label_repel geom_text_repel
 #' @import rstatix
 #' @importFrom vegan rrarefy rarecurve diversity vegdist adonis adonis2
 #' @importFrom ape rtree pcoa biplot.pcoa
@@ -46,6 +46,8 @@
 #' @importFrom utils View write.csv stack
 #' @importFrom S4Vectors unfactor
 #' @rawNamespace import(crayon,except=c('%+%'))
+#' @importFrom purrr reduce
+#' @importFrom scales pretty_breaks
 #'
 mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_to_fxnl=NA,
                    autoProcess=T,combineDupes=T,combineDataSets=F) {

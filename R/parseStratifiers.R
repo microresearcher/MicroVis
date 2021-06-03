@@ -111,7 +111,6 @@ parseStratifiers <- function(primary_factor, factors, stratify, facet.x, facet.y
 
   if(!length(facets)) {
     message('\nWARNING: No valid factor was selected to facet by -- Proceeding with unstratified analysis and plotting')
-    warning_list <<- c(warning_list, paste0('WARNING: No valid factor was selected to facet by -- Proceeding with unstratified analysis and plotting'))
   } else {
     # If there is a valid facet that was selected, create a "txt" element of
     #   "facets" that will be printed out in the name of the figure file and
