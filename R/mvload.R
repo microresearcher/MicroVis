@@ -19,7 +19,7 @@
 #' @export
 #'
 #' @importFrom graphics barplot
-#' @importFrom grid textGrob
+#' @importFrom grid textGrob gpar
 #' @importFrom taxa parse_tax_data
 #' @importFrom metacoder calc_taxon_abund
 #' @importFrom circlize colorRamp2

@@ -22,17 +22,17 @@
 #' @return Scatter plot of the dissimilarity indices of the samples of each group
 #' @export
 #'
-plotBeta <- function(dataset=NULL,
-                     method='bray',
-                     weighted=F,
-                     factor=NULL,
-                     stratify=F,
-                     spokes=T,
-                     ellipse=T,
-                     ci=0.95,
-                     showStats=T,
-                     labelSamples=F,
-                     separateLegend=F) {
+plotBetaDiv <- function(dataset=NULL,
+                        method='bray',
+                        weighted=F,
+                        factor=NULL,
+                        stratify=F,
+                        spokes=T,
+                        ellipse=T,
+                        ci=0.95,
+                        showStats=T,
+                        labelSamples=F,
+                        separateLegend=F) {
   if(is.null(dataset)) {
     dataset <- get('active_dataset',envir = mvEnv)
     dataset_name <- 'active_dataset'
@@ -109,10 +109,10 @@ plotBeta <- function(dataset=NULL,
     pval <- paste('Pr(>F):',stats$stattab$`Pr(>F)`[1])
 
     p <- p+coord_cartesian(clip='off')+
-      annotation_custom(grob = textGrob(label=r2,hjust=0.5,gp=gpar(cex=2)),
+      annotation_custom(grob = textGrob(label=r2,hjust=0.5,gp=grid::gpar(cex=2)),
                         ymin=lab.ypos,ymax=lab.ypos,
                         xmin=lab.xpos,xmax=lab.xpos)+
-      annotation_custom(grob = textGrob(label=pval,hjust=0.5,gp=gpar(cex=2)),
+      annotation_custom(grob = textGrob(label=pval,hjust=0.5,gp=grid::gpar(cex=2)),
                         ymin=.9*lab.ypos,ymax=.9*lab.ypos,
                         xmin=lab.xpos,xmax=lab.xpos)
   }
