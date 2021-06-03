@@ -8,7 +8,7 @@ MicroVis is a package for flexible analysis of metagenomic data and generation o
 
 ## Installation
 
-Before installing MicroVis, make sure to install these dependencies that separately for full functionality:
+Before installing MicroVis, make sure to install these dependencies separately for full functionality:
 
 Install [phyloseq](https://joey711.github.io/phyloseq/) and [DESeq2](http://www.bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html):
 
