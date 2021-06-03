@@ -53,7 +53,7 @@ foldChange <- function(dataset=NULL, factor=NULL,
     pairing_factor <- select.list(colnames(metadata),graphics = T,
                                   title = 'Select the factor to pair samples by')
   } else {
-    summary_tab <- summariseTaxa(dataset, factor=factor, ranks=ranks)
+    summary_tab <- summarizeTaxa(dataset, factor=factor, ranks=ranks)
     fc_tab <- data.frame(summary_tab[1:2],Reference=rep(ref_group,nrow(summary_tab)))
     for(grp in comparison_groups) {
       fc_tab[[grp]] <- summary_tab[[paste0(grp,' Mean')]]/summary_tab[[paste0(ref_group,' Mean')]]
