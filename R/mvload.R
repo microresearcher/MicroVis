@@ -49,6 +49,8 @@
 #'
 mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_to_fxnl=NA,
                    autoProcess=T,combineDupes=T,combineDataSets=F) {
+  assign('.loading',TRUE,envir = mvEnv)
+
   do_taxa <- F
   do_fxnl <- F
   #### Load Project Directory ####

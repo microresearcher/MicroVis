@@ -1,7 +1,6 @@
 mvEnv <- new.env()
 mvDefaults <- new.env()
 
-assign('.loading',TRUE,envir = mvEnv)
 assign('warning_list',list(),envir = mvEnv)
 assign('autosave',F,envir = mvEnv)
 assign('offerSave',T,envir = mvEnv)
