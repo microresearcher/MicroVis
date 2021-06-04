@@ -565,8 +565,6 @@ filterLowAbun <- function(dataset=NULL, min_abun=NULL, min_proportion=NULL, sile
 
   dataset$data <- ft_data
 
-  print(get('.loading',envir = mvEnv))
-
   # Now process the dataset
   if(!get('.loading',envir = mvEnv)) dataset <- processDataset(dataset, silent=silent)
 

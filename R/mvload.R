@@ -53,6 +53,7 @@
 mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_to_fxnl=NA,
                    autoProcess=T,combineDupes=T,combineDataSets=F) {
   assign('.loading',TRUE,envir = mvEnv)
+  on.exit(assign('.loading',F,envir = mvEnv))
 
   do_taxa <- F
   do_fxnl <- F
@@ -222,6 +223,5 @@ mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_
     else if(do_fxnl) cat('\n\n  <|> Active Dataset: "fxnl_raw" <|>\n\n')
   }
 
-  assign('.loading',F,envir = mvEnv)
   return(cat('\nType "mvhelp()" then press Enter to see the available functions!\n\n'))
 }
