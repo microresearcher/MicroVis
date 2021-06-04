@@ -53,5 +53,5 @@ mvdeseq <- function(dataset=NULL,
   if(dataset_name=='active_dataset') assign(dataset_name,dataset,envir = mvEnv)
   else assign(dataset_name,dataset,1)
 
-  return(deseq_res)
+  return(dataset)
 }
