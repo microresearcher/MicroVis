@@ -234,6 +234,8 @@ listsigs <- function(dataset=NULL,factor=NULL,
 #'     groups by default
 #' @param rank Rank at which to analyze features
 #' @param alpha Significance threshold. Defaults to 0.05
+#' @param param Perform parametrized or nonparametrized univariate analysis?
+#'     Defaults to FALSE (nonparametrized)
 #' @param dataset_name (Not recommended) Name of the dataset to save statistics
 #'     to. This should not need to be used by users since the function can
 #'     determine the name of the dataset directly passed to it, but not when
@@ -245,9 +247,10 @@ listsigs <- function(dataset=NULL,factor=NULL,
 listUniques <- function(dataset=NULL,factor=NULL,groups=NULL,
                         rank=NULL,
                         alpha=0.05,
+                        param=F,
                         dataset_name=NULL) {
   if(is.null(dataset)) {
-    dataset <- active_dataset
+    dataset <- get('active_dataset',envir = mvEnv)
     dataset_name <- 'active_dataset'
   } else if(is.null(dataset_name)) {
     dataset_name <- deparse(substitute(dataset))
@@ -277,6 +280,60 @@ listUniques <- function(dataset=NULL,factor=NULL,groups=NULL,
   }
 
   return(discriminators.bygroup)
+}
+
+#' Get features that uniquely identify one group from other groups
+#'
+#' @param pairwise_statistics Data frame of pairwise statistics for a comparison
+#'     of 3 or more groups
+#' @param unique_group The group of interest -- features that are uniquely
+#'     differentially expressed in this group compared to the comparison groups
+#'     will be identified
+#' @param comparison_groups The groups to compare the group of interest to.
+#'     Defaults to all other groups in the subsetted dataset
+#' @param alpha Significance threshold. Defaults to 0.05
+#'
+#' @return List of features uniquely differentially expressed in "unique_group"
+#' @export
+#'
+getDiscriminatingFeatures <- function(pairwise_statistics,
+                                      unique_group,
+                                      comparison_groups=NULL,
+                                      alpha=0.05) {
+  if(!all(c('.y.','group1','group2','p.adj') %in% colnames(pairwise_statistics))) {
+    stop('"pairwise_statistics" argument must be a table with .y., group1, group2, and p.adj columns')
+  }
+
+  all_groups <- unique(unlist(pairwise_statistics[c('group1','group2')]))
+
+  unique_group <- unique_group[unique_group %in% all_groups]
+  if(is.null(unique_group)) unique_group <- all_groups[1]
+
+  comparison_groups <- comparison_groups[comparison_groups %in%
+                                           all_groups[!(all_groups %in% unique_group)]]
+  if(is.null(comparison_groups)) comparison_groups <- all_groups[!(all_groups %in% unique_group)]
+
+  # Filter the pairwise_statistics for only those that:
+  #   1) Meet the alpha threshold
+  #   2) Have the unique_group (group of interest) in either the "group1" or
+  #     "group2" column
+  #   3) Have one the comparison_groups in either the "group1" or "group2" column
+  pw_sigs <- pairwise_statistics[pairwise_statistics$p.adj<=alpha &
+                                   (pairwise_statistics$group1==unique_group |
+                                      pairwise_statistics$group2==unique_group) &
+                                   (pairwise_statistics$group1 %in% comparison_groups |
+                                      pairwise_statistics$group2 %in% comparison_groups),]
+
+  # For each feature, if the number of rows equals the number of comparison groups,
+  #   then that means the group of interest (unique_group) is different from all
+  #   of the comparison groups, and is thus unique
+  discriminating_fts <- sapply(unique(pw_sigs$.y.),
+                               function(x) {
+                                 ifelse(nrow(pw_sigs[pw_sigs$.y.==x,])==length(comparison_groups),
+                                        T,F)
+                               })
+
+  return(names(discriminating_fts)[discriminating_fts])
 }
 
 #' Standardized naming of the stratification of an analysis

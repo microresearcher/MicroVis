@@ -50,7 +50,7 @@ foldChange <- function(dataset=NULL, factor=NULL,
   if(pairSamples) {
     #TODO
     stop('Sorry: Fold-change calculation with paired samples is still under development')
-    pairing_factor <- select.list(colnames(metadata),graphics = T,
+    pairing_factor <- select.list(colnames(dataset$metadata),graphics = T,
                                   title = 'Select the factor to pair samples by')
   } else {
     summary_tab <- summarizeTaxa(dataset, factor=factor, ranks=ranks)

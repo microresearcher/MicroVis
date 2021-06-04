@@ -20,6 +20,7 @@
 #'
 #' @importFrom graphics barplot
 #' @importFrom grid textGrob gpar
+#' @importFrom picante pd prune.sample
 #' @importFrom taxa parse_tax_data
 #' @importFrom metacoder calc_taxon_abund
 #' @importFrom circlize colorRamp2

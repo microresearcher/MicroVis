@@ -37,4 +37,5 @@ Imports:
     circlize,
     microbiomeMarker,
     purrr,
-    scales
+    scales,
+    picante

@@ -56,13 +56,19 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
   else suffix <- paste0('_',rank)
 
   if(plotSigs) {
-    stats <- runStats(dataset_name = dataset_name,
-                      merged_data = mvmelt(dataset),
-                      ft_name = rank,
-                      features = colnames(dataset$data$proc[[rank]]),
-                      factor = factor)$overall
+    sigfts <- listsigs(dataset=dataset,
+                       factor=factor,
+                       ranks=rank,
+                       alpha=alpha,
+                       silent=T
+                       ,dataset_name=dataset_name)
+    # stats <- runStats(dataset_name = dataset_name,
+    #                   merged_data = mvmelt(dataset),
+    #                   ft_name = rank,
+    #                   features = colnames(dataset$data$proc[[rank]]),
+    #                   factor = factor)$overall
 
-    sigfts <- stats$stats[stats$stats$p.adj<alpha,]$Feature
+    # sigfts <- stats$stats[stats$stats$p.adj<alpha,]$Feature
     if(!length(sigfts)) message('\nNo significant features were found\n')
     else suffix <- paste0('_sig-alpha_',alpha,suffix)
     ftlist <- c(ftlist,sigfts)

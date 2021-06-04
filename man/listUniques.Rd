@@ -10,6 +10,7 @@ listUniques(
   groups = NULL,
   rank = NULL,
   alpha = 0.05,
+  param = F,
   dataset_name = NULL
 )
 }
@@ -25,6 +26,9 @@ groups by default}
 \item{rank}{Rank at which to analyze features}
 
 \item{alpha}{Significance threshold. Defaults to 0.05}
+
+\item{param}{Perform parametrized or nonparametrized univariate analysis?
+Defaults to FALSE (nonparametrized)}
 
 \item{dataset_name}{(Not recommended) Name of the dataset to save statistics
 to. This should not need to be used by users since the function can
