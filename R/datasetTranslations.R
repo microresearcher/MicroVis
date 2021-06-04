@@ -59,11 +59,13 @@ makePS <- function(dataset=NULL) {
 #' Make a DESeq object from a MicroVis dataset
 #'
 #' @param dataset MicroVis dataset. Default is the active dataset
+#' @param baseline A reference group for building the DESeq dataset. If
+#'     none is selected the user will be asked to select one during function run.
 #'
 #' @return DESeq object
 #' @export
 #'
-makeDeseq <- function(dataset=NULL) {
+makeDeseq <- function(dataset=NULL,baseline=NULL) {
   if(is.null(dataset)) {
     dataset <- get('active_dataset',envir = mvEnv)
     dataset_name <- 'active_dataset'
@@ -88,14 +90,18 @@ makeDeseq <- function(dataset=NULL) {
   abd <- abd %>% select(as.character(metadata$sample))
 
   factor <- dataset$active_factor
+  baseline <- baseline[baseline %in% dataset$factors[[factor]]$subset]
 
   cts <- abd
   coldata <- metadata
 
-  cat('\nSelect a baseline group\n')
-  baseline <- select.list(unique(as.character(coldata[[factor]])),
-                          title = 'Select a baseline',graphics = T)
-  if(!exists('baseline')) {
+  if(is.null(baseline)) {
+    cat('\nSelect a baseline group\n')
+    baseline <- select.list(unique(as.character(coldata[[factor]])),
+                            title = 'Select a baseline',graphics = T)
+  }
+
+  if(is.null(baseline)) {
     baseline <- levels(coldata[[factor]])[1]
     message('\nWarning: No baseline chosen so ',baseline,' was automatically selected')
   }

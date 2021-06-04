@@ -4,7 +4,13 @@
 \alias{mvdeseq}
 \title{DESeq2 Analysis}
 \usage{
-mvdeseq(dataset = NULL, factor = NULL, rank = NULL, dataset_name = NULL)
+mvdeseq(
+  dataset = NULL,
+  factor = NULL,
+  rank = NULL,
+  compareAll = F,
+  dataset_name = NULL
+)
 }
 \arguments{
 \item{dataset}{MicroVis dataset. Defaults to the active dataset}
@@ -12,6 +18,10 @@ mvdeseq(dataset = NULL, factor = NULL, rank = NULL, dataset_name = NULL)
 \item{factor}{Factor along which to perform analysis. Defaults to active factor}
 
 \item{rank}{Rank at which to select features to analyze. Defaults to active rank}
+
+\item{compareAll}{Perform pairwise comparisons between all groups or just
+between a reference group and all other groups? Defaults to FALSE
+(compares a reference group to all other groups)}
 
 \item{dataset_name}{(Not recommended) Name of the dataset to save results
 to. This should not need to be used by users since the function can
