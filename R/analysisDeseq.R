@@ -26,7 +26,8 @@ mvdeseq <- function(dataset=NULL,
   if(is.null(rank)) rank <- dataset$data$proc$active_rank
 
   factor <- factor[factor %in% names(dataset$factors)]
-  if(is.null(factor)) factor <- setFVar(dataset)
+  if(is.null(factor)) factor <- dataset$active_factor
+  factor <- setFVar(dataset,factor_name = factor)
 
   dds <- DESeq(makeDeseq(dataset))
   result_names <- resultsNames(dds)
@@ -34,13 +35,13 @@ mvdeseq <- function(dataset=NULL,
 
   for(contrast in result_names) {
     res <- results(dds,name=contrast)
-    comparison <- strsplit(gsub(paste0('.*',factor$name,' '),'',res@elementMetadata$description[2]),
+    comparison <- strsplit(gsub(paste0('.*',factor$name_text,' '),'',res@elementMetadata$description[2]),
                            split = ' vs ')[[1]]
     base_grp <- comparison[2]
-    contrast <- comparison[1]
+    comp_grp <- comparison[1]
 
     temp <- cbind(Reference=rep(base_grp,nrow(res)),
-                  Contrast=rep(contrast,nrow(res)),
+                  Contrast=rep(comp_grp,nrow(res)),
                   data.frame(Feature=rownames(res)),
                   res@listData)
     if(!exists('deseq_res',inherits = F)) deseq_res <- temp

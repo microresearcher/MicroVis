@@ -16,7 +16,6 @@ setFVar <- function(dataset, factor_name=NULL) {
   factors <- dataset$factors
   active_factor <- dataset$active_factor
 
-  # If there are no factors in flist, the user-friendly variable is set to point to the "sample" column of metadata (which is renamed internally in processMDFile())
   if(!length(dataset$factors)) {
     varname$name <- 'sample'
   } else {
