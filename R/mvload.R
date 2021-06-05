@@ -49,6 +49,8 @@
 #' @rawNamespace import(crayon,except=c('%+%'))
 #' @importFrom purrr reduce
 #' @importFrom scales pretty_breaks
+#' @importFrom limma lmFit eBayes
+#' @importFrom matrixStats colQuantiles
 #'
 mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_to_fxnl=NA,
                    autoProcess=T,combineDupes=T,combineDataSets=F) {
