@@ -21,7 +21,7 @@ mvlefse <- function(dataset=NULL, dataset_name=NULL) {
 
   phylodata <- makePS(dataset)
   mm <- lefse(phylodata,
-              normalization=1e6,
+              norm=1e6,
               class=factor$name,
               bootstrap_n=1000,
               correct='2')
