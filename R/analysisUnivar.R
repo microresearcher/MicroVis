@@ -225,11 +225,13 @@ calcUniVar <- function(data,factor,stratifiers=NULL,features,
           if(is.null(pairwise_comparisons)) {
             pw_stats[[ft]] <- ftTab %>% pairwise_t_test(formula, p.adjust.method='BH') %>%
               add_xy_position(x=factor)
-            # pvals <- pvals[, !(names(pvals) %in% c('p.adj','p.adj.signif'))]
-            # padj <- ftTab %>% tukey_hsd(formula)
-            # padj <- padj[c(stratifiers,'group1','group2','p.adj','p.adj.signif')]
-            # pw_stats[[ft]] <- inner_join(pvals, padj, c(stratifiers,'group1','group2')) %>%
-            #   add_xy_position(x=factor)
+            if(get('tukey_games',envir = mvEnv)){
+              pvals <- pw_stats[[ft]][, !(names(pw_stats[[ft]]) %in% c('p.adj','p.adj.signif'))]
+              padj <- ftTab %>% tukey_hsd(formula)
+              padj <- padj[c(stratifiers,'group1','group2','p.adj','p.adj.signif')]
+              pw_stats[[ft]] <- inner_join(pvals, padj, c(stratifiers,'group1','group2')) %>%
+                add_xy_position(x=factor)
+            }
           } else {
             pw_stats[[ft]] <- ftTab %>% pairwise_t_test(formula, p.adjust.method='BH',
                                                         comparisons = pairwise_comparisons) %>%
@@ -243,11 +245,13 @@ calcUniVar <- function(data,factor,stratifiers=NULL,features,
           if(is.null(pairwise_comparisons)) {
             pw_stats[[ft]] <- ftTab %>% pairwise_wilcox_test(formula, p.adjust.method='BH') %>%
               add_xy_position(x=factor)
-            # pvals <- pvals[, !(names(pvals) %in% c('p.adj','p.adj.signif'))]
-            # padj <- ftTab %>% games_howell_test(formula)
-            # padj <- padj[c(stratifiers,'group1','group2','p.adj','p.adj.signif')]
-            # pw_stats[[ft]] <- inner_join(pvals, padj, c(stratifiers,'group1','group2')) %>%
-            #   add_xy_position(x=factor)
+            if(get('tukey_games',envir = mvEnv)){
+              pvals <- pw_stats[[ft]][, !(names(pw_stats[[ft]]) %in% c('p.adj','p.adj.signif'))]
+              padj <- ftTab %>% games_howell_test(formula)
+              padj <- padj[c(stratifiers,'group1','group2','p.adj','p.adj.signif')]
+              pw_stats[[ft]] <- inner_join(pvals, padj, c(stratifiers,'group1','group2')) %>%
+                add_xy_position(x=factor)
+            }
           } else {
             pw_stats[[ft]] <- ftTab %>% pairwise_wilcox_test(formula, p.adjust.method='BH',
                                                              comparisons = pairwise_comparisons) %>%

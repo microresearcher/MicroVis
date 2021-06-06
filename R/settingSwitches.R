@@ -34,3 +34,17 @@ autonametoggle <- function() {
   assign('autoNameResults',!get('autoNameResults',envir = mvEnv),envir = mvEnv)
   cat('\nAuto-naming of figures is set to',get('autoNameResults',envir = mvEnv),'\n\n')
 }
+
+#' Switch between Tukey/Games-Howell or T-test/Wilcox for post-hoc analysis
+#'
+#' @return Does not return anything
+#' @export
+#'
+posthoctoggle <- function() {
+  assign('tukey_games',!get('tukey_games',envir = mvEnv),envir = mvEnv)
+  if(get('tukey_games',envir = mvEnv)) {
+    cat('\nPost-hoc analysis will be performed using either Tukey (parametric) or Games-Howell (nonparametric)\n\n')
+  } else {
+    cat('\nPost-hoc analysis will be performed using either T-test (parametric) or Wilcox (nonparametric) and then corrected for multiple comparisons\n\n')
+  }
+}

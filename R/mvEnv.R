@@ -10,6 +10,7 @@ assign('detailed_taxa_names',F,envir = mvEnv)
 assign('taxaRanks',c('domain','phylum','class','order','family','genus','species'),envir = mvEnv)
 assign('keepSigFisher',T,envir = mvEnv)
 assign('imageType','png',envir = mvEnv)
+assign('tukey_games',T,envir = mvEnv)
 # When forceStats is set to true, values will be slightly adjusted for
 #   groups with the same mean prior to statistical testing
 assign('forceStats',F,envir = mvEnv)
