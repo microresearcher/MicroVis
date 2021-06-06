@@ -6,6 +6,7 @@
 \usage{
 plotSimilarity(
   dataset = NULL,
+  rank = NULL,
   dist_method = "bray",
   clust_method = "ward.D2",
   clust_num = 2,
@@ -14,6 +15,8 @@ plotSimilarity(
 }
 \arguments{
 \item{dataset}{MicroVis dataset. Defaults to the active dataset}
+
+\item{rank}{Rank of features to use for similarity calculation}
 
 \item{dist_method}{Dissimilarity calculation method. One of either "pearson",
 "spearman", bray", "euclidean", "jaccard", "unifrac", "manhattan", "canberra",

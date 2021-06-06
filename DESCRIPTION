@@ -40,4 +40,5 @@ Imports:
     scales,
     picante,
     limma,
-    matrixStats
+    matrixStats,
+    magrittr
