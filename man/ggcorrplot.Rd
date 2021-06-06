@@ -96,9 +96,9 @@ text label (variable names).}
 \item{digits}{Decides the number of decimal digits to be displayed (Default:
 `2`).}
 
-\item{as.is}{A logical passed to \code{\link[reshape2]{melt.array}}. If
+\item{as.is}{A logical passed to reshape2. If
 \code{TRUE}, dimnames will be left as strings instead of being converted
-using \code{\link[utils]{type.convert}}.}
+using utils.}
 }
 \value{
 \itemize{ \item ggcorrplot(): Returns a ggplot2 \item cor_pmat():
