@@ -1,22 +1,25 @@
 #' Save Dataset in its Current State
 #'
-#' @param dataset_name (Optional) MicroVis dataset (mvdata object). Defaults to
-#'     active dataset
+#' @param name New name to save the currently active dataset
+#'     to. If none is specified, simply returns the dataset
 #'
 #' @return MicroVis dataset (mvdata object)
 #' @export
 #'
-mvsave <- function(dataset_name=NULL) {
-  if(is.null(dataset_name)) dataset_name <- 'active_dataset'
+mvsave <- function(name=NULL) {
+  dataset <- get('active_dataset',envir = mvEnv)
 
-  dataset <- get(dataset_name,envir = mvEnv)
-  if(class(dataset)!='mvdata') {
-    message('Note: "',dataset_name,'" is not a MicroVis dataset object')
+  if(is.null(name)) {
+    dataset$name <- NA
+    return(dataset)
   }
 
-  print(dataset)
+  dataset$name <- name
+  name <- str_replace_all(name, '[- +=!@#$%^&*()]', '_')
 
-  return(dataset)
+  assign(name, dataset, pos=1)
+
+  print(dataset)
 }
 
 #' Clean up a metadata factor column in a merged data table

@@ -32,7 +32,10 @@ processDataset <- function(dataset, temp=F, silent=F) {
   dataset$data$proc$filtering$ftstats <- NULL
   class(dataset) <- 'mvdata'
 
-  if(!temp) {assign('active_dataset',dataset,envir = mvEnv)}
+  if(!temp) {
+    dataset$name <- NULL
+    assign('active_dataset',dataset,envir = mvEnv)
+  }
   return(dataset)
 }
 

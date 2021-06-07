@@ -33,12 +33,11 @@ plotBetaDiv <- function(dataset=NULL,
                         showStats=T,
                         labelSamples=F,
                         separateLegend=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else if(is.na(dataset$name)) dataset_name <- deparse(substitute(dataset))
+  else dataset_name <- dataset$name
 
   colors <- dataset$colors
   factor <- setFVar(dataset)
