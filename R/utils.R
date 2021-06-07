@@ -8,7 +8,11 @@
 #'
 mvsave <- function(name=NULL) {
   dataset <- get('active_dataset',envir = mvEnv)
-  if(is.null(name)) return(dataset)
+
+  if(is.null(name)) {
+    dataset$name <- NA
+    return(dataset)
+  }
 
   dataset$name <- name
   name <- str_replace_all(name, '[- +=!@#$%^&*()]', '_')

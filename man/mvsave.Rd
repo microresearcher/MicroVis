@@ -4,11 +4,11 @@
 \alias{mvsave}
 \title{Save Dataset in its Current State}
 \usage{
-mvsave(dataset_name = NULL)
+mvsave(name = NULL)
 }
 \arguments{
-\item{dataset_name}{(Optional) MicroVis dataset (mvdata object). Defaults to
-active dataset}
+\item{name}{New name to save the currently active dataset
+to. If none is specified, simply returns the dataset}
 }
 \value{
 MicroVis dataset (mvdata object)
