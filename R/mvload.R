@@ -166,8 +166,10 @@ mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_
   if(do_taxa | do_fxnl) cat('\n\n>>>  DATA LOADED SUCCESSFULLY!  <<<\n')
 
   if(do_taxa) {
+    taxa_ds$name <- 'taxa_raw'
     assign('taxa_raw',taxa_ds,1)
     if(autoProcess) {
+      taxa_ds$name <- 'taxa_proc'
       taxa_ds <- scaleSamples(taxa_ds, scaling = 'sum', silent = T)
       taxa_ds <- transData(taxa_ds, transform_method = 'glog', silent = T)
       taxa_ds <- filterLowPrev(taxa_ds, silent = T)
@@ -184,8 +186,10 @@ mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_
   if(do_fxnl) {
     for(ds in add_ds_list) {
       fxnl_ds <- get(ds,inherits = F)
+      fxnl_ds$name <- paste0(fxnl_ds$features,'_raw')
       assign(paste0(fxnl_ds$features,'_raw'),fxnl_ds,1)
       if(autoProcess) {
+        fxnl_ds$name <- paste0(fxnl_ds$features,'_proc')
         fxnl_ds <- filterLowPrev(fxnl_ds, silent = T)
         fxnl_ds <- filterLowRelAbun(fxnl_ds, silent = T)
         fxnl_ds <- scaleSamples(fxnl_ds, scaling = 'sum', silent = T)
