@@ -13,11 +13,11 @@
 #'     a random forest model
 #' @export
 #'
-plotRF <- function(dataset=NULL,
-                   factor=NULL,
-                   hideShadow=T,confirmedOnly=F,top=15,
-                   max_runs=100,roughfix=F,
-                   alpha=0.01) {
+plotRFImp <- function(dataset=NULL,
+                      factor=NULL,
+                      hideShadow=T,confirmedOnly=F,top=15,
+                      max_runs=100,roughfix=F,
+                      alpha=0.01) {
   if(is.null(dataset)) {
     dataset <- get('active_dataset',envir = mvEnv)
     dataset_name <- 'active_dataset'
