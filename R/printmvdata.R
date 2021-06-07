@@ -8,6 +8,9 @@
 #'
 print.mvdata <- function(x, ...) {
   # Get relevant dataset info
+  if(is.null(x$name)) saved <- crayon::red$bold$italic('(Not saved)\n')
+  else if(is.na(x$name)) saved <- crayon::italic('(Saved)\n')
+  else saved <- crayon::italic('(Saved to',paste0('"',x$name,'")'),'\n')
   rank <- x$data$proc$active_rank
   if(x$features=='taxa') feature_type <- rank
   else feature_type <- x$features
@@ -33,7 +36,7 @@ print.mvdata <- function(x, ...) {
 
   # Now print out the info
   cat('\n~~~\n')
-  cat(paste0(' | ',crayon::bold$underline('MicroVis Dataset:\n')))
+  cat(paste0(' | ',crayon::bold$underline('MicroVis Dataset:'),saved))
 
   # Print number of included samples (and how many are specifically ignored, if any)
   cat(paste0(' |   > ',crayon::green$bold(n_samples),' samples '))

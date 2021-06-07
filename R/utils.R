@@ -1,17 +1,19 @@
 #' Save Dataset in its Current State
 #'
-#' @param dataset_name New name to save the currently active dataset
+#' @param name New name to save the currently active dataset
 #'     to. If none is specified, simply returns the dataset
 #'
 #' @return MicroVis dataset (mvdata object)
 #' @export
 #'
-mvsave <- function(dataset_name=NULL) {
-  if(is.null(dataset_name)) return(dataset)
+mvsave <- function(name=NULL) {
+  dataset <- get('active_dataset',envir = mvEnv)
+  if(is.null(name)) return(dataset)
 
-  dataset_name <- str_replace_all(dataset_name, '[- +=!@#$%^&*()]', '_')
+  dataset$name <- name
+  name <- str_replace_all(name, '[- +=!@#$%^&*()]', '_')
 
-  assign(dataset_name, get('active_dataset',envir = mvEnv), pos=1)
+  assign(name, dataset, pos=1)
 
   print(dataset)
 }
