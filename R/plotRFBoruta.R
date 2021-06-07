@@ -13,7 +13,7 @@
 #'     a random forest model
 #' @export
 #'
-plotRF <- function(dataset=NULL,
+plotRFImp <- function(dataset=NULL,
                    factor=NULL,
                    hideShadow=T,confirmedOnly=F,top=15,
                    max_runs=100,roughfix=F,
