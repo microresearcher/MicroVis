@@ -96,8 +96,8 @@ plotUnivar <- function(dataset=NULL,
                       rank = rank,
                       param = param,
                       dataset_name = dataset_name)
-    if(!length(facets)) stats <- dataset$stats[[factor$name]][[rank]]
-    else stats <- dataset$stats[[factor$name]][[facets$txt]][[rank]]
+    if(!length(facets)) stats <- dataset$stats[[factor$name]][[rank]]$univar
+    else stats <- dataset$stats[[factor$name]][[facets$txt]][[rank]]$univar
   }
   sigfts <- unique(stats$stats$.y.[stats$stats$p.adj<=alpha])
 
@@ -112,8 +112,7 @@ plotUnivar <- function(dataset=NULL,
       sigfts <- unlist(uniques[unique_groups])
     }
     fts <- sigfts
-  }
-  else {
+  } else {
     print(dataset)
     message('\nNo significant features were found for this dataset at a significance threshold of ',alpha,'.\n')
     return(NULL)
