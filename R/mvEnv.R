@@ -7,7 +7,14 @@ assign('autosave',F,envir = mvEnv)
 assign('offerSave',T,envir = mvEnv)
 assign('autoNameResults',T,envir = mvEnv)
 assign('detailed_taxa_names',F,envir = mvEnv)
-assign('taxaRanks',c('domain','phylum','class','order','family','genus','species'),envir = mvEnv)
+assign('taxaRanks',c('kingdom',
+                     'domain',
+                     'phylum',
+                     'class',
+                     'order',
+                     'family',
+                     'genus',
+                     'species'),envir = mvEnv)
 assign('keepSigFisher',T,envir = mvEnv)
 assign('imageType','png',envir = mvEnv)
 assign('tukey_games',T,envir = mvEnv)
@@ -37,7 +44,7 @@ assign('defCols',c('#6700b5', # Purple
                  '#6b4500', # Brown
                  '#006948', # Dark... mint?
                  '#8a423b' # Burnt... coral?
-                 ),envir = mvEnv)
+                 ),envir = mvDefaults)
 
 ### DEFAULT SAMPLE FILTERING CUTOFF
 assign('rthresh',10000,envir = mvDefaults) # Minimum read count threshold for each sample

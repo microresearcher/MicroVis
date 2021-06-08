@@ -166,7 +166,7 @@ removeLowQuality <- function(dataset=NULL, silent=F) {
 
   # Save the read depths image to a png file
   if(get('.loading',envir = mvEnv)) {ggsave(filename = file.path(get('project_dir',envir = mvEnv),
-                                                                 'read_depth.png'),
+                                                                 'read_depth.png'),height = nrow(samplestats)*.15,
                        plot = p_samplereads,device = 'png')}
 
   lowqual <- as.character(samplestats[samplestats$Tot.Reads<rthresh,]$sample)

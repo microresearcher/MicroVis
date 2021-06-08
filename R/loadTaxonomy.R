@@ -40,8 +40,9 @@ loadTaxaFile <- function(path_to_taxa=NA,metadata=NULL,combineDupes=T) {
   rank_cols <- c()
   for(rank in get('taxaRanks',envir = mvEnv)) rank_cols <- c(rank_cols,grep(rank, taxa_data[1,], ignore.case = T))
   if(length(rank_cols)) {
-    taxa_ranks <- unname(unlist(taxa_data[1,][tolower(taxa_data[1,]) %in% taxa_data[rank_cols][1,]]))
-    taxa_names_tab <- taxa_data[2:nrow(taxa_data),taxa_data[1,] %in% taxa_ranks]
+    taxa_ranks <- tolower(unname(unlist(taxa_data[1,][tolower(taxa_data[1,]) %in%
+                                                        tolower(taxa_data[rank_cols][1,])])))
+    taxa_names_tab <- taxa_data[2:nrow(taxa_data),rank_cols]
     colnames(taxa_names_tab) <- taxa_ranks
     rownames(taxa_names_tab) <- paste(1:nrow(taxa_names_tab))
 
@@ -67,12 +68,24 @@ loadTaxaFile <- function(path_to_taxa=NA,metadata=NULL,combineDupes=T) {
 
   # First turn the first row of the abundance table into column names (assuming
   #   that these are sample names)
-  colnames(taxa_data) <- taxa_data[1,]
+  colnames(taxa_data) <- sample_names <- unname(unlist(taxa_data[1,]))
   taxa_data <- taxa_data[2:nrow(taxa_data),]
 
   rownames(taxa_data) <- rownames(taxa_names_tab)
 
   taxa_data <- data.frame(t(taxa_data))
+  if(length(unique(sample_names))!=length(sample_names)) {
+    dupe_samples <- sample_names[duplicated(sample_names)]
+    message('\nThe following sample names were duplicated:\n',
+            paste(sample_names[sample_names %in% dupe_samples], collapse='\t'),
+            '\n\nThey have been changed to:')
+    for(dupe in unique(dupe_samples)) {
+      dupe_ind <- which(sample_names==dupe)
+      for(i in seq_along(dupe_ind)) sample_names[dupe_ind[i]] <- paste(sample_names[dupe_ind[i]], i, sep='_')
+      message(paste(sample_names[dupe_ind], collapse='\t'))
+    }
+  }
+  rownames(taxa_data) <- sample_names
 
   # Clean up taxonomy table and order the samples (stored in rows) by sample number
   taxa_data$sample <- rownames(taxa_data)
@@ -88,7 +101,7 @@ loadTaxaFile <- function(path_to_taxa=NA,metadata=NULL,combineDupes=T) {
   if(!is.null(metadata)) {
     if(!all(taxa_data$sample %in% metadata$sample)) {
       missing_samples <- taxa_data$sample[!(taxa_data$sample %in% metadata$sample)]
-      cat('\nThe following sample names were in the taxonomic abundance file but not in the metadata:\n ',paste(missing_samples,collapse='\n  '))
+      cat('\nThe following sample names were in the taxonomic abundance file but not in the metadata:\n',paste(missing_samples,collapse='\t'))
       message('\nSkipping taxonomic data.\n To analyze taxonomic data, please fix sample names and run "mvLoad()" again\n')
       return(NULL)
     }

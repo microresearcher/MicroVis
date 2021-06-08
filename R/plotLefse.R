@@ -27,10 +27,9 @@ plotLEFSE <- function(dataset=NULL,factor=NULL,alpha=0.05,lda_cutoff=2,top=20,by
   mm <- dataset$stats[[factor$name]]$lefse
   lefse_results <- data.frame(Feature=mm@marker_table$feature,
                               Enriched=mm@marker_table$enrich_group,
-                              Log_max_mean=mm@marker_table$log_max_mean,
                               LDA_Score=mm@marker_table$lda,
-                              p=mm@marker_table$p_orig,
-                              q=mm@marker_table$p_value)
+                              p=mm@marker_table$pvalue,
+                              q=mm@marker_table$padj)
 
   lefse_results$Feature <- gsub('.*\\|','',lefse_results$Feature)
   plottab <- subset(lefse_results,p<=alpha & LDA_Score>=lda_cutoff)

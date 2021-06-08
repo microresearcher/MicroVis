@@ -55,12 +55,12 @@ plotGroupedBars <- function(dataset=NULL,
     rankfts <- getFeatures(dataset, ranks=rank)
 
     if(plotSigs) {
-      if(is.null(dataset$stats[[factor]][[rank]])) dataset <- univar(dataset=dataset,
-                                                                     rank=rank,
-                                                                     param=param,
-                                                                     dataset_name = dataset_name)
+      if(is.null(dataset$stats[[factor]][[rank]]$univar)) dataset <- univar(dataset=dataset,
+                                                                            rank=rank,
+                                                                            param=param,
+                                                                            dataset_name = dataset_name)
 
-      stats <- dataset$stats[[factor]][[rank]]
+      stats <- dataset$stats[[factor]][[rank]]$univar
 
       sigfts <- c(stats$stats$.y.[stats$stats$p.adj <= alpha])
       skipped_list[[rank]] <- stats$skipped

@@ -63,6 +63,7 @@ univar <- function(dataset=NULL,
     # Set the features to be compared
     features <- features[features %in% getFeatures(dataset,ranks=rank)]
     if(is.null(features)) features <- colnames(dataset$data$proc[[rank]])
+    features <- features[features!='Other']
 
     # Get the sizes of each group/stratified group
     anysmallgrps <- checkGroups(dataset=dataset,
@@ -117,9 +118,9 @@ univar <- function(dataset=NULL,
   # Record the results in the dataset if a dataset was passed to this function
   if(is.null(data)) {
     if(length(stratifiers)) {
-      dataset$stats[[factor]][[nameStratification(stratifiers)]][[rank]] <- stat_results
+      dataset$stats[[factor]][[nameStratification(stratifiers)]][[rank]]$univar <- stat_results
     } else {
-      dataset$stats[[factor]][[rank]] <- stat_results
+      dataset$stats[[factor]][[rank]]$univar <- stat_results
     }
 
     if(!is.null(dataset_name)) {

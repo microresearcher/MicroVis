@@ -26,8 +26,7 @@ mvlefse <- function(dataset=NULL, dataset_name=NULL) {
               bootstrap_n=1000,
               correct='2')
 
-  mm@marker_table$p_orig <- mm@marker_table$p_value
-  mm@marker_table$p_value <- p.adjust(mm@marker_table$p_value,method = 'BH')
+  mm@marker_table$BHadjust <- p.adjust(mm@marker_table$pvalue,method = 'BH')
 
   dataset$stats[[factor$name]]$lefse <- mm
 

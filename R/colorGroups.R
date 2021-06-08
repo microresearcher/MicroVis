@@ -16,7 +16,7 @@ colorGrps <- function(dataset, new_order.unlisted=NULL, clrd_grps=NULL) {
     return(dataset)
   }
 
-  defCols <- get('defCols',envir = mvEnv)
+  defCols <- get('defCols',envir = mvDefaults)
 
   # Initialize an empty named colors list
   #   This will be the global list with groups as names and their corresponding
