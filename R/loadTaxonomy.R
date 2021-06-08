@@ -40,8 +40,9 @@ loadTaxaFile <- function(path_to_taxa=NA,metadata=NULL,combineDupes=T) {
   rank_cols <- c()
   for(rank in get('taxaRanks',envir = mvEnv)) rank_cols <- c(rank_cols,grep(rank, taxa_data[1,], ignore.case = T))
   if(length(rank_cols)) {
-    taxa_ranks <- unname(unlist(taxa_data[1,][tolower(taxa_data[1,]) %in% taxa_data[rank_cols][1,]]))
-    taxa_names_tab <- taxa_data[2:nrow(taxa_data),taxa_data[1,] %in% taxa_ranks]
+    taxa_ranks <- unname(unlist(taxa_data[1,][tolower(taxa_data[1,]) %in%
+                                                tolower(taxa_data[rank_cols][1,])]))
+    taxa_names_tab <- taxa_data[2:nrow(taxa_data),rank_cols]
     colnames(taxa_names_tab) <- taxa_ranks
     rownames(taxa_names_tab) <- paste(1:nrow(taxa_names_tab))
 
