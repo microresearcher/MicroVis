@@ -45,15 +45,18 @@ plotHeatmap <- function(dataset=NULL,
   features <- getFeatures(dataset)
 
   if(plotSigs) {
-    if(is.null(dataset$stats[[factor]][[rank]]$univar)) dataset <- univar(dataset,
-                                                                          rank=rank,
-                                                                          param=param,
-                                                                          dataset_name=dataset_name)
+    if(is.null(dataset$stats[[factor]][[rank]]$univar)) {
+      dataset <- univar(dataset,
+                        rank=rank,
+                        param=param,
+                        dataset_name=dataset_name)
+    }
     stats <- dataset$stats[[factor]][[rank]]$univar
     sigfts <- unique(stats$stats$.y.[stats$stats$p.adj<=alpha])
 
     if(length(sigfts)) {
-      if(plotUniques) sigfts <- unique(unlist(listUniques(dataset,dataset_name=dataset_name)))
+      if(plotUniques) sigfts <- unique(unlist(listUniques(dataset,
+                                                          dataset_name=dataset_name)))
       features <- sigfts
       suffix <- paste0('_alpha_',alpha)
     } else {
