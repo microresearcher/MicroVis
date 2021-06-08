@@ -44,7 +44,7 @@ assign('defCols',c('#6700b5', # Purple
                  '#6b4500', # Brown
                  '#006948', # Dark... mint?
                  '#8a423b' # Burnt... coral?
-                 ),envir = mvEnv)
+                 ),envir = mvDefaults)
 
 ### DEFAULT SAMPLE FILTERING CUTOFF
 assign('rthresh',10000,envir = mvDefaults) # Minimum read count threshold for each sample
