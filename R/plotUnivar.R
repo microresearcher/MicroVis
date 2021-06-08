@@ -87,8 +87,8 @@ plotUnivar <- function(dataset=NULL,
 
   ### Get statistics for the chosen feature type ###
   #------------------------------------------------#
-  if(!length(facets)) stats <- dataset$stats[[factor$name]][[rank]]
-  else stats <- dataset$stats[[factor$name]][[facets$txt]][[rank]]
+  if(!length(facets)) stats <- dataset$stats[[factor$name]][[rank]]$univar
+  else stats <- dataset$stats[[factor$name]][[facets$txt]][[rank]]$univar
 
   if(is.null(stats)) {
     dataset <- univar(dataset=dataset,

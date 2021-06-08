@@ -50,6 +50,12 @@ TaxatoASV <- function(taxa_data, taxalist, taxa_rank=NULL) {
   if(ncol(taxa_names_tab)==1) asvs <- rownames(taxa_names_tab)[taxa_names_tab[[taxa_rank]] %in% taxalist]
   else asvs <- rownames(taxa_names_tab)[taxa_names_tab[[taxa_rank]] %in% taxalist]
 
+  if(length(asvs)!=length(taxalist)) {
+    message('\nWarning: Some taxa names at the ',taxa_rank,
+            ' level mapped to more than one ASV.\n This means there are some duplicate taxa names at the ',
+            taxa_rank,' level\n')
+  }
+
   others_index <- grep('Other',taxalist)
   if(length(others_index)) asvs[[others_index]] <- 'Other'
 
