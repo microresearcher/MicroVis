@@ -50,7 +50,7 @@ library(MicroVis)
 Now let's grab the example data
 ``` r
 kostic_files <- system.file('extdata',package='MicroVis')
-mvload('kostic_files')
+mvload(kostic_files)
 ```
 
 A pop-up window will appear showing the files in `kostic_files` and asking you to select the metadata file. Double click `kostic2012_metadata_short.csv` in the pop-up window to select it. Next, it will ask if you would like to load a taxonomic dataset. Enter `1` for "Yes" in the RStudio console. It will then ask you to select the taxonomy abundance file. Double click `kostic2012_taxonomy_abundance.csv` and the data will start loading.
