@@ -42,7 +42,7 @@ The following steps will walk you through some of the basic analysis and plottin
 This example data comes with this package, it just needs to be loaded in.
 First, load up MicroVis:
 ``` r
-load(MicroVis)
+library(MicroVis)
 ```
 
 ### Loading Data
