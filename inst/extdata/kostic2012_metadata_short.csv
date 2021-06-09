@@ -1,0 +1,191 @@
+SampleID,AGE,DIAGNOSIS,TREATMENT,CEA,SEX,CHEMOTHERAPY,YEAR_OF_DEATH,ETHNICITY,PRIMARY_DISEASE
+C0333.N.518126,59,Healthy,unaffected mucosa,3,female,Yes,None,None,Colon Cancer
+C0333.T.518046,59,Tumor,tumor,3,female,Yes,None,None,Colon Cancer
+38U4VAHB.518100,53,Tumor,tumor,None,female,None,None,None,Colon Cancer
+XZ33PN7O.518030,48,Healthy,unaffected mucosa,None,female,None,None,None,Colon Cancer
+GQ6LSNI6.518106,81,Healthy,unaffected mucosa,None,female,None,None,None,Colon Cancer
+C0270.N.518041,85,Healthy,unaffected mucosa,1.8,female,No,None,None,Colon Cancer
+HZIMMAM6.518095,79,Tumor,tumor,None,female,None,None,American Indian,Colon Cancer
+LRQ9WN6C.518048,68,Healthy,unaffected mucosa,None,female,None,None,Hispanic,Colon Cancer
+A8A34NCW.518023,65,Healthy,unaffected mucosa,None,female,None,None,None,Colon Cancer
+C0332.N.518027,94,Healthy,unaffected mucosa,18,male,No,None,None,Colon Cancer
+C10.S.517995,None,Healthy,unaffected mucosa,None,unknown,None,None,None,Colon Cancer
+MQE9ONGV.518038,79,Healthy,unaffected mucosa,None,female,None,None,None,Colon Cancer
+C0230.N.517992,75,Healthy,unaffected mucosa,None,male,Yes,None,None,Colon Cancer
+C0256.N.518170,54,Healthy,unaffected mucosa,None,male,Yes,None,None,Colon Cancer
+HZIMMNL5.518062,79,Healthy,unaffected mucosa,None,female,None,None,American Indian,Colon Cancer
+GQ6LSABJ.518010,81,Tumor,tumor,None,female,None,None,None,Colon Cancer
+C0282.N.518138,79,Healthy,unaffected mucosa,16,female,Yes,None,None,Colon Cancer
+TV28INUO.518004,53,Healthy,unaffected mucosa,None,female,None,None,None,Colon Cancer
+C0315.N.518021,85,Healthy,unaffected mucosa,6.2,female,No,None,None,Colon Cancer
+C0235.N.517993,60,Healthy,unaffected mucosa,10.2,male,Yes,None,None,Colon Cancer
+5TA9VN6K.518161,52,Healthy,unaffected mucosa,None,male,None,None,None,Colon Cancer
+A8A34AP9.518086,65,Tumor,tumor,None,female,None,None,None,Colon Cancer
+UEL2GAPI.518173,59,Tumor,tumor,None,female,None,None,None,Colon Cancer
+O436FAO8.518097,84,Tumor,tumor,None,female,None,None,None,Colon Cancer
+C0378.N.518158,54,Healthy,unaffected mucosa,1.4,female,Yes,None,None,Colon Cancer
+41E1KNBP.517985,55,Healthy,unaffected mucosa,None,female,None,None,None,Colon Cancer
+C0269.T.518150,56,None,tumor,7.5,male,Yes,None,None,Colon Cancer
+C0378.T.518104,54,Tumor,tumor,1.4,female,Yes,None,None,Colon Cancer
+R8J9ZNOW.518040,32,Healthy,unaffected mucosa,None,female,None,None,None,Colon Cancer
+8XBKGABK.517998,72,Tumor,tumor,None,male,None,None,Hispanic,Colon Cancer
+R8J9ZAGC.518059,32,Tumor,tumor,None,female,None,None,None,Colon Cancer
+5TA9VAT9.518088,52,Tumor,tumor,None,male,None,None,None,Colon Cancer
+OTGGZAZO.518108,63,Tumor,tumor,None,female,None,None,None,Colon Cancer
+C0269.N.518130,56,Healthy,unaffected mucosa,7.5,male,Yes,None,None,Colon Cancer
+C0271.T.518078,82,Tumor,tumor,None,male,Yes,None,None,Colon Cancer
+C0318.N.518105,74,Healthy,unaffected mucosa,2.4,female,Yes,None,None,Colon Cancer
+C0159.T.518087,82,Tumor,tumor,None,female,No,None,None,Colon Cancer
+C0318.T.518140,74,Tumor,tumor,2.4,female,Yes,None,None,Colon Cancer
+O436FNP3.518007,84,Healthy,unaffected mucosa,None,female,None,None,None,Colon Cancer
+C0209.N.517984,70,Healthy,unaffected mucosa,53.8,male,Yes,None,None,Colon Cancer
+C0240.N.518020,81,Healthy,unaffected mucosa,None,male,Yes,None,None,Colon Cancer
+C0306.N.518003,70,Healthy,unaffected mucosa,None,male,Yes,None,None,Colon Cancer
+MQETMNL4.518037,79,Healthy,unaffected mucosa,None,male,None,None,None,Colon Cancer
+C0209.T.518128,70,Tumor,tumor,53.8,male,Yes,None,None,Colon Cancer
+C0112.T.518024,63,Tumor,tumor,7.7,female,Yes,None,None,Colon Cancer
+C0355.T.518157,55,Tumor,tumor,2.3,female,Yes,None,None,Colon Cancer
+C0322.N.518165,90,Healthy,unaffected mucosa,None,female,No,None,None,Colon Cancer
+6G2KBNS6.518045,81,Healthy,unaffected mucosa,None,female,None,None,None,Colon Cancer
+C0240.T.518052,81,Tumor,tumor,None,male,Yes,None,None,Colon Cancer
+C0268.T.518114,62,Tumor,tumor,2.9,male,Yes,None,None,Colon Cancer
+C0285.T.518044,84,Tumor,tumor,None,female,Yes,2006,None,Colon Cancer
+41E1KAMA.517991,55,Tumor,tumor,None,female,None,None,None,Colon Cancer
+QFHRSAG2.518005,45,Tumor,tumor,None,male,None,None,None,Colon Cancer
+I7ROLN9P.518079,41,Healthy,unaffected mucosa,None,female,None,None,None,Colon Cancer
+QFHRSNIH.518116,45,Healthy,unaffected mucosa,None,male,None,None,None,Colon Cancer
+C0271.N.518022,82,Healthy,unaffected mucosa,None,male,Yes,None,None,Colon Cancer
+KIXFRARY.518160,23,Tumor,tumor,None,female,None,None,None,Colon Cancer
+C0133.N.518051,63,Healthy,unaffected mucosa,None,male,Yes,None,None,Colon Cancer
+C0268.N.518089,62,Healthy,unaffected mucosa,2.9,male,Yes,None,None,Colon Cancer
+OTGGZN5Y.518063,63,Healthy,unaffected mucosa,None,female,None,None,None,Colon Cancer
+C0134.N.518072,75,Healthy,unaffected mucosa,None,female,Yes,2004,None,Colon Cancer
+C0395.N.518054,80,Healthy,unaffected mucosa,3.2,male,Yes,None,None,Colon Cancer
+UZ65XAS5.518119,86,Tumor,tumor,None,male,None,None,None,Colon Cancer
+C0311.T.518131,82,Tumor,tumor,None,female,No,None,None,Colon Cancer
+5EKFOAO4.518164,83,Tumor,tumor,None,female,None,None,None,Colon Cancer
+C0294.T.518134,84,Tumor,tumor,None,male,Yes,None,None,Colon Cancer
+C0388.N.518136,89,Healthy,unaffected mucosa,2.2,female,No,2006,None,Colon Cancer
+C0186.N.518143,76,Healthy,unaffected mucosa,None,female,Yes,None,None,Colon Cancer
+38U4VNBW.518090,53,Healthy,unaffected mucosa,None,female,None,None,None,Colon Cancer
+C0334.T.518147,65,Tumor,tumor,7.2,female,Yes,None,None,Colon Cancer
+JIDZEN4J.518073,53,Healthy,unaffected mucosa,None,male,None,None,None,Colon Cancer
+JIDZEAPD.518149,53,Tumor,tumor,None,male,None,None,None,Colon Cancer
+LRQ9WAHA.518036,68,Tumor,tumor,None,female,None,None,Hispanic,Colon Cancer
+UZ65XN27.518028,86,Healthy,unaffected mucosa,None,male,None,None,None,Colon Cancer
+C0159.N.518042,82,Healthy,unaffected mucosa,None,female,No,None,None,Colon Cancer
+C0306.T.518122,70,Tumor,tumor,None,male,Yes,None,None,Colon Cancer
+C0394.N.518031,65,Healthy,unaffected mucosa,None,female,Yes,None,None,Colon Cancer
+C0342.N.518068,79,Healthy,unaffected mucosa,2.3,male,Yes,None,None,Colon Cancer
+82S3MAZ4.518145,48,Tumor,tumor,None,female,None,None,None,Colon Cancer
+C4.T.518118,None,Tumor,tumor,None,unknown,None,None,None,Colon Cancer
+C0398.N.518152,76,Healthy,unaffected mucosa,5,male,Yes,None,None,Colon Cancer
+C0388.T.518015,89,Tumor,tumor,2.2,female,No,2006,None,Colon Cancer
+C0285.N.518084,84,Healthy,unaffected mucosa,None,female,Yes,2006,None,Colon Cancer
+C0308.N.518154,87,Healthy,unaffected mucosa,4.5,female,No,None,None,Colon Cancer
+C0355.N.518077,55,Healthy,unaffected mucosa,2.3,female,Yes,None,None,Colon Cancer
+C0308.T.518162,87,Tumor,tumor,4.5,female,No,None,None,Colon Cancer
+C0211.T.518096,84,Tumor,tumor,None,female,Yes,None,None,Colon Cancer
+C0206.N.518065,70,Healthy,unaffected mucosa,None,male,Yes,None,None,Colon Cancer
+C0149.N.518039,75,Healthy,unaffected mucosa,1,female,Yes,None,None,Colon Cancer
+C4.S.518169,None,Healthy,unaffected mucosa,None,unknown,None,None,None,Colon Cancer
+C0374.N.518099,75,Healthy,unaffected mucosa,1.7,male,No,None,None,Colon Cancer
+C0362.N.518069,62,Healthy,unaffected mucosa,4,female,Yes,None,None,Colon Cancer
+C0211.N.518117,84,Healthy,unaffected mucosa,None,female,Yes,None,None,Colon Cancer
+G3UBQNDP.518121,53,Healthy,unaffected mucosa,None,male,None,None,None,Colon Cancer
+C0341.N.518101,72,Healthy,unaffected mucosa,3.7,female,Yes,None,None,Colon Cancer
+C1.T.518120,None,Tumor,tumor,None,unknown,None,None,None,Colon Cancer
+C0399.T.518153,76,Tumor,tumor,1.7,male,Yes,None,None,Colon Cancer
+C0294.N.517987,84,Healthy,unaffected mucosa,None,male,Yes,None,None,Colon Cancer
+C0186.T.518019,76,Tumor,tumor,None,female,Yes,None,None,Colon Cancer
+G2OD5N55.518146,76,Healthy,unaffected mucosa,None,male,None,None,None,Colon Cancer
+8XBKGN9F.518085,72,Healthy,unaffected mucosa,None,male,None,None,Hispanic,Colon Cancer
+YOTV6ASH.518142,85,Tumor,tumor,None,female,None,None,None,Colon Cancer
+C0258.T.517997,82,Tumor,tumor,2.6,male,Yes,None,None,Colon Cancer
+C0230.T.518144,75,Tumor,tumor,None,male,Yes,None,None,Colon Cancer
+C0315.T.518034,85,Tumor,tumor,6.2,female,No,None,None,Colon Cancer
+C0349.N.517989,79,Healthy,unaffected mucosa,10.4,male,Yes,None,None,Colon Cancer
+C0212.N.518167,64,Healthy,unaffected mucosa,None,female,Yes,None,None,Colon Cancer
+C0245.N.518071,79,Healthy,unaffected mucosa,None,male,Yes,None,None,Colon Cancer
+YOTV6NC8.518156,85,Healthy,unaffected mucosa,None,female,None,None,None,Colon Cancer
+C0112.N.518001,63,Healthy,unaffected mucosa,7.7,female,Yes,None,None,Colon Cancer
+C0335.N.518107,75,Healthy,unaffected mucosa,22.2,male,No,None,None,Colon Cancer
+C0344.N.518103,84,Healthy,unaffected mucosa,2.7,male,Yes,None,None,Colon Cancer
+82S3MNBY.518050,48,Healthy,unaffected mucosa,None,female,None,None,None,Colon Cancer
+5EKFONB3.518125,83,Healthy,unaffected mucosa,None,female,None,None,None,Colon Cancer
+C0225.N.518047,81,Healthy,unaffected mucosa,2.6,female,No,None,None,Colon Cancer
+C6.S.518082,None,Healthy,unaffected mucosa,None,unknown,None,None,None,Colon Cancer
+C0241.N.518043,64,Healthy,unaffected mucosa,None,male,Yes,None,None,Colon Cancer
+C1.S.518137,None,Healthy,unaffected mucosa,None,unknown,None,None,None,Colon Cancer
+XBS5MNEH.518074,75,Healthy,unaffected mucosa,None,male,None,None,None,Colon Cancer
+C0195.N.518110,68,Healthy,unaffected mucosa,None,male,Yes,None,None,Colon Cancer
+C0322.T.518018,90,Tumor,tumor,None,female,No,None,None,Colon Cancer
+C0342.T.518093,79,Tumor,tumor,2.3,male,Yes,None,None,Colon Cancer
+C0198.T.518166,50,Tumor,tumor,1.3,male,Yes,None,None,Colon Cancer
+C0395.T.518075,80,Tumor,tumor,3.2,male,Yes,None,None,Colon Cancer
+G3UBQAJU.518060,53,Tumor,tumor,None,male,None,None,None,Colon Cancer
+C0195.T.517986,68,None,tumor,None,male,Yes,None,None,Colon Cancer
+C0335.T.518115,75,Tumor,tumor,22.2,male,No,None,None,Colon Cancer
+C0349.T.518111,79,Tumor,tumor,10.4,male,Yes,None,None,Colon Cancer
+C0149.T.518132,75,Tumor,tumor,1,female,Yes,None,None,Colon Cancer
+C0311.N.518124,82,Healthy,unaffected mucosa,None,female,No,None,None,Colon Cancer
+C0154.N.518002,76,Healthy,unaffected mucosa,8.1,female,Yes,None,None,Colon Cancer
+C0258.N.518014,82,Healthy,unaffected mucosa,2.6,male,Yes,None,None,Colon Cancer
+C0371.N.518009,77,Healthy,unaffected mucosa,36.6,female,No,None,None,Colon Cancer
+C0330.N.518148,77,Healthy,unaffected mucosa,2.6,male,Yes,None,None,Colon Cancer
+C0344.T.518029,84,Tumor,tumor,2.7,male,Yes,None,None,Colon Cancer
+C0206.T.518053,70,Tumor,tumor,None,male,Yes,None,None,Colon Cancer
+C0282.T.518000,79,None,tumor,16,female,Yes,None,None,Colon Cancer
+C0371.T.518139,77,Tumor,tumor,36.6,female,No,None,None,Colon Cancer
+C0394.T.518064,65,Tumor,tumor,None,female,Yes,None,None,Colon Cancer
+C0332.T.518017,94,Tumor,tumor,18,male,No,None,None,Colon Cancer
+G2OD5ABL.518057,76,Tumor,tumor,None,male,None,None,None,Colon Cancer
+C6.T.518061,None,Tumor,tumor,None,unknown,None,None,None,Colon Cancer
+C0256.T.518080,54,Tumor,tumor,None,male,Yes,None,None,Colon Cancer
+C0245.T.518151,79,None,tumor,None,male,Yes,None,None,Colon Cancer
+C0095.T.518141,59,Tumor,tumor,0.7,male,Yes,None,None,Colon Cancer
+C0252.T.518006,62,Tumor,tumor,None,female,No,None,None,Colon Cancer
+C0366.T.518172,72,Tumor,tumor,6.7,female,Yes,None,None,Colon Cancer
+C0241.T.518067,64,Tumor,tumor,None,male,Yes,None,None,Colon Cancer
+C0198.N.518081,50,Healthy,unaffected mucosa,1.3,male,Yes,None,None,Colon Cancer
+C0330.T.518035,77,Tumor,tumor,2.6,male,Yes,None,None,Colon Cancer
+C0325.N.518109,80,Healthy,unaffected mucosa,None,male,Yes,None,None,Colon Cancer
+C0225.T.518033,81,Tumor,tumor,2.6,female,No,None,None,Colon Cancer
+C0154.T.518091,76,Tumor,tumor,8.1,female,Yes,None,None,Colon Cancer
+C0366.N.518094,72,Healthy,unaffected mucosa,6.7,female,Yes,None,None,Colon Cancer
+C0270.T.518163,85,Tumor,tumor,1.8,female,No,None,None,Colon Cancer
+MQETMAZC.518171,79,Tumor,tumor,None,male,None,None,None,Colon Cancer
+C0095.N.518123,59,Healthy,unaffected mucosa,0.7,male,Yes,None,None,Colon Cancer
+C0341.T.518113,72,Tumor,tumor,3.7,female,Yes,None,None,Colon Cancer
+C0252.N.518016,62,Healthy,unaffected mucosa,None,female,No,None,None,Colon Cancer
+C0325.T.518083,80,Tumor,tumor,None,male,Yes,None,None,Colon Cancer
+C0212.T.518155,64,Tumor,tumor,None,female,Yes,None,None,Colon Cancer
+C0399.N.518011,76,Healthy,unaffected mucosa,1.7,male,Yes,None,None,Colon Cancer
+C0334.N.518066,65,Healthy,unaffected mucosa,7.2,female,Yes,None,None,Colon Cancer
+XZ33PA3O.518135,48,Tumor,tumor,None,female,None,None,None,Colon Cancer
+C0134.T.517988,75,None,tumor,None,female,Yes,2004,None,Colon Cancer
+KIXFRNL2.518129,23,Healthy,unaffected mucosa,None,female,None,None,None,Colon Cancer
+C0374.T.518127,75,Tumor,tumor,1.7,male,No,None,None,Colon Cancer
+C0275.N.518076,57,Healthy,unaffected mucosa,None,female,Yes,None,None,Colon Cancer
+59S9WAIH.518013,44,Tumor,tumor,None,male,None,None,None,Colon Cancer
+C0314.T.518025,70,Tumor,tumor,5.1,male,No,None,None,Colon Cancer
+6G2KBASQ.517999,81,Tumor,tumor,None,female,None,None,None,Colon Cancer
+C0133.T.518133,63,Tumor,tumor,None,male,Yes,None,None,Colon Cancer
+UEL2GN92.518058,59,Healthy,unaffected mucosa,None,female,None,None,None,Colon Cancer
+59S9WNC6.518055,44,Healthy,unaffected mucosa,None,male,None,None,None,Colon Cancer
+C0235.T.518049,60,Tumor,tumor,10.2,male,Yes,None,None,Colon Cancer
+C0362.T.518026,62,Tumor,tumor,4,female,Yes,None,None,Colon Cancer
+TV28IANZ.518070,53,Tumor,tumor,None,female,None,None,None,Colon Cancer
+C10.T.518056,None,Tumor,tumor,None,unknown,None,None,None,Colon Cancer
+C0275.T.518032,57,Tumor,tumor,None,female,Yes,None,None,Colon Cancer
+C3.S.517996,None,Healthy,unaffected mucosa,None,unknown,None,None,None,Colon Cancer
+MQE9OAS7.518008,79,Tumor,tumor,None,female,None,None,None,Colon Cancer
+32I9UAPQ.518112,71,Tumor,tumor,None,female,None,None,None,Colon Cancer
+C0398.T.518092,76,Tumor,tumor,5,male,Yes,None,None,Colon Cancer
+UTWNWANU.518168,66,Tumor,tumor,None,male,None,None,None,Colon Cancer
+UTWNWN3P.518012,66,Healthy,unaffected mucosa,None,male,None,None,None,Colon Cancer
+BFJMKAKB.518159,68,Tumor,tumor,None,male,None,None,None,Colon Cancer
+XBS5MA8H.517990,75,Tumor,tumor,None,male,None,None,None,Colon Cancer
+C3.T.517994,None,Tumor,tumor,None,unknown,None,None,None,Colon Cancer
+32I9UNA9.518098,71,Healthy,unaffected mucosa,None,female,None,None,None,Colon Cancer
+BFJMKNMP.518102,68,Healthy,unaffected mucosa,None,male,None,None,None,Colon Cancer
