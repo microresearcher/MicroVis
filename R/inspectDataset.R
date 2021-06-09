@@ -41,8 +41,8 @@ countSamples <- function(dataset=NULL, factors=NULL, stratifiers=NULL, getSizes=
   # Lastly, list any ignored samples
   if(verbose) {
     if(length(dataset$data$proc$ignored_samples)) {
-      cat('\n  Ignored samples:\n    ')
-      cat(paste(dataset$data$proc$ignored_samples,collapse = '\n    '))
+      cat('\n  Ignored samples:\n')
+      cat(paste(dataset$data$proc$ignored_samples,collapse = '\t'))
     }
     cat('\n\n')
   }
