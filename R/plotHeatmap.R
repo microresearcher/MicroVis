@@ -75,10 +75,10 @@ plotHeatmap <- function(dataset=NULL,
   #   and abundance table
   if(!is.null(stratifier)) {
     melted <- data.frame(mvstratify(scaleFeatures(clearNormalization(dataset,temp = T,silent = T),
-                                                  scaling = 'sum',temp = T,silent = T)))
+                                                  scaling = 'relative',temp = T,silent = T)))
   } else {
     melted <- mvmelt(scaleFeatures(clearNormalization(dataset,temp = T,silent = T),
-                                   scaling = 'sum',temp = T,silent = T))
+                                   scaling = 'relative',temp = T,silent = T))
   }
 
   if(aggregated) {
