@@ -136,6 +136,8 @@ plotHeatmap <- function(dataset=NULL,
 
   colscale <- colorRamp2(c(minval,col_center,maxval),c('#ebebeb','#ffea75','red'))
 
+  if(clustNum>2) suffix <- paste0(suffix,'_',clustNum,'clusters')
+
   hm <- Heatmap(hm_data,
                 top_annotation = ha, column_gap = unit(3,'mm'),
                 show_column_names = labelSamples,
