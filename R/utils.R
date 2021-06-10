@@ -211,13 +211,13 @@ listsigs <- function(dataset=NULL,factor=NULL,
     fts <- colnames(dataset$data$proc[[rank]])
     merged_abun <- mvmelt(dataset)
 
-    if(!length(dataset$stats[[factor]][[rank]]$stats)) dataset <- univar(dataset=dataset,
-                                                                         factor=factor,
-                                                                         rank=rank,
-                                                                         features=fts,
-                                                                         dataset_name=dataset_name)
+    if(!length(dataset$stats[[factor]][[rank]]$univar)) dataset <- univar(dataset=dataset,
+                                                                          factor=factor,
+                                                                          rank=rank,
+                                                                          features=fts,
+                                                                          dataset_name=dataset_name)
 
-    stats <- dataset$stats[[factor]][[rank]]$stats
+    stats <- dataset$stats[[factor]][[rank]]$univar
     sigs <- c(sigs,stats$.y.[stats$p.adj<=alpha])
 
     if(!silent) cat('\n\nThese are the significant features at the',rank,'rank:\n',
