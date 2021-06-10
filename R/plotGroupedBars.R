@@ -173,8 +173,6 @@ plotGroupedBars <- function(dataset=NULL,
                                 width = 12, height = 10,
                                 suffix = suffix)
 
-  if(!is.null(save_directory)) write.csv(pivoted_tab,file.path(save_directory,'mean_se.csv'))
-
   cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
   print(dataset)
 

@@ -55,13 +55,17 @@ plotHeatmap <- function(dataset=NULL,
     sigfts <- unique(stats$stats$.y.[stats$stats$p.adj<=alpha])
 
     if(length(sigfts)) {
-      if(plotUniques) sigfts <- unique(unlist(listUniques(dataset,
-                                                          dataset_name=dataset_name)))
-      features <- sigfts
       suffix <- paste0('_alpha_',alpha)
+      suffix <- paste0(suffix,'_uniques')
+      if(plotUniques) {
+        sigfts <- unique(unlist(listUniques(dataset,
+                                            dataset_name=dataset_name)))
+
+      }
+      features <- sigfts
     } else {
       message('\nNo significant features were found. Plotting all features')
-      suffix <- 'allfts'
+      suffix <- '_allfts'
     }
   }
 
@@ -90,20 +94,24 @@ plotHeatmap <- function(dataset=NULL,
     # Column names were lost, so reassign the group names to the columns
     #   Group names were in rows before under the factor name but hm_data is transposed
     colnames(hm_data) <- interaction(melted[c(factor,stratifier)])
+    column_order <- dataset$factors[[factor]]$subset
 
     # Make a dataframe for annotation factors
     factor_anno <- melted[c(factor,stratifier)]
     suffix <- paste0('_heatmap_aggregated',suffix)
+    value_legend_title <- 'Average Relative Abundance'
   } else {
     hm_data <- t(melted[features])
 
     # Column names were lost, so reassign the sample names to the columns
     #   Sample names were row names before, but hm_data is transposed
     colnames(hm_data) <- melted$sample
+    column_order <- NULL
 
     # Make a dataframe for annotation factors
     factor_anno <- melted[names(dataset$factors)]
     suffix <- paste0('_heatmap',suffix)
+    value_legend_title <- 'Relative Abundance'
   }
   splitby <- melted[c(factor,stratifier)]
 
@@ -131,11 +139,11 @@ plotHeatmap <- function(dataset=NULL,
   hm <- Heatmap(hm_data,
                 top_annotation = ha, column_gap = unit(3,'mm'),
                 show_column_names = labelSamples,
-                column_split = splitby,
-                row_km = clustNum, row_km_repeats = 100, cluster_row_slices = FALSE,
+                column_split = splitby, column_order = column_order,
+                row_km = clustNum, row_km_repeats = 100, cluster_row_slices = T,
                 show_row_names = labelFeatures,
                 col = colscale,
-                heatmap_legend_param = list(title='Relative Abundance',
+                heatmap_legend_param = list(title=value_legend_title,
                                             legend_direction='horizontal',
                                             title_position='topcenter'))
 
@@ -154,6 +162,7 @@ plotHeatmap <- function(dataset=NULL,
               active_factor = factor,
               figure = hm, width = width, height = height,
               stat_results = stats,
+              other_results = list(Values=hm_data),
               suffix = suffix)
 
   cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
