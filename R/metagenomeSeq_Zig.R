@@ -79,8 +79,7 @@ mvfitZig <- function(abun,
                      useCSSoffset=TRUE,
                      control=mvzigControl(),
                      useMixedModel=FALSE,
-                   ...)
-{
+                   ...) {
   nf <- unname(unlist(mvcalcNormFactors(abun)))
 
   libsize <- colSums(abun)
@@ -141,8 +140,7 @@ mv.do_fitZig <- function(y,
                        zero_model_matrix,
                        control=zigControl(),
                        useMixedModel=FALSE,
-                       ...)
-{
+                       ...) {
   # Initialization
   tol <- control$tol
   maxit <- control$maxit

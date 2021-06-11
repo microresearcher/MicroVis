@@ -1,3 +1,5 @@
+#' @importFrom glmnet glmnet
+
 #' Zero-Inflated Mixed Model Analysis
 #'
 #' @param dataset MicroVis dataset. Defaults to the active dataset
@@ -54,11 +56,15 @@ mvZimm <- function(dataset=NULL,
 #' @param dataset MicroVis dataset. Defaults to the active dataset
 #' @param factor Factor to analyze by. Defaults to the active factor
 #' @param rank Rank to select features from. Defaults to active rank
+#' @param dataset_name (Not Recommended) Name of the dataset to save results
+#'     to. This should not need to be used by users since the function can
+#'     determine the name of the dataset directly passed to it, but not when
+#'     it is called within another function.
 #'
 #' @return metagenomeSeq fitZig results
 #' @export
 #'
-mvZiln <- function(dataset=NULL,factor=NULL,rank=NULL) {
+mvZiln <- function(dataset=NULL,factor=NULL,rank=NULL,dataset_name=NULL) {
   if(is.null(dataset)) {
     dataset <- get('active_dataset',envir = mvEnv)
     dataset_name <- 'active_dataset'
@@ -75,7 +81,7 @@ mvZiln <- function(dataset=NULL,factor=NULL,rank=NULL) {
   rank <- rank[rank %in% getRanks(dataset)]
   if(is.null(rank)) rank <- dataset$data$proc$active_rank
 
-  data <- mvmelt(dataset, rank=rank)
+  data <- mvmelt(clearNormalization(dataset, temp=T, silent=T), rank=rank)
   sample_names <- data$sample
 
   metadata <- data[2:ncol(dataset$metadata)]
@@ -99,11 +105,15 @@ mvZiln <- function(dataset=NULL,factor=NULL,rank=NULL) {
 #' @param dataset MicroVis dataset. Defaults to the active dataset
 #' @param factor Factor to analyze by. Defaults to the active factor
 #' @param rank Rank to select features from. Defaults to active rank
+#' @param dataset_name (Not Recommended) Name of the dataset to save results
+#'     to. This should not need to be used by users since the function can
+#'     determine the name of the dataset directly passed to it, but not when
+#'     it is called within another function.
 #'
 #' @return metagenomeSeq fitFeatureModel results
 #' @export
 #'
-mvZig <- function(dataset=NULL,factor=NULL,rank=NULL) {
+mvZig <- function(dataset=NULL,factor=NULL,rank=NULL,dataset_name=NULL) {
   if(is.null(dataset)) {
     dataset <- get('active_dataset',envir = mvEnv)
     dataset_name <- 'active_dataset'

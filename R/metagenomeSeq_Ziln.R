@@ -67,7 +67,9 @@ mvfitFeatureModel <- function(abun,mod,coef=2,B=1,szero=FALSE,spos=TRUE) {
 
   if(any(is.na(fitzeroln$logFC))) {
     feats = which(is.na(fitzeroln$logFC))
-    mat = MRcounts(obj[feats,], norm=TRUE, log=FALSE,sl=median(nf))
+    # mat = MRcounts(obj[feats,], norm=TRUE, log=FALSE,sl=median(nf))
+    if(any(is.na(nf))) mat <- mvcumNormMat(abun, sl=sl)
+    else mat <- sweep(abun,2,nf/median(nf),'/')
     fit = lmFit(log(mat+1),mmCount)
     fit = eBayes(fit)
     fitzeroln$logFC[feats] = coefficients(fit)[,coef]
@@ -869,3 +871,39 @@ mvMRfulltable<-function(obj,by=2,coef=NULL,number=10,taxa=obj@taxa,
   }
   return(as.data.frame(mat))
 }
+
+#' Cumulative sum scaling factors.
+#'
+#' Calculates each column's quantile and calculates the sum up to and including
+#' that quantile.
+#'
+#'
+#' @param abun A matrix of counts
+#' @param p The pth quantile.
+#' @param sl The value to scale by (default=1000).
+#' @return Returns a matrix normalized by scaling counts up to and including
+#' the pth quantile.
+#' @seealso \code{\link{fitZig}} \code{\link{cumNorm}}
+#' @examples
+#'
+#' data(mouseData)
+#' head(cumNormMat(mouseData))
+#'
+mvcumNormMat <- function(abun, p=mvcumNormStatFast(abun), sl=1000) {
+    ####################################################################################
+    #   Calculates each column's quantile
+    #    and calculated the sum up to and
+    #    including that quantile.
+    ####################################################################################
+    xx=x
+    xx[x==0] <- NA
+
+    qs=colQuantiles(xx,probs=p,na.rm=TRUE)
+
+    newMat<-sapply(1:ncol(xx), function(i) {
+      xx=(x[,i]-.Machine$double.eps)
+      sum(xx[xx<=qs[i]])
+    })
+    nmat<-sweep(x,2,newMat/sl,"/")
+    return(nmat)
+  }
