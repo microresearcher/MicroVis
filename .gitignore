@@ -42,3 +42,4 @@ vignettes/*.pdf
 # Files generated during example run
 inst/extdata/group_data.txt
 inst/extdata/read_depth.png
+
