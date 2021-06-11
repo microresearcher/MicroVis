@@ -211,13 +211,13 @@ listsigs <- function(dataset=NULL,factor=NULL,
     fts <- colnames(dataset$data$proc[[rank]])
     merged_abun <- mvmelt(dataset)
 
-    if(!length(dataset$stats[[factor]][[rank]]$stats)) dataset <- univar(dataset=dataset,
-                                                                         factor=factor,
-                                                                         rank=rank,
-                                                                         features=fts,
-                                                                         dataset_name=dataset_name)
+    if(!length(dataset$stats[[factor]][[rank]]$univar)) dataset <- univar(dataset=dataset,
+                                                                          factor=factor,
+                                                                          rank=rank,
+                                                                          features=fts,
+                                                                          dataset_name=dataset_name)
 
-    stats <- dataset$stats[[factor]][[rank]]$stats
+    stats <- dataset$stats[[factor]][[rank]]$univar
     sigs <- c(sigs,stats$.y.[stats$p.adj<=alpha])
 
     if(!silent) cat('\n\nThese are the significant features at the',rank,'rank:\n',
@@ -269,13 +269,13 @@ listUniques <- function(dataset=NULL,factor=NULL,groups=NULL,
   rank <- rank[rank %in% getRanks(dataset)]
   if(is.null(rank)) rank <- dataset$data$proc$active_rank
 
-  if(is.null(dataset$stats[[factor]][[rank]])) dataset <- univar(dataset=dataset,
-                                                                 factor=factor,
-                                                                 rank=rank,
-                                                                 param=param,
-                                                                 dataset_name=dataset_name)
+  if(is.null(dataset$stats[[factor]][[rank]]$univar)) dataset <- univar(dataset=dataset,
+                                                                        factor=factor,
+                                                                        rank=rank,
+                                                                        param=param,
+                                                                        dataset_name=dataset_name)
 
-  pw_stats <- dataset$stats[[factor]][[rank]]$pw_stats
+  pw_stats <- dataset$stats[[factor]][[rank]]$univar$pw_stats
 
   discriminators.bygroup <- list()
   for(grp in dataset$factors[[factor]]$subset) {

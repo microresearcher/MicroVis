@@ -51,11 +51,11 @@ orderGroups <- function(dataset, reorder=F) {
     #   ask if they would like to reorder the groups in *this* factor
     # This way, if they wanted to reorder the groups in one factor,
     #   they don't have to order the groups in *all* the factors
-    if(!length(new_grps) & !reorder) {
+    if((!length(new_grps) | length(new_grps)>10) & !reorder) {
       change_order <- FALSE
     } else {
       cat(paste0('\n\nCurrent group order for ',f$name_text,':'))
-      cat(paste('\n',current_order))
+      cat(paste0('\t',current_order))
       change_order <- ifelse(select.list(choices = c('Keep','Change'),
                                          title = '\n\nChange the ordering of the groups?')=='Change',TRUE,FALSE)
     }
@@ -64,7 +64,7 @@ orderGroups <- function(dataset, reorder=F) {
     #   If it does need to be changed, then ask the user to order the groups how they would like them, and that will be the new order
     if(!change_order) {
       new_order <- current_order
-      cat('\n\nGroup order for', f$name_text, 'is:\n',paste0(new_order,collapse='\n '))
+      cat('\n\nGroup order for', f$name_text, 'is:\n',paste0(new_order,collapse='\t'))
     } else {
       new_order <- list()
 
@@ -79,7 +79,7 @@ orderGroups <- function(dataset, reorder=F) {
       # Once one item is remaining, we don't need to ask the user to 'choose' that item for the last slot
       #   which is why the loop exited when 1 item was remaining
       new_order <- unlist(c(new_order, current_order[!(current_order %in% new_order)]))
-      cat('\n\nGroup order for ', f$text, 'is:\n',paste0(new_order,collapse='\n '))
+      cat('\n\nGroup order for ', f$text, 'is:\n',paste0(new_order,collapse='\t'))
     }
 
     # Reorder the "levels" list of this factor
