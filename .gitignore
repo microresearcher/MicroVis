@@ -38,3 +38,6 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+inst/extdata/group_data.txt
+inst/extdata/read_depth.png
