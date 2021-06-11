@@ -3,7 +3,7 @@
 #' @param dataset MicroVis dataset. Defaults to the active dataset
 #' @param clustNum Number of clusters for rows (features)
 #' @param ftlist (Optional) List of specific features to plot
-#' @param plotSigs Plot only significant features? Defaults to TRUE
+#' @param plotAll Plot all features? Defaults to FALSE
 #' @param plotUniques Plot only features that are uniquely expressed in a certain
 #'     group? Defaults to FALSE
 #' @param param Perform parametrized or nonparametrized univariate analysis for
@@ -26,7 +26,7 @@
 #'
 plotHeatmap <- function(dataset=NULL,
                         clustNum=0,
-                        ftlist=NULL, plotSigs=T, plotUniques=F, param=F,
+                        ftlist=NULL, plotAll=F, plotUniques=F, param=F,
                         aggregated=F,
                         labelFeatures=T, labelSamples=F,
                         factor=NULL, stratify=F,
@@ -44,7 +44,13 @@ plotHeatmap <- function(dataset=NULL,
   rank <- dataset$data$proc$active_rank
   features <- getFeatures(dataset)
 
-  if(plotSigs) {
+  ftlist <- ftlist[ftlist %in% features]
+
+  if(plotAll) suffix <- 'allfts'
+  else if(length(ftlist)) {
+    features <- ftlist
+    suffix <- 'specific_fts'
+  } else {
     if(is.null(dataset$stats[[factor]][[rank]]$univar)) {
       dataset <- univar(dataset,
                         rank=rank,

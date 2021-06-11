@@ -27,6 +27,7 @@ plotGroupedBars <- function(dataset=NULL,
                             factor=NULL,
                             stratify=FALSE, flattenFactors=FALSE,
                             facet.x=FALSE, facet.y=FALSE,
+                            width=12,
                             alpha=0.05, param=F,
                             byrank=F) {
   if(is.null(dataset)) {
@@ -170,7 +171,7 @@ plotGroupedBars <- function(dataset=NULL,
                                 active_factor = factor,
                                 stat_results = stats_allranks,
                                 other_results = list(Mean_SE=pivoted_tab),
-                                width = 12, height = 10,
+                                width = width, height = 10,
                                 suffix = suffix)
 
   cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
