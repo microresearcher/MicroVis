@@ -14,6 +14,8 @@ plotClad <- function(dataset=NULL, factor=NULL) {
     dataset_name <- deparse(substitute(dataset))
   }
 
+  on.exit(cat('There is an incompatibility between ggtree and dplyr 1.0.6 as of May 2021'))
+
   clrs <- dataset$colors
 
   factor <- factor[factor %in% names(dataset$factor)]
@@ -31,6 +33,8 @@ plotClad <- function(dataset=NULL, factor=NULL) {
                          annotation_shape = 22,
                          annotation_shape_size = 3,
                          node_size_offset = 2)
+
+  on.exit()
 
   clad_legend <- as_ggplot(get_legend(clad))
   clad <- clad+theme(legend.position = 'none')

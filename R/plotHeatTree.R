@@ -17,6 +17,7 @@ plotHeatTree <- function(dataset=NULL,
                          test='univar',ftlist=NULL,showAll=F,
                          color_limit=2,
                          alpha=0.05,
+                         initial_layout='fruchterman-reingold',
                          layout='reingold-tilford') {
   if(is.null(dataset)) {
     dataset <- get('active_dataset',envir = mvEnv)

@@ -218,7 +218,7 @@ listsigs <- function(dataset=NULL,factor=NULL,
                                                                           dataset_name=dataset_name)
 
     stats <- dataset$stats[[factor]]$univar[[rank]]
-    sigs <- c(sigs,stats$.y.[stats$p.adj<=alpha])
+    sigs <- c(sigs,stats$stats$.y.[stats$stats$p.adj<=alpha])
 
     if(!silent) cat('\n\nThese are the significant features at the',rank,'rank:\n',
                     paste(stats$.y.[stats$p.adj<=alpha],collapse = '\n '))
