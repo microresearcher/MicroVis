@@ -57,7 +57,7 @@ mvmerge <- function(dataset1,dataset2,
                        rank=rank1,
                        features=fts1,
                        factor=dataset1$active_factor)$overall
-    stats1 <- dataset1$stats[[dataset1$active_factor]][[rank]]$stats
+    stats1 <- dataset1$stats[[dataset1$active_factor]]$univar[[rank]]$stats
     sigfts1 <- fts1[fts1 %in% stats1$.y.[stats1$p.adj < alpha]]
     if(length(sigfts1)) fts1 <- union(fts1,sigfts1)
     else message('\nNo significant features were found in ',dataset1_name,' that overlapped with already selected features\n')
@@ -69,7 +69,7 @@ mvmerge <- function(dataset1,dataset2,
                      rank=rank2,
                      features=fts2,
                      factor=dataset2$active_factor)$overall
-    stats2 <- dataset2$stats[[dataset2$active_factor]][[rank]]$stats
+    stats2 <- dataset2$stats[[dataset2$active_factor]]$univar[[rank]]$stats
     sigfts2 <- fts2[fts2 %in% stats2$.y.[stats2$p.adj < alpha]]
     if(length(sigfts2)) fts2 <- union(fts2,sigfts2)
     else message('\nNo significant features were found in ',dataset2_name,' that overlapped with already selected features\n')

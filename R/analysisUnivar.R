@@ -1,9 +1,7 @@
 #' Perform Univariate Analysis
 #'
-#' @param dataset (Optional) MicroVis dataset. Defaults to the active dataset.
-#'     Must either provide a "dataset" or "data" argument
-#' @param data (Optional) Data table containing metadata and count values with samples as
-#'     rows and metadata factors or features as columns
+#' @param data Either a MicroVis dataset or a data table containing metadata and
+#'     count values with samples as rows and metadata factors or features as columns
 #' @param factor Factor along which to form groups from the samples and perform
 #'     the statistical analysis
 #' @param stratifiers  (Optional) One or two factors to stratify the groups by
@@ -24,25 +22,22 @@
 #'
 # TODO: Figure out how to incorporate Tukey and Games-Howell post-hoc tests as
 #       options
-univar <- function(dataset=NULL,
-                   data=NULL,
+univar <- function(data=NULL,
                    factor=NULL,
                    stratifiers=NULL,
                    rank=NULL,
                    features=NULL, pairwise_comparisons=NULL,
                    param=F,
                    dataset_name=NULL) {
-  # If no data table was provided, default to analysis of a dataset
-  # Providing a data table as opposed to an entire dataset to this function
-  #   would allow for univariate analysis of non-feature metrics such as alpha
-  #   diversity
   if(is.null(data)) {
-    if(is.null(dataset)) {
-      dataset <- get('active_dataset',envir = mvEnv)
-      dataset_name <- 'active_dataset'
-    } else if(is.null(dataset_name)) {
-      dataset_name <- deparse(substitute(dataset))
-    }
+    data <- get('active_dataset',envir = mvEnv)
+    dataset_name <- 'active_dataset'
+  }
+
+  # Can analyze either a MicroVis dataset or just a melted table of metadata and counts
+  if(inherits(data,'mvdata')) {
+    if(is.null(dataset_name)) dataset_name <- deparse(substitute(data))
+    dataset <- data
 
     # Set the factor
     factor <- factor[factor %in% names(dataset$factors)]
@@ -116,11 +111,11 @@ univar <- function(dataset=NULL,
                              param=param,pairwise_comparisons=pairwise_comparisons)
 
   # Record the results in the dataset if a dataset was passed to this function
-  if(is.null(data)) {
+  if(inherits(data,'mvdata')) {
     if(length(stratifiers)) {
-      dataset$stats[[factor]][[nameStratification(stratifiers)]][[rank]]$univar <- stat_results
+      dataset$stats[[factor]][[nameStratification(stratifiers)]]$univar[[rank]] <- stat_results
     } else {
-      dataset$stats[[factor]][[rank]]$univar <- stat_results
+      dataset$stats[[factor]]$univar[[rank]] <- stat_results
     }
 
     if(!is.null(dataset_name)) {

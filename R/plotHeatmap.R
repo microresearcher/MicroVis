@@ -51,20 +51,20 @@ plotHeatmap <- function(dataset=NULL,
     features <- ftlist
     suffix <- 'specific_fts'
   } else {
-    if(is.null(dataset$stats[[factor]][[rank]]$univar)) {
-      dataset <- univar(dataset,
+    if(is.null(dataset$stats[[factor]]$univar[[rank]])) {
+      dataset <- univar(data=dataset,
                         rank=rank,
                         param=param,
                         dataset_name=dataset_name)
     }
-    stats <- dataset$stats[[factor]][[rank]]$univar
+    stats <- dataset$stats[[factor]]$univar[[rank]]
     sigfts <- unique(stats$stats$.y.[stats$stats$p.adj<=alpha])
 
     if(length(sigfts)) {
       suffix <- paste0('_alpha_',alpha)
       suffix <- paste0(suffix,'_uniques')
       if(plotUniques) {
-        sigfts <- unique(unlist(listUniques(dataset,
+        sigfts <- unique(unlist(listUniques(dataset=dataset,
                                             dataset_name=dataset_name)))
 
       }

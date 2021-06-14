@@ -60,3 +60,7 @@ assign('filtering.defaults',list(min_totabun=10,
 ### ONLY FOR MICROVIS DEVELOPMENT ###
 assign('.debug',F,envir = mvEnv)
 assign('mga',F,envir = mvEnv)
+
+# utils package overwrites the normal View function with something weird, so this
+#   rectifies that... for now
+View <<- NULL

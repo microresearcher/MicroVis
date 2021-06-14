@@ -48,7 +48,7 @@ mvdeseq <- function(dataset=NULL,
     base_grp <- factor$subset[gsub('[- ;,/]','\\.',factor$subset) %in% comparison[2]]
     comp_grp <- factor$subset[gsub('[- ;,/]','\\.',factor$subset) %in% comparison[1]]
 
-    cat('\n',paste(comp_grp,'vs',base_grp))
+    cat('\nAnalyzing ',comp_grp,' vs ',base_grp)
 
     temp <- cbind(Reference=rep(base_grp,nrow(res)),
                   Contrast=rep(comp_grp,nrow(res)),
@@ -68,7 +68,7 @@ mvdeseq <- function(dataset=NULL,
         base_grp <- contrast_levels[i]
         comp_grp <- contrast_levels[j]
 
-        cat('\n',paste(comp_grp,'vs',base_grp))
+        cat('\nAnalyzing ',comp_grp,' vs ',base_grp)
 
         res <- results(dds,contrast = c(factor$name,comp_grp,base_grp))
 
@@ -82,7 +82,9 @@ mvdeseq <- function(dataset=NULL,
     }
   }
 
-  dataset$stats[[factor$name]][[rank]]$deseq <- deseq_res
+  cat('\n')
+
+  dataset$stats[[factor$name]]$deseq[[rank]] <- deseq_res
 
   if(dataset_name=='active_dataset') assign(dataset_name,dataset,envir = mvEnv)
   else assign(dataset_name,dataset,1)

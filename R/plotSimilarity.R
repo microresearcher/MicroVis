@@ -7,6 +7,8 @@
 #'     "clark", "kulczynski", "gower", "altGower", "morisita", "horn", "mountford",
 #'     "raup", "binomial", "chao", "cao", "mahalanobis", "chisq" or "chord".
 #'     Defaults to "bray"
+#' @param weighted If performing unifract distance, whether to use weighted or
+#'     unweighted unifrac. Defults to FALSE (unweighted)
 #' @param clust_method Clustering method. One of either "ward.D", "ward.D2",
 #'     "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA),
 #'     "median" (= WPGMC) or "centroid" (= UPGMC). Defaults to "ward.D2"
@@ -20,6 +22,7 @@
 plotSimilarity <- function(dataset=NULL,
                            rank=NULL,
                            dist_method='bray',
+                           weighted=F,
                            clust_method='ward.D2',
                            clust_num=2,
                            r_cutoff=0) {

@@ -71,13 +71,18 @@ ftRatiostab <- function(melted_data, feature1list, feature2list,
       ratios$data <- allsamples[c('sample',factor,ratiocols)]
 
       rationames <- gsub('/','__',ratios$ratios)
+
       ratiodata <- ratios$data
       colnames(ratiodata) <- gsub('/','__',colnames(ratiodata))
-      stats <- univar(ratiodata,factor,rationames)
+
+      stats <- univar(data=ratiodata,
+                      factor=factor,
+                      features=rationames)
+
       stats$stattab$Feature <- gsub('__','/',stats$stattab$Feature)
       names(stats$stats) <- gsub('__','/',names(stats$stats))
-      allstats <- stats$stats[[1]]
-      allstats <- allstats[0,]
+
+      allstats <- stats$stats[[1]][0,]
       for(ratio in names(stats$stats)) {
         stats$stats[[ratio]]$.y. <- gsub('__','/',stats$stats[[ratio]]$.y.)
         stats$stats[[ratio]] <- stats$stats[[ratio]] %>% add_xy_position(fun = 'mean_se')

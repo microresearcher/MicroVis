@@ -5,7 +5,6 @@
 \title{Perform Univariate Analysis}
 \usage{
 univar(
-  dataset = NULL,
   data = NULL,
   factor = NULL,
   stratifiers = NULL,
@@ -17,11 +16,8 @@ univar(
 )
 }
 \arguments{
-\item{dataset}{(Optional) MicroVis dataset. Defaults to the active dataset.
-Must either provide a "dataset" or "data" argument}
-
-\item{data}{(Optional) Data table containing metadata and count values with samples as
-rows and metadata factors or features as columns}
+\item{data}{Either a MicroVis dataset or a data table containing metadata and
+count values with samples as rows and metadata factors or features as columns}
 
 \item{factor}{Factor along which to form groups from the samples and perform
 the statistical analysis}

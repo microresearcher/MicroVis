@@ -15,6 +15,7 @@ plotGroupedBars(
   flattenFactors = FALSE,
   facet.x = FALSE,
   facet.y = FALSE,
+  width = 12,
   alpha = 0.05,
   param = F,
   byrank = F
@@ -43,6 +44,8 @@ active factor}
 \item{facet.x}{(Optional) Factor to stratify horizontally}
 
 \item{facet.y}{(Optional) Factor to stratify vertically}
+
+\item{width}{Width of the saved figure (in inches). Defaults to 12 inches}
 
 \item{alpha}{Significance threshold. Defaults to 0.05}
 

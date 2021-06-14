@@ -87,17 +87,18 @@ plotUnivar <- function(dataset=NULL,
 
   ### Get statistics for the chosen feature type ###
   #------------------------------------------------#
-  if(!length(facets)) stats <- dataset$stats[[factor$name]][[rank]]$univar
-  else stats <- dataset$stats[[factor$name]][[facets$txt]][[rank]]$univar
+  if(!length(facets)) stats <- dataset$stats[[factor$name]]$univar[[rank]]
+  else stats <- dataset$stats[[factor$name]][[facets$txt]]$univar[[rank]]
 
   if(is.null(stats)) {
-    dataset <- univar(dataset=dataset,
-                      stratifiers = c(facets$x,facets$y),
-                      rank = rank,
-                      param = param,
-                      dataset_name = dataset_name)
-    if(!length(facets)) stats <- dataset$stats[[factor$name]][[rank]]$univar
-    else stats <- dataset$stats[[factor$name]][[facets$txt]][[rank]]$univar
+    dataset <- univar(data=dataset,
+                      factor=factor$name,
+                      stratifiers=c(facets$x,facets$y),
+                      rank=rank,
+                      param=param,
+                      dataset_name=dataset_name)
+    if(!length(facets)) stats <- dataset$stats[[factor$name]]$univar[[rank]]
+    else stats <- dataset$stats[[factor$name]][[facets$txt]]$univar[[rank]]
   }
   sigfts <- unique(stats$stats$.y.[stats$stats$p.adj<=alpha])
 

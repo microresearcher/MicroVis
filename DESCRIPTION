@@ -41,4 +41,5 @@ Imports:
     picante,
     limma,
     matrixStats,
-    magrittr
+    magrittr,
+    Hmisc

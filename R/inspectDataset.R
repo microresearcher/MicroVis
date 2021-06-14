@@ -211,6 +211,8 @@ viewtable <- function(dataset=NULL) {
 #'
 #' @param dataset (Optional) MicroVis dataset (mvdata object). If not specified,
 #'     defaults to active dataset.
+#' @param type Type of statistical test to view results for. Defaults to the first
+#'     available of univariate, deseq, and lefse in that order
 #' @param factor (Optional) Factor to count samples by groups. Default is the
 #'     active factor of the dataset.
 #' @param rank (Optional) Rank to get abundance values of. Default is active rank.
@@ -218,7 +220,7 @@ viewtable <- function(dataset=NULL) {
 #' @return View of the statistics of the dataset
 #' @export
 #'
-viewstats <- function(dataset=NULL, factor=NULL, rank=NULL) {
+viewstats <- function(dataset=NULL, type=NULL, factor=NULL, rank=NULL) {
   if(is.null(dataset)) {
     dataset <- get('active_dataset', envir=mvEnv)
     dataset_name <- 'active_dataset'
@@ -229,14 +231,25 @@ viewstats <- function(dataset=NULL, factor=NULL, rank=NULL) {
   factor <- names(dataset$factors)[tolower(names(dataset$factors)) %in% tolower(factor)]
   if(!length(factor)) factor <- dataset$active_factor
 
-  rank <- names(get('taxaRanks',envir = mvEnv))[tolower(names(get('taxaRanks',envir = mvEnv))) %in% tolower(rank)]
+  rank <- rank[rank %in% getRanks(dataset)]
   if(!length(rank)) rank <- dataset$data$proc$active_rank
 
-  print(names(dataset$factors))
-  print(factor)
-  print(rank)
+  stat_types <- names(dataset$stats[[factor]])
+  if(is.null(stat_types)) {
+    stop('No analyses have been performed for ',dataset_name)
+  }
 
-  View(dataset$stats[[factor]][[rank]]$stattab)
+  if(is.null(type)) type <- stat_types[1]
+  else if(is.null(type[type %in% stat_types])) {
+    stop('Please choose one of the following for "type":\n ',
+         paste(stat_types, collapse=', '))
+  }
+
+  cat('\nPulling up',type,'statistical results for',factor,'at',rank,'rank\n\n')
+
+  stats <- dataset$stats[[factor]][[type]][[rank]]
+  if(type=='univar') View(stats$stats)
+  else View(stats)
 }
 
 #' Check Colors of Groups in a Dataset
