@@ -1,3 +1,12 @@
+#' Plot Cladogram
+#'
+#' @param dataset MicroVis dataset. Defaults to the activedataset
+#' @param factor Factor to analyze by. Defaults to the active factor
+#'
+#' @return
+#' @export
+#'
+#' @examples
 plotClad <- function(dataset=NULL, factor=NULL) {
   if(is.null(dataset)) {
     dataset <- get('active_dataset',envir = mvEnv)
