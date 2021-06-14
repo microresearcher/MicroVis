@@ -38,9 +38,7 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
 
     filter_rank <- filtering$filter_rank
 
-    # Get stats for the features using the raw counts but only with the desired
-    #   set of samples
-    ft_data <- getFtStats(runSampleFilter(dataset,temp=T,silent=T))
+    ft_data <- getFtStats(dataset)
     abd_temp <- ft_data$proc$unranked
     if(dataset$features=='taxa') abd_temp <- agglomTaxa(ft_data, abd_temp,
                                                         from_rank='asv',
@@ -679,7 +677,8 @@ getFtStats <- function(dataset=NULL, rank=NULL) {
     dataset_name <- deparse(substitute(dataset))
   }
 
-  if(is.null(dataset$data$proc$unranked)) dataset <- runSampleFilter(dataset,temp = T,silent = T)
+  # If a pre-filtered, unranked abundance table is not available, run normalization to get one
+  if(is.null(dataset$data$proc$unranked)) dataset <- runNormalization(dataset,temp = T,silent = T)
 
   if(is.null(rank)) rank <- dataset$data$proc$filtering$filter_rank
 
