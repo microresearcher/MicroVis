@@ -39,7 +39,8 @@ plotGroupedBars <- function(dataset=NULL,
   }
 
   factor <- dataset$active_factor
-  clrs <- dataset$colors
+  colors <- dataset$colors
+  colors <- colors[names(colors) %in% dataset$factors[[factor]]$subset]
 
   metadata <- dataset$metadata
 

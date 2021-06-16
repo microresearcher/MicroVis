@@ -39,8 +39,9 @@ plotBetaDiv <- function(dataset=NULL,
   else if(is.na(dataset$name)) dataset_name <- deparse(substitute(dataset))
   else dataset_name <- dataset$name
 
-  colors <- dataset$colors
   factor <- setFVar(dataset)
+  colors <- dataset$colors
+  colors <- colors[names(colors) %in% factor$subset]
   metadata <- dataset$metadata
 
   if(stratify & length(names(dataset$factors))>1) {

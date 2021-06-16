@@ -16,18 +16,18 @@ plotClad <- function(dataset=NULL, factor=NULL) {
 
   on.exit(cat('There is an incompatibility between ggtree and dplyr 1.0.6 as of May 2021'))
 
-  clrs <- dataset$colors
 
   factor <- factor[factor %in% names(dataset$factor)]
   if(is.null(factor)) factor <- dataset$active_factor
   factor <- setFVar(dataset,factor_name = factor)
+  colors <- dataset$colors
+  colors <- colors[names(colors) %in% factor$subset]
 
   if(is.null(dataset$stats[[factor$name]]$lefse)) dataset <- mvlefse(dataset,
                                                                      dataset_name)
 
   mm <- dataset$stats[[factor$name]]$lefse
 
-  clrlist <- clrs[names(clrs) %in% factor$subset]
   clad <- plot_cladogram(mm, color = clrlist,
                          clade_label_level = 2,
                          annotation_shape = 22,

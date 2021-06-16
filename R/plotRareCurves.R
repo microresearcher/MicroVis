@@ -28,9 +28,10 @@ plotRareCurves <- function(dataset=NULL,
   rank <- dataset$data$proc$active_rank
   abd <- dataset$data$proc[[rank]]
 
-  clrs <- dataset$colors
   metadata <- dataset$metadata
-  cmpgrp <- setFVar(dataset)
+  factor <- setFVar(dataset)
+  colors <- dataset$colors
+  colors <- colors[names(colors) %in% factor$subset]
 
   maxrich <- max(rowSums(abd))
   minrich <- min(rowSums(abd))
@@ -51,15 +52,15 @@ plotRareCurves <- function(dataset=NULL,
   maxpts <- merge(maxpts, alldata)
 
   # Merge these two data tables with the metadata
-  maxtab <- cleanData(merge(metadata, maxpts), cmpgrp)
-  rctab <- cleanData(merge(metadata, alldata), cmpgrp)
+  maxtab <- cleanData(merge(metadata, maxpts), factor)
+  rctab <- cleanData(merge(metadata, alldata), factor)
 
   p <- ggplot(rctab, aes(sample_size,richness,group=sample))+
-    geom_line(aes(color=get(cmpgrp$name)),size=0.5)+
+    geom_line(aes(color=get(factor$name)),size=0.5)+
     scale_color_manual(values=clrs)+
-    labs(y='Genus Richness',x='Sample Size',colour=cmpgrp$txt)
+    labs(y='Genus Richness',x='Sample Size',colour=factor$txt)
   if(panels) {
-    p <- facet(p,cmpgrp$name)
+    p <- facet(p,factor$name)
   }
   if(labelSamples) {
     p<-p+geom_label_repel(data=maxtab,
@@ -71,7 +72,7 @@ plotRareCurves <- function(dataset=NULL,
 
   saveResults(dataset$results_path,foldername = 'Rarefaction Curves',
               factors = dataset$factors,
-              active_factor = cmpgrp$name,
+              active_factor = factor$name,
               suffix = '_rc')
 
   cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
