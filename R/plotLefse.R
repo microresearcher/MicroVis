@@ -19,8 +19,8 @@ plotLEFSE <- function(dataset=NULL,factor=NULL,alpha=0.05,lda_cutoff=2,top=20,by
   }
 
   factor <- setFVar(dataset)
-  clrs <- dataset$colors
-  clrs <- clrs[names(clrs) %in% factor$subset]
+  colors <- dataset$colors
+  colors <- colors[names(colors) %in% factor$subset]
 
   if(is.null(dataset$stats[[factor$name]]$lefse)) dataset <- mvlefse(dataset,dataset_name)
 
@@ -38,7 +38,7 @@ plotLEFSE <- function(dataset=NULL,factor=NULL,alpha=0.05,lda_cutoff=2,top=20,by
   ranknames <- c('Kingdom','Phylum','Class','Order','Family','Genus','Species')
   names(ranknames) <- c('k','p','c','o','f','g','s')
   plottab$Rank <- sapply(plottab$Feature, function(ft) ranknames[substr(ft,1,1)])
-  plottab$Rank <- factor(plottab$Rank,levels=unname(ranknames))
+  plottab$Rank <- factor(plottab$Rank, levels=unname(ranknames))
   if(byrank) {
     taxanames <- plottab$Feature
     plottab$Feature <- gsub('.*__','',as.character(plottab$Feature))
@@ -50,7 +50,7 @@ plotLEFSE <- function(dataset=NULL,factor=NULL,alpha=0.05,lda_cutoff=2,top=20,by
                   add.params = list(size=2),
                   sorting = 'descending',
                   rotate = T)+
-    scale_color_manual(values=clrs)+
+    scale_color_manual(values=colors)+
     labs(y='LDA Score')+
     theme(axis.title = element_text(size=20),
           axis.text = element_text(size=18),

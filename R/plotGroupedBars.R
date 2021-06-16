@@ -39,7 +39,8 @@ plotGroupedBars <- function(dataset=NULL,
   }
 
   factor <- dataset$active_factor
-  clrs <- dataset$colors
+  colors <- dataset$colors
+  colors <- colors[names(colors) %in% dataset$factors[[factor]]$subset]
 
   metadata <- dataset$metadata
 
@@ -136,7 +137,7 @@ plotGroupedBars <- function(dataset=NULL,
     theme(axis.text.x = element_text(size = 12, angle = 45, hjust=1))+
     labs(y='Mean Relative Abundance')+
     scale_y_continuous(trans='sqrt',breaks=scales::pretty_breaks(n=6))+
-    scale_fill_manual(values=clrs)
+    scale_fill_manual(values=colors)
 
   p <- p+theme(axis.title = element_text(size=25),
                axis.text = element_text(size=20),

@@ -24,6 +24,8 @@ plotDeseq <- function(dataset=NULL,
   factor <- factor[factor %in% names(dataset$factors)]
   if(is.null(factor)) factor <- dataset$active_factor
   factor <- setFVar(dataset, factor_name=factor)
+  colors <- dataset$colors
+  colors <- colors[names(colors) %in% factor$subset]
 
   rank <- rank[rank %in% getRanks(dataset)]
   if(is.null(rank)) rank <- dataset$data$proc$active_rank
@@ -69,7 +71,7 @@ plotDeseq <- function(dataset=NULL,
                            fill='Contrast', color='white',
                            position = position_dodge(), order=ftorder$Feature)+
       geom_hline(yintercept=0, linetype='solid', color='darkgray', size=1)+
-      scale_fill_manual(values=dataset$colors)+
+      scale_fill_manual(values=colors)+
       labs(y=paste0('Log2FC vs ', plottab.unique$Reference))+
       theme(plot.title = element_text(size=25,hjust = 0.5),
             axis.line.y = element_blank(),
@@ -100,7 +102,7 @@ plotDeseq <- function(dataset=NULL,
                          fill='Contrast', color='white',
                          position = position_dodge(), order=ftorder$Feature)+
       geom_hline(yintercept=0, linetype='solid', color='darkgray', size=1)+
-      scale_fill_manual(values=dataset$colors)+
+      scale_fill_manual(values=colors)+
       labs(y=paste0('Log2FC vs ', plottab.other$Reference))+
       theme(plot.title = element_text(size=25,hjust = 0.5),
             axis.line.y = element_blank(),

@@ -27,6 +27,7 @@ plotRFImp <- function(dataset=NULL,
 
   factor <- setFVar(dataset)
   colors <- dataset$colors
+  colors <- colors[names(colors) %in% factor$subset]
   colors <- c('gray',colors)
   names(colors)[1] <- 'OOB'
   outlines <- c('#32a83c', '#deb42c', '#cc1f08', '#11007d')
@@ -72,13 +73,15 @@ plotRFImp <- function(dataset=NULL,
     fts <- fts[importance$Decision=='Confirmed']
     titletxt <- paste('Significantly Important Features')
     suffix <- paste0(suffix,'_confirmed')
-  }
-  else if(top>3 & top<nrow(importance)) {
+  } else if(top>3 & top<nrow(importance)) {
     fts <- fts[1:top]
     titletxt <- paste('Top',top,'Important Features')
     suffix <- paste0(suffix,'_top_',top)
   } else titletxt <- paste('Random Forest Importance of All Features')
   boruta <- boruta[boruta$Feature %in% fts,]
+
+  outlines <- outlines[names(outlines) %in% as.character(unique(boruta$Decision))]
+  fills <- fills[names(fills) %in% as.character(unique(boruta$Decision))]
 
   p_imp <- ggboxplot(boruta,x='Feature',y='Importance',fill='Decision',color='Decision',size=1)+
     labs(title = titletxt)+
