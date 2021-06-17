@@ -29,15 +29,13 @@ univar <- function(data=NULL,
                    features=NULL, pairwise_comparisons=NULL,
                    param=F,
                    dataset_name=NULL) {
-  if(is.null(data)) {
-    data <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  }
+  if(is.null(data)) data <- get('active_dataset',envir = mvEnv)
 
   # Can analyze either a MicroVis dataset or just a melted table of metadata and counts
   if(inherits(data,'mvdata')) {
-    if(is.null(dataset_name)) dataset_name <- deparse(substitute(data))
     dataset <- data
+    if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+    else dataset_name <- dataset$name
 
     # Set the factor
     factor <- factor[factor %in% names(dataset$factors)]

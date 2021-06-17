@@ -17,12 +17,10 @@
 #'     3) Specific samples removed by the user using removeSamples()
 #'
 runSampleFilter <- function(dataset=NULL, temp=F, silent=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   if(!silent) cat(paste0('\n\n|~~~~~~~~~~~~~  FILTERING SAMPLES  ~~~~~~~~~~~~~~|\n'))
   # Reference variables
@@ -116,12 +114,10 @@ runSampleFilter <- function(dataset=NULL, temp=F, silent=F) {
 #' @export
 #'
 removeLowQuality <- function(dataset=NULL, silent=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   if(!is.null(dataset$data$proc$low_quality)) {
     rthresh <- dataset$data$proc$low_quality$reads_thresh
@@ -193,12 +189,10 @@ removeLowQuality <- function(dataset=NULL, silent=F) {
 #' @export
 #'
 chooseGrps <- function(dataset=NULL, factor_names=NULL) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   # This function alters these variables, so they will need to be passed back to
   #   "dataset" at the end before "dataset" is returned. We use the original
@@ -258,12 +252,10 @@ chooseGrps <- function(dataset=NULL, factor_names=NULL) {
 #' @export
 #'
 removeGrps <- function(dataset=NULL, factor_name=NULL, grps=NULL) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   # This function alters these variables, so they will need to be passed back to
   #   "dataset" at the end before "dataset" is returned. We use the original
@@ -324,12 +316,10 @@ removeGrps <- function(dataset=NULL, factor_name=NULL, grps=NULL) {
 #' @export
 #'
 addGrps <- function(dataset=NULL, factor_name=NULL, grps=NULL) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   # This function alters these variables, so they will need to be passed back to
   #   "dataset" at the end before "dataset" is returned. We use the original
@@ -397,12 +387,10 @@ addGrps <- function(dataset=NULL, factor_name=NULL, grps=NULL) {
 #' @export
 #'
 removeSamples <- function(dataset=NULL, metadata_column=NULL, samples) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   if(is.null(samples)) {
     message('\nERROR: Please enter a sample name (in quotes) or vector of sample names to exclude')
@@ -447,12 +435,10 @@ removeSamples <- function(dataset=NULL, metadata_column=NULL, samples) {
 #' @export
 #'
 addSamples <- function(dataset=NULL,samples) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   if(is.null(samples)) {
     message('\nERROR: Please enter a sample name (in quotes) or vector of sample names to add back')

@@ -14,12 +14,10 @@ plotDeseq <- function(dataset=NULL,
                       rank=NULL,
                       byGroup=T,
                       alpha=0.05) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   factor <- factor[factor %in% names(dataset$factors)]
   if(is.null(factor)) factor <- dataset$active_factor

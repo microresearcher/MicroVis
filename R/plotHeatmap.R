@@ -33,12 +33,10 @@ plotHeatmap <- function(dataset=NULL,
                         scaleCol=1,
                         alpha=0.05,
                         width=6,height=12) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   factor <- dataset$active_factor
   rank <- dataset$data$proc$active_rank

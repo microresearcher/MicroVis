@@ -16,12 +16,10 @@ plotRareCurves <- function(dataset=NULL,
                            panels=TRUE,
                            labelSamples=FALSE,
                            getPlot=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   if(!is.null(dataset$data$proc$normalization)) dataset <- clearNormalization(dataset, temp=T, silent=T)
 

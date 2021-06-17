@@ -7,12 +7,10 @@
 #' @export
 #'
 plotClad <- function(dataset=NULL, factor=NULL) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   on.exit(cat('There is an incompatibility between ggtree and dplyr 1.0.6 as of May 2021'))
 

@@ -6,20 +6,18 @@
 #' @return MicroVis dataset (mvdata object)
 #' @export
 #'
-mvsave <- function(name=NULL) {
+mvsave <- function(name) {
   dataset <- get('active_dataset',envir = mvEnv)
 
-  if(is.null(name)) {
-    dataset$name <- NA
-    return(dataset)
-  }
+  print(dataset)
 
   dataset$name <- name
   name <- str_replace_all(name, '[- +=!@#$%^&*()]', '_')
 
   assign(name, dataset, pos=1)
+  activate(dataset)
 
-  print(dataset)
+  cat('The above dataset was saved to',paste0('"',name,'".'),'Further analysis results will be saved to this dataset as well\n')
 }
 
 #' Clean up a metadata factor column in a merged data table
@@ -92,12 +90,10 @@ cleanGroups <- function(melted_data, factor_name, verbose=T) {
 #' @export
 #'
 getLowestRank <- function(dataset=NULL) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   ds_ranks <- getRanks(dataset)
 
@@ -115,12 +111,10 @@ getLowestRank <- function(dataset=NULL) {
 #' @export
 #'
 getRanks <- function(dataset=NULL) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   if(dataset$features!='taxa') return('functional')
   else if(dataset$features=='merged') return('single_rank')
@@ -140,12 +134,10 @@ getRanks <- function(dataset=NULL) {
 #' @export
 #'
 getFeatures <- function(dataset=NULL,ranks=NULL,allRanks=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   if(allRanks) ranks <- getRanks(dataset)
   else {
@@ -184,12 +176,10 @@ listsigs <- function(dataset=NULL,factor=NULL,
                      alpha=0.05,
                      silent=F,
                      dataset_name=NULL) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else if(is.null(dataset_name)) {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   print(dataset)
 
@@ -252,12 +242,10 @@ listUniques <- function(dataset=NULL,factor=NULL,groups=NULL,
                         alpha=0.05,
                         param=F,
                         dataset_name=NULL) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else if(is.null(dataset_name)) {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   factor <- factor[factor %in% names(dataset$factors)]
   if(is.null(factor)) factor <- dataset$active_factor

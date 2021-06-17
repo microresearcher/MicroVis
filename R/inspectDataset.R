@@ -1,3 +1,13 @@
+#' View the active dataset in RStudio Viewer
+#'
+#' @return NULL
+#' @export
+#'
+viewactive <- function() {
+  active_dataset <- get('active_dataset',envir = mvEnv)
+  View(active_dataset)
+}
+
 #' Get Number of Included Samples in a Dataset
 #'
 #' @param dataset (Optional) MicroVis dataset (mvdata object). If not specified,
@@ -19,9 +29,9 @@
 countSamples <- function(dataset=NULL, factors=NULL, stratifiers=NULL, getSizes=F, min_n=3, verbose=T) {
   if(is.null(dataset)) {
     dataset <- get('active_dataset', envir=mvEnv)
-    dataset_name <- 'active_dataset'
+    dataset_name <- 'the active dataset'
   } else {
-    dataset_name <- deparse(substitute(dataset))
+    dataset_name <- paste0('"',dataset$name,'"')
   }
 
   factors <- factors[factors %in% names(dataset$factors)]
@@ -144,9 +154,9 @@ countSamples.base <- function(metadata,factors,stratifiers=NULL,min_n=3,dataset=
 countFeatures <- function(dataset=NULL) {
   if(is.null(dataset)) {
     dataset <- get('active_dataset', envir=mvEnv)
-    dataset_name <- 'active_dataset'
+    dataset_name <- 'the active dataset'
   } else {
-    dataset_name <- deparse(substitute(dataset))
+    dataset_name <- paste0('"',dataset$name,'"')
   }
 
   rank <- dataset$data$proc$active_rank
@@ -169,9 +179,9 @@ countFeatures <- function(dataset=NULL) {
 getdata <- function(dataset=NULL, rank=NULL, group=NULL, metadata=T) {
   if(is.null(dataset)) {
     dataset <- get('active_dataset', envir=mvEnv)
-    dataset_name <- 'active_dataset'
+    dataset_name <- 'the active dataset'
   } else {
-    dataset_name <- deparse(substitute(dataset))
+    dataset_name <- paste0('"',dataset$name,'"')
   }
   rank <- rank[tolower(rank) %in% tolower(c(get('taxaRanks',envir = mvEnv),'single_rank'))]
   if(is.null(rank)) rank <- dataset$data$proc$active_rank
@@ -196,9 +206,9 @@ getdata <- function(dataset=NULL, rank=NULL, group=NULL, metadata=T) {
 viewtable <- function(dataset=NULL) {
   if(is.null(dataset)) {
     dataset <- get('active_dataset', envir=mvEnv)
-    dataset_name <- 'active_dataset'
+    dataset_name <- 'the active dataset'
   } else {
-    dataset_name <- deparse(substitute(dataset))
+    dataset_name <- paste0('"',dataset$name,'"')
   }
   rank <- dataset$data$proc$active_rank
 
@@ -221,11 +231,12 @@ viewtable <- function(dataset=NULL) {
 #' @export
 #'
 viewstats <- function(dataset=NULL, type=NULL, factor=NULL, rank=NULL) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset', envir=mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else {
+    dataset_name <- dataset$name
+    dataset <- get(dataset$name, pos = 1)
   }
 
   factor <- names(dataset$factors)[tolower(names(dataset$factors)) %in% tolower(factor)]

@@ -12,7 +12,7 @@ changerank <- function(dataset=NULL,rank=NULL) {
     dataset <- get('active_dataset', envir=mvEnv)
     dataset_name <- 'active_dataset'
   } else {
-    dataset_name <- deparse(substitute(dataset))
+    dataset_name <- dataset$name
   }
 
   ranks <- getRanks(dataset)
@@ -43,7 +43,7 @@ poolGroups <- function(dataset=NULL,factor=NULL,include_prefix=T) {
     dataset <- get('active_dataset', envir=mvEnv)
     dataset_name <- 'active_dataset'
   } else {
-    dataset_name <- deparse(substitute(dataset))
+    dataset_name <- dataset$name
   }
 
   if(is.null(factor)) factor <- setFVar(dataset)
@@ -147,6 +147,6 @@ removePool <- function(dataset=NULL) {
     dataset <- get('active_dataset',envir = mvEnv)
     dataset_name <- 'active_dataset'
   } else {
-    dataset_name <- deparse(substitute(dataset))
+    dataset_name <- dataset$name
   }
 }

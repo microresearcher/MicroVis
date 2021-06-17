@@ -83,12 +83,7 @@ bdiv <- function(dataset=NULL, factor=NULL, stratifier=NULL, method='bray', weig
 #' @export
 #'
 mvunifrac <- function(dataset=NULL,weighted=F,normalized=T) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   ps <- makePS(dataset)
 

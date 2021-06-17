@@ -36,15 +36,13 @@ plotFtCor <- function(dataset1=NULL, dataset2=NULL,
                       features1=NULL, features2=NULL,
                       matchFts=F,
                       circles=F) {
-  if(is.null(dataset1)) {
-    dataset1 <- get('active_dataset',envir = mvEnv)
-    dataset1_name <- 'active_dataset'
-  } else {
-    dataset1_name <- deparse(substitute(dataset1))
-  }
+  if(is.null(dataset)) dataset1 <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset1$name)) dataset1_name <- 'active_dataset'
+  else dataset1_name <- dataset1$name
 
   if(!is.null(dataset2)) {
-    dataset2_name <- deparse(substitute(dataset2))
+    dataset2_name <- dataset2$name
     filename <- paste(dataset1_name,dataset2_name,collapse = '_and_')
   } else filename <- dataset1$data$proc$active_rank
 

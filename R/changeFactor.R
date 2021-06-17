@@ -12,7 +12,7 @@ changeFactor <- function(dataset=NULL, factor_name=NULL, temp=F) {
     dataset <- get('active_dataset',envir = mvEnv)
     dataset_name <- 'active_dataset'
   } else {
-    dataset_name <- deparse(substitute(dataset))
+    dataset_name <- dataset$name
   }
 
   factors <- names(dataset$factors)
