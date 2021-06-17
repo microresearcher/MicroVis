@@ -81,7 +81,7 @@ plotDeseq <- function(dataset=NULL,
             legend.key.size = unit(1,'cm'))+
       coord_flip()+
       geom_text(aes(y=0, label=Feature, size=6,
-                    hjust=as.numeric(-plottab.all$label_ynudge/abs(plottab.all$label_ynudge)+1)/2),
+                    hjust=as.numeric(-plottab.unique$label_ynudge/abs(plottab.unique$label_ynudge)+1)/2),
                 nudge_y=plottab.unique$label_ynudge, show.legend = F,
                 check_overlap = T)
 
@@ -113,7 +113,7 @@ plotDeseq <- function(dataset=NULL,
       coord_flip()+
       facet_grid(rows=dplyr::vars(Contrast), scales='free_y', space='free')+
       geom_text(aes(y=0, label=Feature, size=6,
-                    hjust=as.numeric(-plottab.all$label_ynudge/abs(plottab.all$label_ynudge)+1)/2),
+                    hjust=as.numeric(-plottab.other$label_ynudge/abs(plottab.other$label_ynudge)+1)/2),
                 nudge_y=plottab.other$label_ynudge, show.legend = F,
                 check_overlap = T)+
       theme(strip.text=element_text(size=20))
