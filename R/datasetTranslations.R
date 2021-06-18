@@ -142,7 +142,7 @@ makeTaxMap <- function(dataset=NULL,unfiltered=F,ftlist=NULL) {
     abun <- dataset$data$orig
   } else {
     ftlist <- ftlist[ftlist %in% getFeatures(dataset)]
-    if(is.null(ftlist)) ftlist <- getFeatures(dataset)
+    if(is.null(ftlist)) ftlist <- getFeatures(dataset, ranks=lowest_rank)
 
     lowest_rank <- getLowestRank(dataset)
 
