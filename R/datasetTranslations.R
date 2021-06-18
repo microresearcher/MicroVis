@@ -141,10 +141,10 @@ makeTaxMap <- function(dataset=NULL,unfiltered=F,ftlist=NULL) {
     # The original abundance table already has the ASV#'s instead of taxa names
     abun <- dataset$data$orig
   } else {
+    lowest_rank <- getLowestRank(dataset)
+
     ftlist <- ftlist[ftlist %in% getFeatures(dataset)]
     if(is.null(ftlist)) ftlist <- getFeatures(dataset, ranks=lowest_rank)
-
-    lowest_rank <- getLowestRank(dataset)
 
     abun <- dataset$data$proc[[lowest_rank]][ftlist]
     abun$Other <- NULL
