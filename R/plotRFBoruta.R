@@ -108,7 +108,7 @@ plotRFImp <- function(dataset=NULL,
                                         file=file.path(savedirectory,'Importance Values.csv'),
                                         row.names=F)
 
-  active(dataset)
+  activate(dataset)
 
   return(p_imp)
 }
