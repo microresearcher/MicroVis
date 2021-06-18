@@ -48,3 +48,17 @@ posthoctoggle <- function() {
     cat('\nPost-hoc analysis will be performed using either T-test (parametric) or Wilcox (nonparametric) and then corrected for multiple comparisons\n\n')
   }
 }
+
+#' Function for setting whether or not to run Fisher tests to prune filtering
+#'
+#' @param keep Keep features with significant Fisher test if they would have been
+#'     filtered out otherwise? Default is TRUE
+#'
+#' @return NULL
+#' @export
+#'
+keepSigFisher <- function(keep=T) {
+  assign('keepSigFisher',keep,envir = mvEnv)
+  if(keep) cat('\nSignificant features by fisher test between the groups will be kept')
+  else cat('\nFisher test will not be run to retain features with significantly different proportions among groups')
+}
