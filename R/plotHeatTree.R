@@ -76,6 +76,5 @@ plotHeatTree <- function(dataset=NULL,
     }
   }
 
-  cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
-  return(dataset)
+  activate(dataset)
 }

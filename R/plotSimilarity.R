@@ -92,8 +92,7 @@ plotSimilarity <- function(dataset=NULL,
                                 suffix = paste0('_sample-similarity_',
                                                 dist_method,'_',clust_method))
 
-  cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
-  print(dataset)
+  activate(dataset)
 
   return(hm)
 }

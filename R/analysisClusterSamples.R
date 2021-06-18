@@ -70,8 +70,9 @@ clusterSamples <- function(dataset=NULL,
   metadata_clustered <- merge(dataset$metadata, clustered_samples, 'sample')
 
   dataset$metadata <- metadata_clustered
-  if(dataset_name=='active_dataset') assign(dataset_name,dataset,envir = mvEnv)
-  else assign(dataset_name,dataset,1)
+
+  assign('active_dataset',dataset,envir = mvEnv)
+  if(dataset_name!='active_dataset') assign(dataset_name,dataset,1)
 
   return(list(dst=dst,clusters=metadata_clustered,data=melted))
 }

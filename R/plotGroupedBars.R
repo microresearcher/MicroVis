@@ -167,8 +167,7 @@ plotGroupedBars <- function(dataset=NULL,
                                 width = width, height = 10,
                                 suffix = suffix)
 
-  cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
-  print(dataset)
+  activate(dataset)
 
   return(p)
 }

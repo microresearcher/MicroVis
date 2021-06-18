@@ -143,8 +143,7 @@ plotBetaDiv <- function(dataset=NULL,
               width = 10, height = 8,
               suffix = suffix)
 
-  cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
-  print(dataset)
+  activate(dataset)
 
   return(p)
 }

@@ -130,7 +130,5 @@ plotDeseq <- function(dataset=NULL,
                                         file=file.path(savedirectory,'DESeq2 Results.csv'),
                                         row.names=F)
 
-  cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
-
-  return(dataset)
+  activate(dataset)
 }

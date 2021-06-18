@@ -267,6 +267,5 @@ plotUnivar <- function(dataset=NULL,
 
   cat(paste('\n\nSuccessfully plotted:\n',paste(fts,collapse = '\n '),'\n\n'))
 
-  cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
-  return(dataset)
+  activate(dataset)
 }

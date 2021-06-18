@@ -52,8 +52,7 @@ plotClad <- function(dataset=NULL, factor=NULL) {
     cat('\nFigures and any associated statistics saved to:\n ',save_directory)
   }
 
-  cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
-  print(dataset)
+  activate(dataset)
 
   return(clad)
 }

@@ -166,8 +166,7 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
               width = 12, height = 8,
               suffix = paste0(suffix,'_',abundance_type))
 
-  cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
-  print(dataset)
+  activate(dataset)
 
   return(p)
 }

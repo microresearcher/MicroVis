@@ -108,8 +108,7 @@ plotRFImp <- function(dataset=NULL,
                                         file=file.path(savedirectory,'Importance Values.csv'),
                                         row.names=F)
 
-  cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
-  print(dataset)
+  active(dataset)
 
   return(p_imp)
 }
