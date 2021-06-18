@@ -43,8 +43,10 @@ mvdeseq <- function(dataset=NULL,
     comparison <- strsplit(gsub(paste0('.*',factor$name_text,' '),'',res@elementMetadata$description[2]),
                            split = ' vs ')[[1]]
 
-    base_grp <- factor$subset[gsub('[- ;,/]','\\.',factor$subset) %in% comparison[2]]
-    comp_grp <- factor$subset[gsub('[- ;,/]','\\.',factor$subset) %in% comparison[1]]
+    base_grp <- factor$subset[gsub('_',' ',
+                                   gsub('[- ;,/]','\\.',factor$subset)) %in% comparison[2]]
+    comp_grp <- factor$subset[gsub('_',' ',
+                                   gsub('[- ;,/]','\\.',factor$subset)) %in% comparison[1]]
 
     cat('\nAnalyzing ',comp_grp,' vs ',base_grp)
 
