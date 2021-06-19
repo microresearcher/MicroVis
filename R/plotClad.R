@@ -26,7 +26,7 @@ plotClad <- function(dataset=NULL, factor=NULL) {
 
   mm <- dataset$stats[[factor$name]]$lefse
 
-  clad <- plot_cladogram(mm, color = clrlist,
+  clad <- plot_cladogram(mm, color = colors,
                          clade_label_level = 2,
                          annotation_shape = 22,
                          annotation_shape_size = 3,
