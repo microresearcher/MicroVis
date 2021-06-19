@@ -19,9 +19,6 @@
 runSampleFilter <- function(dataset=NULL, temp=F, silent=F) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
-  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
-  else dataset_name <- dataset$name
-
   if(!silent) cat(paste0('\n\n|~~~~~~~~~~~~~  FILTERING SAMPLES  ~~~~~~~~~~~~~~|\n'))
   # Reference variables
   metadata <- dataset$metadata
@@ -116,9 +113,6 @@ runSampleFilter <- function(dataset=NULL, temp=F, silent=F) {
 removeLowQuality <- function(dataset=NULL, silent=F) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
-  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
-  else dataset_name <- dataset$name
-
   if(!is.null(dataset$data$proc$low_quality)) {
     rthresh <- dataset$data$proc$low_quality$reads_thresh
   } else rthresh <- get('rthresh',envir = mvDefaults)
@@ -191,9 +185,6 @@ removeLowQuality <- function(dataset=NULL, silent=F) {
 chooseGrps <- function(dataset=NULL, factor_names=NULL) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
-  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
-  else dataset_name <- dataset$name
-
   # This function alters these variables, so they will need to be passed back to
   #   "dataset" at the end before "dataset" is returned. We use the original
   #   abundance table because other functions permanently remove groups from the
@@ -253,9 +244,6 @@ chooseGrps <- function(dataset=NULL, factor_names=NULL) {
 #'
 removeGrps <- function(dataset=NULL, factor_name=NULL, grps=NULL) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
-
-  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
-  else dataset_name <- dataset$name
 
   # This function alters these variables, so they will need to be passed back to
   #   "dataset" at the end before "dataset" is returned. We use the original
@@ -317,9 +305,6 @@ removeGrps <- function(dataset=NULL, factor_name=NULL, grps=NULL) {
 #'
 addGrps <- function(dataset=NULL, factor_name=NULL, grps=NULL) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
-
-  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
-  else dataset_name <- dataset$name
 
   # This function alters these variables, so they will need to be passed back to
   #   "dataset" at the end before "dataset" is returned. We use the original
@@ -389,9 +374,6 @@ addGrps <- function(dataset=NULL, factor_name=NULL, grps=NULL) {
 removeSamples <- function(dataset=NULL, metadata_column=NULL, samples) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
-  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
-  else dataset_name <- dataset$name
-
   if(is.null(samples)) {
     message('\nERROR: Please enter a sample name (in quotes) or vector of sample names to exclude')
     return(dataset)
@@ -436,9 +418,6 @@ removeSamples <- function(dataset=NULL, metadata_column=NULL, samples) {
 #'
 addSamples <- function(dataset=NULL,samples) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
-
-  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
-  else dataset_name <- dataset$name
 
   if(is.null(samples)) {
     message('\nERROR: Please enter a sample name (in quotes) or vector of sample names to add back')

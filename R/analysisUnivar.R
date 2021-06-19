@@ -34,8 +34,6 @@ univar <- function(data=NULL,
   # Can analyze either a MicroVis dataset or just a melted table of metadata and counts
   if(inherits(data,'mvdata')) {
     dataset <- data
-    if(is.null(dataset$name)) dataset_name <- 'active_dataset'
-    else dataset_name <- dataset$name
 
     # Set the factor
     factor <- factor[factor %in% names(dataset$factors)]
@@ -117,7 +115,7 @@ univar <- function(data=NULL,
     }
 
     assign('active_dataset',dataset,envir = mvEnv)
-    if(dataset_name!='active_dataset') assign(dataset_name,dataset,1)
+    if(!is.null(dataset$name)) assign(dataset$name,dataset,1)
 
     return(dataset)
   }

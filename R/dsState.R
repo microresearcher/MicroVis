@@ -8,25 +8,17 @@
 #' @export
 #'
 changerank <- function(dataset=NULL,rank=NULL) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset', envir=mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- dataset$name
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset', envir=mvEnv)
 
   ranks <- getRanks(dataset)
-  if(length(ranks)==1) {
-    message('\nERROR: Only one rank in this dataset')
-    return(dataset)
-  }
+  if(length(ranks)==1) stop('ERROR: Only one rank in this dataset')
 
   if(!length(ranks[ranks %in% rank])) rank <- select.list(ranks,title='Select a rank',graphics = T)
 
   dataset$data$proc$active_rank <- rank
 
-  assign('active_dataset',dataset,envir = mvEnv)
-  return(dataset)
+  if(!is.null(dataset$name)) assign(dataset$name,dataset,1)
+  activate(dataset)
 }
 
 #' Pool groups of a factor into fewer, larger groups
@@ -39,12 +31,7 @@ changerank <- function(dataset=NULL,rank=NULL) {
 #' @export
 #'
 poolGroups <- function(dataset=NULL,factor=NULL,include_prefix=T) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset', envir=mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- dataset$name
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset', envir=mvEnv)
 
   if(is.null(factor)) factor <- setFVar(dataset)
 
@@ -143,10 +130,5 @@ poolGroups <- function(dataset=NULL,factor=NULL,include_prefix=T) {
 #' @export
 #'
 removePool <- function(dataset=NULL) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- dataset$name
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 }
