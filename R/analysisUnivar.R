@@ -60,7 +60,8 @@ univar <- function(data=NULL,
     anysmallgrps <- checkGroups(dataset=dataset,
                                 factor=factor,
                                 stratifiers=stratifiers,
-                                min_n=3)
+                                min_n=3,
+                                verbose=F)
 
     if(anysmallgrps) stop('All groups or stratified groups must have at least 3 samples for statistical analysis')
     if(is.null(stratifiers)) melted <- mvmelt(dataset, rank=rank)
