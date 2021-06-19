@@ -155,13 +155,11 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
     taxa_names_tab <- ft_data$taxa_names
     active_rank <- ft_data$proc$active_rank
     if(!is.null(filtering$NAfilter$ranks)) {
-      if(!is.null(taxa_names_tab)) {
-        filterNA.ranks <- paste0(paste0(substr(filtering$NAfilter$ranks,1,1),'__'),collapse = '|')
-        filterlist$NAs <- unique(taxa_names_tab[grep('unidentified',
-                                                     taxa_names_tab[[active_rank]]),][[lowest_rank]],
-                                 taxa_names_tab[grep('__',
-                                                     taxa_names_tab[[active_rank]]),][[lowest_rank]])
+      if(!is.null(taxa_names_tab)) for(rank in filtering$NAfilter$ranks) {
+        filterlist$NAs <- unique(taxa_names_tab[grep(paste0('_',rank),
+                                                     taxa_names_tab[[rank]]),][[lowest_rank]])
       }
+
       if(!silent) cat(paste0('\n  Identified ',length(filterlist$NAs),' features without assigned ',paste0(filtering$NAfilter$ranks,collapse = ', ')))
     }
 
