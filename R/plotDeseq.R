@@ -47,10 +47,13 @@ plotDeseq <- function(dataset=NULL,
     } else if(all(vals<0)) {
       0.5
     } else {
-      max_abs <- vals[grep(max(abs(vals)),abs(vals))]
-      max_abs_side <- max_abs/abs(max_abs)
+      max_abs <- vals[abs(vals)==max(abs(vals))]
+      # Put the label on the opposite side of the value with the max absolute value
+      label_side <- -1*max_abs/abs(max_abs)
 
-      max(vals[vals!=max_abs])-max_abs_side*0.5
+      # Get the value of the max value on the opposite side of the value with
+      #   the overall max absolute value
+      label_side*(max(label_side*vals[vals!=max_abs])+.5)
     }
   })
 
@@ -69,7 +72,7 @@ plotDeseq <- function(dataset=NULL,
                            fill='Contrast', color='white',
                            position = position_dodge(), order=ftorder$Feature)+
       geom_hline(yintercept=0, linetype='solid', color='darkgray', size=1)+
-      scale_fill_manual(values=colors)+
+      scale_fill_manual(values=colors[names(colors) %in% as.character(unique(plottab.unique$Contrast))])+
       labs(y=paste0('Log2FC vs ', plottab.unique$Reference))+
       theme(plot.title = element_text(size=25,hjust = 0.5),
             axis.line.y = element_blank(),
@@ -83,7 +86,9 @@ plotDeseq <- function(dataset=NULL,
       geom_text(aes(y=0, label=Feature, size=6,
                     hjust=as.numeric(-plottab.unique$label_ynudge/abs(plottab.unique$label_ynudge)+1)/2),
                 nudge_y=plottab.unique$label_ynudge, show.legend = F,
-                check_overlap = T)
+                check_overlap = T)+
+      facet_grid(rows=vars(Feature),scales = 'free_y',space = 'free')+
+      theme(strip.background = element_blank(),strip.text = element_blank())
 
     show(p_uniques)
     savedirectory <- saveResults(dataset$results_path,foldername = 'DESeq2',
@@ -100,7 +105,7 @@ plotDeseq <- function(dataset=NULL,
                          fill='Contrast', color='white',
                          position = position_dodge(), order=ftorder$Feature)+
       geom_hline(yintercept=0, linetype='solid', color='darkgray', size=1)+
-      scale_fill_manual(values=colors)+
+      scale_fill_manual(values=colors[names(colors) %in% as.character(unique(plottab.other$Contrast))])+
       labs(y=paste0('Log2FC vs ', plottab.other$Reference))+
       theme(plot.title = element_text(size=25,hjust = 0.5),
             axis.line.y = element_blank(),

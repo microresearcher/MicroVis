@@ -14,12 +14,7 @@
 #'     parameters set by the filter___ feature filtering functions
 #'
 runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   if(!is.null(dataset$data$proc$rarefied)) return(dataset)
 
@@ -229,12 +224,7 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
 #' @export
 #'
 clearFeatureFilt <- function(dataset=NULL, temp=F, silent=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   dataset$data$proc$filtering <- NULL
 
@@ -260,12 +250,7 @@ clearFeatureFilt <- function(dataset=NULL, temp=F, silent=F) {
 #' @export
 #'
 filterLowPrev <- function(dataset=NULL, top=NULL, min_prevalence=NULL, silent=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   filtering.defaults <- get('filtering.defaults',envir = mvDefaults)
 
@@ -321,12 +306,7 @@ filterLowPrev <- function(dataset=NULL, top=NULL, min_prevalence=NULL, silent=F)
 #' @export
 #'
 filterLowRelAbun <- function(dataset=NULL, top=NULL, min_relabun=NULL, silent=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   filtering.defaults <- get('filtering.defaults',envir = mvDefaults)
 
@@ -381,12 +361,7 @@ filterLowRelAbun <- function(dataset=NULL, top=NULL, min_relabun=NULL, silent=F)
 #' @export
 #'
 filterLowTotAbun <- function(dataset=NULL, top=NULL, min_totabun=NULL, silent=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   filtering.defaults <- get('filtering.defaults',envir = mvDefaults)
 
@@ -444,12 +419,7 @@ filterLowTotAbun <- function(dataset=NULL, top=NULL, min_totabun=NULL, silent=F)
 #' @export
 #'
 filterLowVar <- function(dataset=NULL, top=NULL, var_type='sd', low_var_percentile=NULL, silent=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   filtering.defaults <- get('filtering.defaults',envir = mvDefaults)
 
@@ -507,12 +477,7 @@ filterLowVar <- function(dataset=NULL, top=NULL, var_type='sd', low_var_percenti
 #' @export
 #'
 filterLowAbun <- function(dataset=NULL, min_abun=NULL, min_proportion=NULL, silent=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   filtering.defaults <- get('filtering.defaults',envir = mvDefaults)
 
@@ -587,12 +552,7 @@ filterLowAbun <- function(dataset=NULL, min_abun=NULL, min_proportion=NULL, sile
 #' @export
 #'
 filterNAs <- function(dataset=NULL, keepNAs=F, ranks=NULL, silent=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   if(dataset$features!='taxa') return(dataset)
 
@@ -670,12 +630,7 @@ findSigFisher <- function(dataset, fts, lowabun_thresh=0, silent=F) {
 #' @export
 #'
 getFtStats <- function(dataset=NULL, rank=NULL) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   # If a pre-filtered, unranked abundance table is not available, run normalization to get one
   if(is.null(dataset$data$proc$unranked)) dataset <- runNormalization(dataset,temp = T,silent = T)
