@@ -5,6 +5,7 @@
 #'
 viewactive <- function() {
   active_dataset <- get('active_dataset',envir = mvEnv)
+  print(active_dataset)
   View(active_dataset)
 }
 
