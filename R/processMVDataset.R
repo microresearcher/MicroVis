@@ -36,6 +36,9 @@ processDataset <- function(dataset, temp=F, silent=F) {
     dataset$name <- NULL
     assign('active_dataset',dataset,envir = mvEnv)
   }
+
+  cat(paste0('\n\n  <|> Active Dataset: "active_dataset" <|>\n'))
+
   return(dataset)
 }
 
@@ -70,7 +73,10 @@ clearProcessing <- function(dataset, clearSampleFilter=F, temp=F, silent=F) {
 #' @export
 #'
 activate <- function(dataset) {
-  cat(paste0('\n\n  <|> Active Dataset: "',dataset$name,'" <|>\n\n'))
+  dataset_name <- dataset$name
+  if(is.null(dataset_name)) dataset_name <- 'active_dataset'
+
+  cat(paste0('\n\n  <|> Active Dataset: "',dataset_name,'" <|>\n\n'))
   print(dataset)
   assign('active_dataset',dataset,envir = mvEnv)
 }

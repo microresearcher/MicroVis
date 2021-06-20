@@ -230,6 +230,45 @@ chooseGrps <- function(dataset=NULL, factor_names=NULL) {
   return(dataset)
 }
 
+#' Select specific samples to analyze
+#'
+#' @param dataset MicroVis dataset. Defaults to the active dataset
+#' @param samples List of samples to analyze
+#' @param includeLowQual Include samples even if they are low quality? Defaults
+#'     to FALSE
+#'
+#' @return Dataset with updated list of samples to ignore
+#' @export
+#'
+chooseSamples <- function(dataset=NULL, samples, includeLowQual=F) {
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  samples <- samples[samples %in% dataset$metadata$sample]
+  if(!length(samples)) stop('None of the specified samples are in the dataset')
+
+  current_samples <- mvmelt(dataset)$sample
+
+  low_quality <- dataset$data$proc$low_quality$low_quality
+  ignored_samples <- dataset$data$proc$ignored_samples
+
+  if(any(samples %in% low_quality)) {
+    if(includeLowQual) low_quality <- low_quality[!(low_quality %in% samples)]
+    else message('\nNote: The following samples are low quality at a reads threshold of ',
+                 dataset$data$proc$low_quality$reads_threshold,' and will not be included:\n',
+                 paste0(samples[samples %in% low_quality], collapse = '\t'),
+                 '\n\nTo include these samples, re-run this function with `includeLowQual=TRUE`\n')
+  }
+
+  ignored_samples <- current_samples[!(current_samples %in% samples)]
+
+  dataset$data$proc$low_quality$low_quality <- low_quality
+  dataset$data$proc$ignored_samples <- ignored_samples
+
+  dataset <- processDataset(dataset)
+
+  return(dataset)
+}
+
 #' Remove Groups
 #'
 #' @param dataset MicroVis dataset (mvdata object)
