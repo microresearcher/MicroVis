@@ -158,7 +158,6 @@ print.mvmerged <- function(x, ...) {
 
   tot_nfeatures <- ncol(x$data$proc[[rank]])
   if('Other' %in% colnames(x$data$proc[[rank]])) tot_nfeatures <- tot_nfeatures - 1
-  else tot_nfeatures <- ncol(x$data$orig)
 
   ds1_nfts <- length(x$data$features[[1]])
   ds2_nfts <- length(x$data$features[[2]])
