@@ -174,7 +174,7 @@ print.mvmerged <- function(x, ...) {
   if(length(n_ignored_samples)) cat(crayon::italic(paste0('(',crayon::yellow$bold(n_ignored_samples),
                                                           ' ignored samples)\n')))
 
-  # Print number of included features and what type (taxa or pathways), as well as total number of features
+  # Print number of total included features as well as the breakdown from each dataset
   cat(paste0(' |   > ',crayon::green$bold(tot_nfeatures), ' features from ',
              paste(crayon::italic(names(x$data$features)),collapse = ' and '),'\n'))
   cat(paste0(' |       * ',crayon::green$bold(ds1_nfts),' from ',
