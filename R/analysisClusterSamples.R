@@ -40,7 +40,7 @@ clusterSamples <- function(dataset=NULL,
 
   allfts <- getFeatures(dataset, ranks=rank)
 
-  dataset_rel <- scaleSamples(clearNormalization(dataset,temp = T,silent = T),
+  dataset_rel <- scaleSamples(clearProcessing(dataset,temp = T,silent = T),
                               scaling = 'relative', temp = T, silent = T)
 
   melted <- mvmelt(dataset_rel, rank=rank)
