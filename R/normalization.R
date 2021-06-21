@@ -508,3 +508,15 @@ normalizeTable <- function(abundance_table,
 
   return(abundance_table)
 }
+
+#' Generalized Log
+#'
+#' @param x Any real number
+#' @param base Log base. Defaults to 10
+#'
+#' @return Generalized log value of the input
+#' @export
+#'
+glog <- function(x, base=10) {
+  return(log((x+sqrt(x^2+4))/2, base=base))
+}
