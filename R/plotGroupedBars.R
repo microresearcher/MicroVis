@@ -42,7 +42,7 @@ plotGroupedBars <- function(dataset=NULL,
 
   metadata <- dataset$metadata
 
-  dataset.rel <- scaleSamples(clearNormalization(dataset, temp=T, silent=T),
+  dataset.rel <- scaleSamples(clearProcessing(dataset, temp=T, silent=T),
                               scaling='relative', temp=T, silent=T)
 
   plottab <- data.frame()
