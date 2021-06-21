@@ -76,7 +76,7 @@ activate <- function(dataset) {
   dataset_name <- dataset$name
   if(is.null(dataset_name)) dataset_name <- 'active_dataset'
 
-  cat(paste0('\n\n  <|> Active Dataset: "',dataset_name,'" <|>\n\n'))
+  cat(paste0('\n\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
   print(dataset)
   assign('active_dataset',dataset,envir = mvEnv)
 }
