@@ -1,9 +1,9 @@
 #' Print function for mvdata (MicroVis dataset) objects
 #'
-#' @param x MicroVis x (mvdata object)
+#' @param x MicroVis dataset (mvdata object)
 #' @param ... Arguments passed to print() function
 #'
-#' @return Print-friendly printout of x details
+#' @return Print-friendly printout of dataset details
 #' @export
 #'
 print.mvdata <- function(x, ...) {
@@ -11,9 +11,12 @@ print.mvdata <- function(x, ...) {
   if(is.null(x$name)) saved <- crayon::red$bold$italic('(Not saved)\n')
   else if(is.na(x$name)) saved <- crayon::italic('(Saved)\n')
   else saved <- crayon::italic('(Saved to',paste0('"',x$name,'")'),'\n')
+
   rank <- x$data$proc$active_rank
+
   if(x$features=='taxa') feature_type <- rank
   else feature_type <- x$features
+
   n_samples <- nrow(x$data$proc[[rank]])
   n_ignored_samples <- length(x$data$proc$ignored_samples)
 
@@ -36,7 +39,7 @@ print.mvdata <- function(x, ...) {
 
   # Now print out the info
   cat('\n~~~\n')
-  cat(paste0(' | ',crayon::bold$underline('MicroVis Dataset:'),saved))
+  cat(paste0(' | ',crayon::bold$underline('MicroVis Dataset:'),' ',saved))
 
   # Print number of included samples (and how many are specifically ignored, if any)
   cat(paste0(' |   > ',crayon::green$bold(n_samples),' samples '))
@@ -128,5 +131,63 @@ print.mvdata <- function(x, ...) {
     }
   }
 
+  cat('~~~\n\n')
+}
+
+#' Print function for mvmerged (merged MicroVis dataset) objects
+#'
+#' @param x Merged MicroVis dataset (mvmerged object)
+#' @param ... Arguments passed to print() function
+#'
+#' @return Print-friendly printout of dataset details
+#' @export
+#'
+print.mvmerged <- function(x, ...) {
+  # Get relevant dataset info
+  if(is.null(x$name)) saved <- crayon::red$bold$italic('(Not saved)\n')
+  else if(is.na(x$name)) saved <- crayon::italic('(Saved)\n')
+  else saved <- crayon::italic('(Saved to',paste0('"',x$name,'")'),'\n')
+
+  rank <- x$data$proc$active_rank
+
+  if(x$features=='taxa') feature_type <- rank
+  else feature_type <- x$features
+
+  n_samples <- nrow(x$data$proc[[rank]])
+  n_ignored_samples <- length(x$data$proc$ignored_samples)
+
+  tot_nfeatures <- ncol(x$data$proc[[rank]])
+  if('Other' %in% colnames(x$data$proc[[rank]])) tot_nfeatures <- tot_nfeatures - 1
+  else tot_nfeatures <- ncol(x$data$orig)
+
+  ds1_nfts <- length(x$data$features[[1]])
+  ds2_nfts <- length(x$data$features[[2]])
+
+  factors <- x$factors
+  active_factor <- x$active_factor
+
+  # Now print out the info
+  cat('\n~~~\n')
+  cat(paste0(' | ',crayon::bold$underline('Merged MicroVis Dataset:'),' ',saved))
+
+  # Print number of included samples (and how many are specifically ignored, if any)
+  cat(paste0(' |   > ',crayon::green$bold(n_samples),' samples '))
+  if(length(n_ignored_samples)) cat(crayon::italic(paste0('(',crayon::yellow$bold(n_ignored_samples),
+                                                          ' ignored samples)\n')))
+
+  # Print number of included features and what type (taxa or pathways), as well as total number of features
+  cat(paste0(' |   > ',crayon::green$bold(tot_nfeatures), ' from ',
+             paste(crayon::italic(names(x$data$features)),collapse = ' and '),'\n'))
+  cat(paste0(' |       * ',crayon::green$bold(ds1_nfts),' from ',names(x$data$features)[[1]],'\n'))
+  cat(paste0(' |       * ',crayon::green$bold(ds2_nfts),' from ',names(x$data$features)[[2]],'\n'))
+
+  # Print all the independent variables (factors)
+  cat(paste0(' |   > ',length(factors),' independent variable(s):\n'))
+  for(f in factors) {
+    if(f$name==active_factor) bullet <- '-> '
+    else bullet <- ' * '
+    cat(paste0(' |      ',bullet,f$name,' with ',crayon::green$bold(length(f$subset)),
+               ' out of ',crayon::cyan$bold(length(f$groups)),' groups\n'))
+  }
   cat('~~~\n\n')
 }
