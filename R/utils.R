@@ -17,7 +17,7 @@ mvsave <- function(name) {
   assign(name, dataset, pos=1)
   activate(dataset)
 
-  cat('The above dataset was saved to',paste0('"',name,'".'),'Further analysis results will be saved to this dataset as well\n')
+  cat('The above dataset was saved to',paste0('"',name,'".'),'Further analysis results will be saved to this dataset as well\n\n')
 }
 
 #' Clean up a metadata factor column in a merged data table
