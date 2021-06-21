@@ -177,8 +177,10 @@ print.mvmerged <- function(x, ...) {
   # Print number of included features and what type (taxa or pathways), as well as total number of features
   cat(paste0(' |   > ',crayon::green$bold(tot_nfeatures), ' features from ',
              paste(crayon::italic(names(x$data$features)),collapse = ' and '),'\n'))
-  cat(paste0(' |       * ',crayon::green$bold(ds1_nfts),' from ',names(x$data$features)[[1]],'\n'))
-  cat(paste0(' |       * ',crayon::green$bold(ds2_nfts),' from ',names(x$data$features)[[2]],'\n'))
+  cat(paste0(' |       * ',crayon::green$bold(ds1_nfts),' from ',
+             crayon::italic(names(x$data$features)[[1]]),'\n'))
+  cat(paste0(' |       * ',crayon::green$bold(ds2_nfts),' from ',
+             crayon::italic(names(x$data$features)[[2]]),'\n'))
 
   # Print all the independent variables (factors)
   cat(paste0(' |   > ',length(factors),' independent variable(s):\n'))
