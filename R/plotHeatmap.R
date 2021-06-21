@@ -82,10 +82,10 @@ plotHeatmap <- function(dataset=NULL,
   # Melt the data to ensure only the samples we are analyzing are in the metadata
   #   and abundance table
   if(!is.null(stratifier)) {
-    melted <- data.frame(mvstratify(scaleFeatures(clearNormalization(dataset,temp = T,silent = T),
+    melted <- data.frame(mvstratify(scaleFeatures(clearProcessing(dataset,temp = T,silent = T),
                                                   scaling = 'relative',temp = T,silent = T)))
   } else {
-    melted <- mvmelt(scaleFeatures(clearNormalization(dataset,temp = T,silent = T),
+    melted <- mvmelt(scaleFeatures(clearProcessing(dataset,temp = T,silent = T),
                                    scaling = 'relative',temp = T,silent = T))
   }
 
