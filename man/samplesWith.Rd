@@ -4,18 +4,18 @@
 \alias{samplesWith}
 \title{Filter a datatable to only samples with certain metadata characteristics}
 \usage{
-samplesWith(data, id_cols, with_cols)
+samplesWith(data, id_cols, complete = NULL, filter = NULL)
 }
 \arguments{
 \item{data}{Data table with metadata}
 
 \item{id_cols}{Vector of names of columns that uniquely identify subjects}
 
-\item{with_cols}{Vector of names of columns that each subject must have all of}
+\item{filter}{(Optional) Vector of names of columns that each subject must have all of}
 }
 \value{
-Data table with just the samples identifiedy by "id_cols" that have
-    all the values in with_cols
+Data table with just the samples identified by "id_cols" that have
+    all the values in filter
 }
 \description{
 Filter a datatable to only samples with certain metadata characteristics

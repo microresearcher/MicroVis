@@ -4,18 +4,18 @@
 \alias{getSamples}
 \title{Get samples with certain metadata characteristics from a dataset}
 \usage{
-getSamples(dataset = NULL, id_cols = NULL, with_cols = NULL)
+getSamples(dataset = NULL, id_cols = NULL, complete = NULL, filter = NULL)
 }
 \arguments{
 \item{id_cols}{Vector of names of metadata columns that uniquely identify subjects}
 
-\item{with_cols}{Vector of names of metadata columns that each subject must have all of}
+\item{filter}{Vector of names of metadata columns that each subject must have all of}
 
 \item{data}{MicroVis dataset. Defaults to the active dataset}
 }
 \value{
 Data table with just the samples identifiedy by "id_cols" that have
-    all the values in with_cols
+    all the values in filter
 }
 \description{
 Get samples with certain metadata characteristics from a dataset
