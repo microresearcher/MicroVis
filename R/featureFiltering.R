@@ -276,6 +276,11 @@ clearFeatureFilt <- function(dataset=NULL, temp=F, silent=F) {
 filterLowPrev <- function(dataset=NULL, top=NULL, min_prevalence=NULL, silent=F) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
+  if(length(dataset$data$proc$selected)) {
+    message('\nRemoving selected feature list')
+    dataset$data$proc$selected <- NULL
+  }
+
   filtering.defaults <- get('filtering.defaults',envir = mvDefaults)
 
   dataset$data$proc$rarefied <- NULL
@@ -332,6 +337,11 @@ filterLowPrev <- function(dataset=NULL, top=NULL, min_prevalence=NULL, silent=F)
 filterLowRelAbun <- function(dataset=NULL, top=NULL, min_relabun=NULL, silent=F) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
+  if(length(dataset$data$proc$selected)) {
+    message('\nRemoving selected feature list')
+    dataset$data$proc$selected <- NULL
+  }
+
   filtering.defaults <- get('filtering.defaults',envir = mvDefaults)
 
   dataset$data$proc$rarefied <- NULL
@@ -386,6 +396,11 @@ filterLowRelAbun <- function(dataset=NULL, top=NULL, min_relabun=NULL, silent=F)
 #'
 filterLowTotAbun <- function(dataset=NULL, top=NULL, min_totabun=NULL, silent=F) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(length(dataset$data$proc$selected)) {
+    message('\nRemoving selected feature list')
+    dataset$data$proc$selected <- NULL
+  }
 
   filtering.defaults <- get('filtering.defaults',envir = mvDefaults)
 
@@ -445,6 +460,11 @@ filterLowTotAbun <- function(dataset=NULL, top=NULL, min_totabun=NULL, silent=F)
 filterLowVar <- function(dataset=NULL, top=NULL, var_type='sd', low_var_percentile=NULL, silent=F) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
+  if(length(dataset$data$proc$selected)) {
+    message('\nRemoving selected feature list')
+    dataset$data$proc$selected <- NULL
+  }
+
   filtering.defaults <- get('filtering.defaults',envir = mvDefaults)
 
   dataset$data$proc$rarefied <- NULL
@@ -502,6 +522,11 @@ filterLowVar <- function(dataset=NULL, top=NULL, var_type='sd', low_var_percenti
 #'
 filterLowAbun <- function(dataset=NULL, min_abun=NULL, min_proportion=NULL, silent=F) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(length(dataset$data$proc$selected)) {
+    message('\nRemoving selected feature list')
+    dataset$data$proc$selected <- NULL
+  }
 
   filtering.defaults <- get('filtering.defaults',envir = mvDefaults)
 
@@ -578,6 +603,11 @@ filterLowAbun <- function(dataset=NULL, min_abun=NULL, min_proportion=NULL, sile
 filterNAs <- function(dataset=NULL, keepNAs=F, ranks=NULL, silent=F) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
+  if(length(dataset$data$proc$selected)) {
+    message('\nRemoving selected feature list')
+    dataset$data$proc$selected <- NULL
+  }
+
   if(dataset$features!='taxa') return(dataset)
 
   if(keepNAs) dataset$data$proc$filtering$NAfilter$ranks <- NULL
@@ -634,6 +664,27 @@ selectFeatures <- function(dataset=NULL, features, temp=F, silent=F) {
   } else selected <- list('functional'=features)
 
   dataset$data$proc$selected <- selected
+
+  dataset <- processDataset(dataset, temp=temp, silent=silent)
+
+  return(dataset)
+}
+
+#' Undo Feature Selection
+#'
+#' @param dataset MicroVis dataset. Defaults to the active dataset
+#' @param temp This parameter has no use in this function and can be removed
+#' @param silent Argument that is ultimately passed onto runSampleFilter(),
+#'     runNormalization(), and runFeatureFilter(), telling them not to output
+#'     any messages.
+#'
+#' @return MicroVis dataset with the selected feature list cleared
+#' @export
+#'
+unselectFeatures <- function(dataset=NULL, temp=F, silent=F) {
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  dataset$data$proc$selected <- NULL
 
   dataset <- processDataset(dataset, temp=temp, silent=silent)
 

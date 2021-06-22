@@ -84,7 +84,7 @@ print.mvdata <- function(x, ...) {
   }
 
   # Print the filtering parameters
-  if(length(filtering)>1) {
+  if(length(filtering[!(names(filtering) %in% 'filterlist')])) {
     cat(paste0(' |   > Filtering (by ',filter_rank,'): \n'))
     for(filt in names(filtering)) {
       if(filt=='min_prevalence') {
