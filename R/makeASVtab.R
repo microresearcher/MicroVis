@@ -151,40 +151,44 @@ combineDupeASVs <- function(taxa_data_list,combineDupes=T) {
     }
   }
 
-  # Check for any duplicates within each rank
-  ranks <- colnames(taxa_names_tab)
-  for(rank in ranks[2:length(ranks)]) {
-    dupes <- taxa_names_tab[rank][duplicated(taxa_names_tab[rank]),]
-    for(dupe in unique(dupes)) {
-      parents <- apply(data.frame(taxa_names_tab[taxa_names_tab[[rank]]==dupe,seq(grep(rank,ranks)-1)]),
-                       1,paste0,collapse=';')
-      if(length(unique(parents))==1) dupes <- dupes[dupes!=dupe]
-    }
+  if(ncol(taxa_names_tab)>1) {
+    # Check for any duplicates within each rank
+    ranks <- colnames(taxa_names_tab)
+    for(rank in ranks[2:length(ranks)]) {
+      dupes <- taxa_names_tab[rank][duplicated(taxa_names_tab[rank]),]
+      for(dupe in unique(dupes)) {
+        parents <- apply(data.frame(taxa_names_tab[taxa_names_tab[[rank]]==dupe,
+                                                   seq(grep(rank,ranks)-1)]),
+                         1,paste0,collapse=';')
+        if(length(unique(parents))==1) dupes <- dupes[dupes!=dupe]
+      }
 
-    if(length(dupes)) {
-      # Identify the next lowest rank that uniquely identifies these taxa
-      prepend_ranks <- sapply(unique(dupes),
-                              function(dupe) {
-                                tab <- unique(taxa_names_tab[taxa_names_tab[[rank]] %in% dupe,seq(grep(rank,ranks))])
-                                max(sapply(rev(seq(grep(rank,ranks)-1)), function(higher_rank) {
-                                  ifelse(length(tab[[higher_rank]])==length(unique(tab[[higher_rank]])),
-                                         higher_rank, 0)
-                                }))
-                              })
+      if(length(dupes)) {
+        # Identify the next lowest rank that uniquely identifies these taxa
+        prepend_ranks <- sapply(unique(dupes),
+                                function(dupe) {
+                                  tab <- unique(taxa_names_tab[taxa_names_tab[[rank]] %in% dupe,
+                                                               seq(grep(rank,ranks))])
+                                  max(sapply(rev(seq(grep(rank,ranks)-1)), function(higher_rank) {
+                                    ifelse(length(tab[[higher_rank]])==length(unique(tab[[higher_rank]])),
+                                           higher_rank, 0)
+                                  }))
+                                })
 
-      taxa_names_tab <- apply(taxa_names_tab, 1, function(asv) {
-        if(asv[[rank]] %in% dupes) {
-          prepend_rank <- prepend_ranks[[asv[[rank]]]]
+        taxa_names_tab <- apply(taxa_names_tab, 1, function(asv) {
+          if(asv[[rank]] %in% dupes) {
+            prepend_rank <- prepend_ranks[[asv[[rank]]]]
 
-          if(!grepl('^[dkpcofg]_',asv[[prepend_rank]])) {
-            prepend <- paste0(substr(ranks[prepend_rank],1,1),'_',asv[[prepend_rank]])
-          } else prepend <- asv[[prepend_rank]]
+            if(!grepl('^[dkpcofg]_',asv[[prepend_rank]])) {
+              prepend <- paste0(substr(ranks[prepend_rank],1,1),'_',asv[[prepend_rank]])
+            } else prepend <- asv[[prepend_rank]]
 
-          asv[rank] <- paste0(prepend,'_',gsub('[dkpcofg]_.*_','',asv[[rank]]))
-        }
-        return(asv)
-      })
-      taxa_names_tab <- data.frame(t(taxa_names_tab))
+            asv[rank] <- paste0(prepend,'_',gsub('[dkpcofg]_.*_','',asv[[rank]]))
+          }
+          return(asv)
+        })
+        taxa_names_tab <- data.frame(t(taxa_names_tab))
+      }
     }
   }
 

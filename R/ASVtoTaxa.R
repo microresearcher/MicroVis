@@ -47,7 +47,7 @@ TaxatoASV <- function(taxa_data, taxalist, taxa_rank=NULL) {
 
   for(i in 1:length(taxalist)) if(startsWith(taxalist[i],'X') & is.numeric(type.convert(substr(taxalist[i],2,2)))) taxalist[i] <- sub('X','',taxalist[i])
 
-  if(ncol(taxa_names_tab)==1) asvs <- rownames(taxa_names_tab)[taxa_names_tab[[taxa_rank]] %in% taxalist]
+  if(ncol(taxa_names_tab)==1) asvs <- rownames(taxa_names_tab)[taxa_names_tab %in% taxalist]
   else asvs <- rownames(taxa_names_tab)[taxa_names_tab[[taxa_rank]] %in% taxalist]
 
   if(length(asvs)!=length(taxalist)) {

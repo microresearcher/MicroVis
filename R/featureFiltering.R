@@ -20,18 +20,16 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
 
   if(is.null(dataset$data$proc$unranked)) dataset <- runNormalization(dataset, silent = T)
 
-  if(is.null(dataset$data$proc$filtering$filter_rank)) {
-    dataset$data$proc$filtering$filter_rank <- getLowestRank(dataset)
-  }
+  if(is.null(dataset$data$proc$filter_rank)) dataset$data$proc$filter_rank <- getLowestRank(dataset)
 
   filtering <- dataset$data$proc$filtering
 
   # If there is something in the dataset's filtering history besides
   #   "filterlist" and "ftstats", proceed with filtering
-  if(length(names(filtering)[!(names(filtering) %in% c('filterlist','ftstats','filter_rank'))])) {
+  if(length(names(filtering)[!(names(filtering) %in% c('filterlist','ftstats'))])) {
     if(!silent) cat('\n\n|~~~~~~~~~~~~~  FILTERING FEATURES  ~~~~~~~~~~~~~|\n')
 
-    filter_rank <- filtering$filter_rank
+    filter_rank <- dataset$data$proc$filter_rank
 
     ft_data <- getFtStats(dataset)
     abd_temp <- ft_data$proc$unranked
@@ -155,12 +153,14 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
     taxa_names_tab <- ft_data$taxa_names
     active_rank <- ft_data$proc$active_rank
     if(!is.null(filtering$NAfilter$ranks)) {
-      if(!is.null(taxa_names_tab)) for(rank in filtering$NAfilter$ranks) {
-        filterlist$NAs <- unique(taxa_names_tab[grep(paste0('_',rank),
-                                                     taxa_names_tab[[rank]]),][[lowest_rank]])
+      if(!is.null(taxa_names_tab)) if(ncol(taxa_names_tab)>1) for(rank in filtering$NAfilter$ranks) {
+          filterlist$NAs <- unique(taxa_names_tab[grep(paste0('_',rank),
+                                                       taxa_names_tab[[rank]]),][[lowest_rank]])
       }
 
-      if(!silent) cat(paste0('\n  Identified ',length(filterlist$NAs),' features without assigned ',paste0(filtering$NAfilter$ranks,collapse = ', ')))
+      if(!silent) cat(paste0('\n  Identified ',
+                             length(filterlist$NAs),' features without assigned ',
+                             paste0(filtering$NAfilter$ranks,collapse = ', ')))
     }
 
     # Reload the normalized ft_data and abundance table
@@ -190,6 +190,9 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
     num_removed <- ncol(abd_temp) - ncol(abd_filtered) + any(colnames(abd_filtered) %in% 'Other')
 
     if(!silent) cat('\n\n>>> Removed',num_removed,'features based on filtering parameters <<<\n')
+  } else if(length(dataset$data$proc$selected)) {
+    selected <- dataset$data$proc$selected
+    if(is.null(names(selected))) s
   } else {
     ft_data <- dataset$data
     if(!silent) cat('\n~~~ No feature filtering performed ~~~\n')
@@ -596,7 +599,7 @@ findSigFisher <- function(dataset, fts, lowabun_thresh=0, silent=F) {
 
   if(dataset$features=='taxa') {
     abun <- agglomTaxa(dataset$data, abun, from_rank = 'asv',
-                       to_rank=dataset$data$proc$filtering$filter_rank)
+                       to_rank=dataset$data$proc$filter_rank)
   }
   active_factor <- dataset$active_factor
 
@@ -633,7 +636,7 @@ getFtStats <- function(dataset=NULL, rank=NULL) {
   # If a pre-filtered, unranked abundance table is not available, run normalization to get one
   if(is.null(dataset$data$proc$unranked)) dataset <- runNormalization(dataset,temp = T,silent = T)
 
-  if(is.null(rank)) rank <- dataset$data$proc$filtering$filter_rank
+  if(is.null(rank)) rank <- dataset$data$proc$filter_rank
 
   ft_data <- dataset$data
   abd <- ft_data$proc$unranked
