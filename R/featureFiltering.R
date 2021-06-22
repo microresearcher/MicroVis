@@ -191,8 +191,31 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
 
     if(!silent) cat('\n\n>>> Removed',num_removed,'features based on filtering parameters <<<\n')
   } else if(length(dataset$data$proc$selected)) {
-    selected <- dataset$data$proc$selected
-    if(is.null(names(selected))) s
+    ft_data <- dataset$data
+    abd_temp <- ft_data$proc$unranked
+    selected <- ft_data$proc$selected
+
+    if(dataset$features=='taxa') {
+      if(is.null(names(selected))) selected.ids <- TaxatoASV(dataset$data, selected, 'single_rank')
+      else selected.ids <- unique(unlist(lapply(getRanks(dataset),
+                                                function(rank) {
+                                                  if(length(selected[[rank]])) {
+                                                    TaxatoASV(dataset$data,
+                                                              selected[[rank]],
+                                                              rank)
+                                                  }
+                                                })))
+    } else selected.ids <- unique(unlist(selected))
+
+    abd_selected <- abd_temp[selected.ids]
+    # Now, pool all the filter list features into 'Other' and add it to the table
+    abd_selected$Other <- rowSums(abd_temp[!(colnames(abd_temp) %in% selected.ids)])
+
+    ft_data$proc$unranked <- abd_selected
+
+    num_selected <- length(selected.ids)
+
+    if(!silent) cat('\n\n>>> Selected',num_selected,'features in total <<<\n')
   } else {
     ft_data <- dataset$data
     if(!silent) cat('\n~~~ No feature filtering performed ~~~\n')
@@ -570,6 +593,49 @@ filterNAs <- function(dataset=NULL, keepNAs=F, ranks=NULL, silent=F) {
   }
 
   if(!get('.loading',envir = mvEnv)) dataset <- processDataset(dataset, silent=silent)
+
+  return(dataset)
+}
+
+#' Select Specific Features
+#'
+#' @param dataset MicroVis dataset. Defaults to the active dataset
+#' @param features Vector of features (at any rank) to select
+#' @param temp This parameter has no use in this function and can be removed
+#' @param silent Argument that is ultimately passed onto runSampleFilter(),
+#'     runNormalization(), and runFeatureFilter(), telling them not to output
+#'     any messages.
+#'
+#' @return Dataset with list of selected features that is passed to runFeatureFilter
+#' @export
+#'
+selectFeatures <- function(dataset=NULL, features, temp=F, silent=F) {
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(length(names(dataset$data$proc$filtering)[!(names(dataset$data$proc$filtering)
+                                                 %in% c('filterlist','ftstats'))])) {
+    removefilts <- ifelse(select.list(c('Yes','No'),
+                                      title='\nSelecting specific features will undo any filtering. Continue?')=='Yes',yes = T, no = T)
+    if(removefilts) dataset$data$proc$filtering <- NULL
+    else stop('Cannot select specific features from a dataset that has been filtered')
+  }
+
+  if(dataset$features=='taxa') alltaxa <- unique(unname(unlist(dataset$data$taxa_names)))
+  else alltaxa <- colnames(dataset$data$orig)
+
+  features <- unique(alltaxa[tolower(alltaxa) %in% tolower(features)])
+  if(!length(features)) stop('None of the features were found in "',dataset$name,'"')
+
+  if(dataset$features=='taxa') {
+    ft_names <- dataset$data$taxa_names
+    if(ncol(ft_names)>1) selected <- sapply(getRanks(dataset),
+                                            function(rank) features[features %in% ft_names[[rank]]])
+    else selected <- list('single_rank'=features)
+  } else selected <- list('functional'=features)
+
+  dataset$data$proc$selected <- selected
+
+  dataset <- processDataset(dataset, temp=temp, silent=silent)
 
   return(dataset)
 }

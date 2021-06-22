@@ -7,12 +7,12 @@
 \method{print}{mvdata}(x, ...)
 }
 \arguments{
-\item{x}{MicroVis x (mvdata object)}
+\item{x}{MicroVis dataset (mvdata object)}
 
 \item{...}{Arguments passed to print() function}
 }
 \value{
-Print-friendly printout of x details
+Print-friendly printout of dataset details
 }
 \description{
 Print function for mvdata (MicroVis dataset) objects
