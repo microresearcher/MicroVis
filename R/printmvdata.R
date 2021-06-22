@@ -33,7 +33,7 @@ print.mvdata <- function(x, ...) {
   rarefied <- x$data$proc$rarefied
 
   filtering <- x$data$proc$filtering[!(names(x$data$proc$filtering) %in% c('filterlist','ftstats'))]
-  filter_rank <- x$data$proc$filtering$filter_rank
+  filter_rank <- x$data$proc$filter_rank
 
   normalization <- x$data$proc$normalization
 
