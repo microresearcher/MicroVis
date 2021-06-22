@@ -644,8 +644,9 @@ selectFeatures <- function(dataset=NULL, features, temp=F, silent=F) {
 
   if(length(names(dataset$data$proc$filtering)[!(names(dataset$data$proc$filtering)
                                                  %in% c('filterlist','ftstats'))])) {
-    removefilts <- ifelse(select.list(c('Yes','No'),
-                                      title='\nSelecting specific features will undo any filtering. Continue?')=='Yes',yes = T, no = T)
+    if(temp) removefilts <- T
+    else removefilts <- ifelse(select.list(c('Yes','No'), title='\nSelecting specific features will undo any filtering. Continue?')=='Yes', yes = T, no = T)
+
     if(removefilts) dataset$data$proc$filtering <- NULL
     else stop('Cannot select specific features from a dataset that has been filtered')
   }

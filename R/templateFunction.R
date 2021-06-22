@@ -6,7 +6,13 @@ templateFunction <- function(dataset=NULL) {
 
   ### Your code here
 
-  # If this is a plotting function or analysis function, it is recommended
+  # If this is a plotting function, it is recommended
   #   to activate the dataset (uncomment the line below)
   #activate(dataset)
+
+  # If this is an analysis function that takes a while, it is recommended to
+  #   store the results in the dataset and rewrite the dataset in the global
+  #   and MicroVis environments (uncomment the lines below)
+  #assign('active_dataset',dataset,envir = mvEnv)
+  #if(!is.null(dataset$name)) assign(dataset$name,dataset,1)
 }
