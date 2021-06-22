@@ -1,3 +1,6 @@
+#### Template Function ####
+# This function is for other developers or those who fork the MicroVis repo.
+#    Feel free to use this as a basis for any functions you make!
 templateFunction <- function(dataset=NULL) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
