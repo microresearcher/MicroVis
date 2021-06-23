@@ -11,12 +11,7 @@
 #' @export
 #'
 checkGroups <- function(dataset=NULL,factor=NULL,stratifiers=NULL,min_n=3,verbose=T) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   factor <- factor[factor %in% names(dataset$factors)]
   if(is.null(factor)) factor <- dataset$active_factor
@@ -41,7 +36,7 @@ checkGroups <- function(dataset=NULL,factor=NULL,stratifiers=NULL,min_n=3,verbos
       }
     }
   }
-  cat('\n')
+  if(verbose) cat('\n')
 
   return(anysmallgrps)
 }

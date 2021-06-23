@@ -27,20 +27,14 @@ plotAlphaDiv <- function(dataset=NULL,
                          param=FALSE,
                          showStats=TRUE,
                          add_xaxis=F, separateLegend=F) {
-  # if(is.null(dataset)) {
-  #   dataset <- get('active_dataset',envir = mvEnv)
-  #   dataset_name <- 'active_dataset'
-  # } else {
-  #   dataset_name <- deparse(substitute(dataset))
-  # }
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   if(is.null(dataset$name)) dataset_name <- 'active_dataset'
-  else if(is.na(dataset$name)) dataset_name <- deparse(substitute(dataset))
   else dataset_name <- dataset$name
 
-  colors <- dataset$colors
   factor <- setFVar(dataset)
+  colors <- dataset$colors
+  colors <- colors[names(colors) %in% factor$subset]
 
   # Calculate alpha diversity
   div_tab <- adiv(dataset,method=method)
@@ -134,7 +128,6 @@ plotAlphaDiv <- function(dataset=NULL,
               width = 8, height = 6,
               suffix = paste0('_adiv_',method))
 
-  cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
-  print(dataset)
+  activate(dataset)
   return(p)
 }

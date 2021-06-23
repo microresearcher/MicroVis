@@ -13,6 +13,7 @@
 #' @param flattenFactors Whether to combine factors. Defaults to FALSE
 #' @param facet.x (Optional) Factor to stratify horizontally
 #' @param facet.y (Optional) Factor to stratify vertically
+#' @param width Width of the saved figure (in inches). Defaults to 12 inches
 #' @param alpha Significance threshold. Defaults to 0.05
 #' @param param Whether to perform parametrized or nonparametrized univariate
 #'     analysis. Defaults to FALSE (nonparametrized)
@@ -30,19 +31,18 @@ plotGroupedBars <- function(dataset=NULL,
                             width=12,
                             alpha=0.05, param=F,
                             byrank=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   factor <- dataset$active_factor
-  clrs <- dataset$colors
+  colors <- dataset$colors
+  colors <- colors[names(colors) %in% dataset$factors[[factor]]$subset]
 
   metadata <- dataset$metadata
 
-  dataset.rel <- scaleSamples(clearNormalization(dataset, temp=T, silent=T),
+  dataset.rel <- scaleSamples(clearProcessing(dataset, temp=T, silent=T),
                               scaling='relative', temp=T, silent=T)
 
   plottab <- data.frame()
@@ -56,12 +56,12 @@ plotGroupedBars <- function(dataset=NULL,
     rankfts <- getFeatures(dataset, ranks=rank)
 
     if(plotSigs) {
-      if(is.null(dataset$stats[[factor]][[rank]]$univar)) dataset <- univar(dataset=dataset,
+      if(is.null(dataset$stats[[factor]]$univar[[rank]])) dataset <- univar(data=dataset,
                                                                             rank=rank,
                                                                             param=param,
                                                                             dataset_name = dataset_name)
 
-      stats <- dataset$stats[[factor]][[rank]]$univar
+      stats <- dataset$stats[[factor]]$univar[[rank]]
 
       sigfts <- c(stats$stats$.y.[stats$stats$p.adj <= alpha])
       skipped_list[[rank]] <- stats$skipped
@@ -69,25 +69,19 @@ plotGroupedBars <- function(dataset=NULL,
       fts <- unique(c(sigfts,addfts[addfts %in% rankfts]))
 
       if(length(stats$stats)) {
-        if(!length(stats_allranks$stats)) {
-          stats_allranks$stats <- cbind(data.frame(Rank=rep(rank,nrow(stats$stats))),
-                                        stats$stats)
-        } else {
-          stats_allranks$stats <- rbind(stats_allranks$stats,
-                                        cbind(data.frame(Rank=rep(rank,nrow(stats$stats))),
-                                              stats$stats))
-        }
+        temp <- cbind(data.frame(Rank=rep(rank,nrow(stats$stats))),
+                      stats$stats)
+
+        if(!length(stats_allranks$stats)) stats_allranks$stats <- temp
+        else stats_allranks$stats <- rbind(stats_allranks$stats, temp)
       }
 
       if(length(stats$pw_stats)) {
-        if(!length(stats_allranks$pw_stats)) {
-          stats_allranks$pw_stats <- cbind(data.frame(Rank=rep(rank,nrow(stats$pw_stats))),
-                                           stats$pw_stats)
-        } else {
-          stats_allranks$pw_stats <- rbind(stats_allranks$pw_stats,
-                                           cbind(data.frame(Rank=rep(rank,nrow(stats$pw_stats))),
-                                                 stats$pw_stats))
-        }
+        temp <- cbind(data.frame(Rank=rep(rank,nrow(stats$pw_stats))),
+                      stats$pw_stats)
+
+        if(!length(stats_allranks$pw_stats)) stats_allranks$pw_stats <- temp
+        else stats_allranks$pw_stats <- rbind(stats_allranks$pw_stats, temp)
       }
 
     } else {
@@ -99,7 +93,6 @@ plotGroupedBars <- function(dataset=NULL,
     if(length(fts)) {
       # If any significant fts were found at this taxonomy rank, add them to the table
       abd.rel <- mvmelt(dataset.rel, rank=rank, features=fts)
-
 
       abd_bygroup <- split(abd.rel,abd.rel[[factor]])
       for(grp in abd_bygroup) {
@@ -142,7 +135,7 @@ plotGroupedBars <- function(dataset=NULL,
     theme(axis.text.x = element_text(size = 12, angle = 45, hjust=1))+
     labs(y='Mean Relative Abundance')+
     scale_y_continuous(trans='sqrt',breaks=scales::pretty_breaks(n=6))+
-    scale_fill_manual(values=clrs)
+    scale_fill_manual(values=colors)
 
   p <- p+theme(axis.title = element_text(size=25),
                axis.text = element_text(size=20),
@@ -174,8 +167,7 @@ plotGroupedBars <- function(dataset=NULL,
                                 width = width, height = 10,
                                 suffix = suffix)
 
-  cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
-  print(dataset)
+  activate(dataset)
 
   return(p)
 }

@@ -47,7 +47,7 @@ TaxatoASV <- function(taxa_data, taxalist, taxa_rank=NULL) {
 
   for(i in 1:length(taxalist)) if(startsWith(taxalist[i],'X') & is.numeric(type.convert(substr(taxalist[i],2,2)))) taxalist[i] <- sub('X','',taxalist[i])
 
-  if(ncol(taxa_names_tab)==1) asvs <- rownames(taxa_names_tab)[taxa_names_tab[[taxa_rank]] %in% taxalist]
+  if(ncol(taxa_names_tab)==1) asvs <- rownames(taxa_names_tab)[taxa_names_tab %in% taxalist]
   else asvs <- rownames(taxa_names_tab)[taxa_names_tab[[taxa_rank]] %in% taxalist]
 
   if(length(asvs)!=length(taxalist)) {
@@ -99,4 +99,40 @@ agglomTaxa <- function(taxa_data, abundance_table, from_rank, to_rank) {
   }
 
   return(abundance_table)
+}
+
+#' Get parent taxa
+#'
+#' @param taxalist Vector of current taxa
+#' @param from Rank of current taxa
+#' @param to Rank of desired parent taxa
+#' @param taxanames Table of all taxa names
+#'
+#' @return Vector of parent taxa for each taxa in "taxalist"
+#' @export
+#'
+getParentTaxa <- function(taxalist, from, to, taxanames) {
+  from <- colnames(taxanames)[tolower(colnames(taxanames)) %in% tolower(from)]
+  if(!length(from)) stop(from,' is not a taxa rank in the dataset')
+
+  to <- colnames(taxanames)[tolower(colnames(taxanames)) %in% tolower(to)]
+  if(!length(to)) stop(to,' is not a taxa rank in the dataset')
+
+  taxalist <- unlist(lapply(taxalist, function(x) {
+    if(startsWith(x,'X') & is.numeric(type.convert(substr(x,2,2)))) {
+      x <- sub('X','',x)
+    } else x
+  }))
+
+  notfound <- taxalist[!(taxalist %in% taxanames[[from]])]
+  if(length(notfound)) message('\nThe following taxa were not found at the ',from,' rank:\n',
+                               paste0(notfound,collapse = '\t'))
+
+  taxalist <- taxalist[taxalist %in% taxanames[[from]]]
+  if(!length(taxalist)) stop('None of the taxa could be found in the ',from,' rank')
+
+  taxanames <- taxanames[!duplicated(taxanames[[from]]),]
+  parents <- taxanames[[to]][taxanames[[from]] %in% taxalist]
+
+  return(parents)
 }

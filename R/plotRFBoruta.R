@@ -18,15 +18,14 @@ plotRFImp <- function(dataset=NULL,
                       hideShadow=T,confirmedOnly=F,top=15,
                       max_runs=100,roughfix=F,
                       alpha=0.01) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   factor <- setFVar(dataset)
   colors <- dataset$colors
+  colors <- colors[names(colors) %in% factor$subset]
   colors <- c('gray',colors)
   names(colors)[1] <- 'OOB'
   outlines <- c('#32a83c', '#deb42c', '#cc1f08', '#11007d')
@@ -72,13 +71,15 @@ plotRFImp <- function(dataset=NULL,
     fts <- fts[importance$Decision=='Confirmed']
     titletxt <- paste('Significantly Important Features')
     suffix <- paste0(suffix,'_confirmed')
-  }
-  else if(top>3 & top<nrow(importance)) {
+  } else if(top>3 & top<nrow(importance)) {
     fts <- fts[1:top]
     titletxt <- paste('Top',top,'Important Features')
     suffix <- paste0(suffix,'_top_',top)
   } else titletxt <- paste('Random Forest Importance of All Features')
   boruta <- boruta[boruta$Feature %in% fts,]
+
+  outlines <- outlines[names(outlines) %in% as.character(unique(boruta$Decision))]
+  fills <- fills[names(fills) %in% as.character(unique(boruta$Decision))]
 
   p_imp <- ggboxplot(boruta,x='Feature',y='Importance',fill='Decision',color='Decision',size=1)+
     labs(title = titletxt)+
@@ -107,8 +108,7 @@ plotRFImp <- function(dataset=NULL,
                                         file=file.path(savedirectory,'Importance Values.csv'),
                                         row.names=F)
 
-  cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
-  print(dataset)
+  activate(dataset)
 
   return(p_imp)
 }

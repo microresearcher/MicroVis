@@ -40,21 +40,19 @@ mvhelp <- function(pages=c('filtering','normalizing','analysis','plotting')) {
   if('plotting' %in% pages) {
     cat(
       '\nPlotting functions currently available:\n
-    - plotAlpha()         plot boxplots of alpha diversity\n
-    - plotBeta()          plot a PCoA plot using a user-specified metric\n
+    - plotAlphaDiv()      plot boxplots of alpha diversity\n
+    - plotBetaDiv()       plot a PCoA plot using a user-specified metric\n
     - plotStackedBars()   plot stacked abundance barplot of features\n
-    - plotHM()            plot a heatmap of significant features\n
+    - plotHeatmap()       plot a heatmap of significant features\n
+    - plotHeatTree()      plot a branched heat tree of significant features\n
     - plotSimilarity()    plot heatmap that clusters samples by varying
                           distance and clustering methods\n
     - plotFtCor()         plot a correlation heatmap between samples of 1 dataset
                           or between features of 2 datasets\n
-    - plotChords()        plot chord diagram of feature correlations\n
-    - plotRegression()    plot regression line between two features within 1 dataset
-                          or between 2 datasets
-    - plotBars()          plot a grouped relative abundance bar plot of significant
+    - plotGroupedBars()   plot a grouped relative abundance bar plot of significant
                           features in every taxonomic rank\n
-    - plotBox()           plot the abundance boxplots of significant features\n
-    - plotRF()            plot important features determined by the Boruta algorithm\n
+    - plotUnivar()        plot the abundance boxplots of significant features\n
+    - plotRFImp()         plot important features determined by the Boruta algorithm\n
     - plotLEFSE()         plot an effect sizes vertical bar chart of enriched
                           taxa determined by LEfSe analysis\n
     - plotClad()          plot a cladogram of enriched taxa determined by LEfSe

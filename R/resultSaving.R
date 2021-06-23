@@ -101,7 +101,7 @@ saveResults <- function(save_directory,
     save_path <- file.path(save_directory,paste0(filename,suffix,'.png'))
     if(is.null(figure)) ggsave(save_path, device='png',
                                width=width, height=height, units = 'in',
-                               dpi = 600)
+                               dpi=600)
     else {
       png(save_path,width=width,height=height,units='in',res=600)
       draw(figure)

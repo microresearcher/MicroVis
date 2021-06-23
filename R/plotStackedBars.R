@@ -33,12 +33,10 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
                             unfiltered=T,rank=NA,
                             top=15, top_by='max',
                             ftlist=c(),plotSigs=F,alpha=0.05) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   taxaranks <- get('taxaRanks',envir = mvEnv)
 
@@ -168,8 +166,7 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
               width = 12, height = 8,
               suffix = paste0(suffix,'_',abundance_type))
 
-  cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
-  print(dataset)
+  activate(dataset)
 
   return(p)
 }

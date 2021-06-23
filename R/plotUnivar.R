@@ -48,12 +48,10 @@ plotUnivar <- function(dataset=NULL,
 
   ### Load Dataset ###
   #------------------#
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   factor <- factor[factor %in% names(dataset$factors)]
   if(is.null(factor)) factor <- dataset$active_factor
@@ -62,7 +60,8 @@ plotUnivar <- function(dataset=NULL,
   rank <- rank[rank %in% getRanks(dataset)]
   if(is.null(rank)) rank <- dataset$data$proc$active_rank
 
-  clrs <- dataset$colors
+  colors <- dataset$colors
+  colors <- colors[names(colors) %in% factor$subset]
 
   if(raw) {
     dataset.raw <- clearNormalization(dataset, temp=T, silent=T)
@@ -87,17 +86,18 @@ plotUnivar <- function(dataset=NULL,
 
   ### Get statistics for the chosen feature type ###
   #------------------------------------------------#
-  if(!length(facets)) stats <- dataset$stats[[factor$name]][[rank]]$univar
-  else stats <- dataset$stats[[factor$name]][[facets$txt]][[rank]]$univar
+  if(!length(facets)) stats <- dataset$stats[[factor$name]]$univar[[rank]]
+  else stats <- dataset$stats[[factor$name]][[facets$txt]]$univar[[rank]]
 
   if(is.null(stats)) {
-    dataset <- univar(dataset=dataset,
-                      stratifiers = c(facets$x,facets$y),
-                      rank = rank,
-                      param = param,
-                      dataset_name = dataset_name)
-    if(!length(facets)) stats <- dataset$stats[[factor$name]][[rank]]$univar
-    else stats <- dataset$stats[[factor$name]][[facets$txt]][[rank]]$univar
+    dataset <- univar(data=dataset,
+                      factor=factor$name,
+                      stratifiers=c(facets$x,facets$y),
+                      rank=rank,
+                      param=param,
+                      dataset_name=dataset_name)
+    if(!length(facets)) stats <- dataset$stats[[factor$name]]$univar[[rank]]
+    else stats <- dataset$stats[[factor$name]][[facets$txt]]$univar[[rank]]
   }
   sigfts <- unique(stats$stats$.y.[stats$stats$p.adj<=alpha])
 
@@ -149,7 +149,7 @@ plotUnivar <- function(dataset=NULL,
     if(violin) {
       p <- ggviolin(ftTab,x=factor$name,y='Abundance',color=factor$name,size=1,
                     add = c('mean_sd'))+
-        scale_color_manual(values=clrs)+
+        scale_color_manual(values=colors)+
         labs(y=paste0(isnrml,'Abundance'),title=paste0(gsub('\\.',' ',ft),israw),colour=factor$name_text)+
         theme(plot.title = element_text(hjust = 0.5,size = 24),
               axis.title.y = element_text(size=20),
@@ -161,7 +161,7 @@ plotUnivar <- function(dataset=NULL,
     } else {
       p <- ggboxplot(ftTab,x=factor$name,y='Abundance',color=factor$name,size=1,
                      add = addlist, add.params = addlistparam)+
-        scale_color_manual(values=clrs)+
+        scale_color_manual(values=colors)+
         labs(y=paste0(isnrml,'Abundance'),title=paste0(gsub('\\.',' ',ft),israw),colour=factor$name_text)+
         theme(plot.title = element_text(hjust = 0.5,size = 30),
               axis.title.y = element_text(size=25),
@@ -267,6 +267,5 @@ plotUnivar <- function(dataset=NULL,
 
   cat(paste('\n\nSuccessfully plotted:\n',paste(fts,collapse = '\n '),'\n\n'))
 
-  cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
-  return(dataset)
+  activate(dataset)
 }

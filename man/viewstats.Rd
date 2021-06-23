@@ -4,11 +4,14 @@
 \alias{viewstats}
 \title{View Statistics of All Features}
 \usage{
-viewstats(dataset = NULL, factor = NULL, rank = NULL)
+viewstats(dataset = NULL, type = NULL, factor = NULL, rank = NULL)
 }
 \arguments{
 \item{dataset}{(Optional) MicroVis dataset (mvdata object). If not specified,
 defaults to active dataset.}
+
+\item{type}{Type of statistical test to view results for. Defaults to the first
+available of univariate, deseq, and lefse in that order}
 
 \item{factor}{(Optional) Factor to count samples by groups. Default is the
 active factor of the dataset.}

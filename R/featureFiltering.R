@@ -14,33 +14,24 @@
 #'     parameters set by the filter___ feature filtering functions
 #'
 runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   if(!is.null(dataset$data$proc$rarefied)) return(dataset)
 
   if(is.null(dataset$data$proc$unranked)) dataset <- runNormalization(dataset, silent = T)
 
-  if(is.null(dataset$data$proc$filtering$filter_rank)) {
-    dataset$data$proc$filtering$filter_rank <- getLowestRank(dataset)
-  }
+  if(is.null(dataset$data$proc$filter_rank)) dataset$data$proc$filter_rank <- getLowestRank(dataset)
 
   filtering <- dataset$data$proc$filtering
 
   # If there is something in the dataset's filtering history besides
   #   "filterlist" and "ftstats", proceed with filtering
-  if(length(names(filtering)[!(names(filtering) %in% c('filterlist','ftstats','filter_rank'))])) {
+  if(length(names(filtering)[!(names(filtering) %in% c('filterlist','ftstats'))])) {
     if(!silent) cat('\n\n|~~~~~~~~~~~~~  FILTERING FEATURES  ~~~~~~~~~~~~~|\n')
 
-    filter_rank <- filtering$filter_rank
+    filter_rank <- dataset$data$proc$filter_rank
 
-    # Get stats for the features using the raw counts but only with the desired
-    #   set of samples
-    ft_data <- getFtStats(runSampleFilter(dataset,temp=T,silent=T))
+    ft_data <- getFtStats(dataset)
     abd_temp <- ft_data$proc$unranked
     if(dataset$features=='taxa') abd_temp <- agglomTaxa(ft_data, abd_temp,
                                                         from_rank='asv',
@@ -162,14 +153,14 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
     taxa_names_tab <- ft_data$taxa_names
     active_rank <- ft_data$proc$active_rank
     if(!is.null(filtering$NAfilter$ranks)) {
-      if(!is.null(taxa_names_tab)) {
-        filterNA.ranks <- paste0(paste0(substr(filtering$NAfilter$ranks,1,1),'__'),collapse = '|')
-        filterlist$NAs <- unique(taxa_names_tab[grep('unidentified',
-                                                     taxa_names_tab[[active_rank]]),][[lowest_rank]],
-                                 taxa_names_tab[grep('__',
-                                                     taxa_names_tab[[active_rank]]),][[lowest_rank]])
+      if(!is.null(taxa_names_tab)) if(ncol(taxa_names_tab)>1) for(rank in filtering$NAfilter$ranks) {
+          filterlist$NAs <- unique(taxa_names_tab[grep(paste0('_',rank),
+                                                       taxa_names_tab[[rank]]),][[lowest_rank]])
       }
-      if(!silent) cat(paste0('\n  Identified ',length(filterlist$NAs),' features without assigned ',paste0(filtering$NAfilter$ranks,collapse = ', ')))
+
+      if(!silent) cat(paste0('\n  Identified ',
+                             length(filterlist$NAs),' features without assigned ',
+                             paste0(filtering$NAfilter$ranks,collapse = ', ')))
     }
 
     # Reload the normalized ft_data and abundance table
@@ -199,6 +190,32 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
     num_removed <- ncol(abd_temp) - ncol(abd_filtered) + any(colnames(abd_filtered) %in% 'Other')
 
     if(!silent) cat('\n\n>>> Removed',num_removed,'features based on filtering parameters <<<\n')
+  } else if(length(dataset$data$proc$selected)) {
+    ft_data <- dataset$data
+    abd_temp <- ft_data$proc$unranked
+    selected <- ft_data$proc$selected
+
+    if(dataset$features=='taxa') {
+      if(is.null(names(selected))) selected.ids <- TaxatoASV(dataset$data, selected, 'single_rank')
+      else selected.ids <- unique(unlist(lapply(getRanks(dataset),
+                                                function(rank) {
+                                                  if(length(selected[[rank]])) {
+                                                    TaxatoASV(dataset$data,
+                                                              selected[[rank]],
+                                                              rank)
+                                                  }
+                                                })))
+    } else selected.ids <- unique(unlist(selected))
+
+    abd_selected <- abd_temp[selected.ids]
+    # Now, pool all the filter list features into 'Other' and add it to the table
+    abd_selected$Other <- rowSums(abd_temp[!(colnames(abd_temp) %in% selected.ids)])
+
+    ft_data$proc$unranked <- abd_selected
+
+    num_selected <- length(selected.ids)
+
+    if(!silent) cat('\n\n>>> Selected',num_selected,'features in total <<<\n')
   } else {
     ft_data <- dataset$data
     if(!silent) cat('\n~~~ No feature filtering performed ~~~\n')
@@ -231,12 +248,7 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
 #' @export
 #'
 clearFeatureFilt <- function(dataset=NULL, temp=F, silent=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   dataset$data$proc$filtering <- NULL
 
@@ -262,11 +274,11 @@ clearFeatureFilt <- function(dataset=NULL, temp=F, silent=F) {
 #' @export
 #'
 filterLowPrev <- function(dataset=NULL, top=NULL, min_prevalence=NULL, silent=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(length(dataset$data$proc$selected)) {
+    message('\nRemoving selected feature list')
+    dataset$data$proc$selected <- NULL
   }
 
   filtering.defaults <- get('filtering.defaults',envir = mvDefaults)
@@ -323,11 +335,11 @@ filterLowPrev <- function(dataset=NULL, top=NULL, min_prevalence=NULL, silent=F)
 #' @export
 #'
 filterLowRelAbun <- function(dataset=NULL, top=NULL, min_relabun=NULL, silent=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(length(dataset$data$proc$selected)) {
+    message('\nRemoving selected feature list')
+    dataset$data$proc$selected <- NULL
   }
 
   filtering.defaults <- get('filtering.defaults',envir = mvDefaults)
@@ -383,11 +395,11 @@ filterLowRelAbun <- function(dataset=NULL, top=NULL, min_relabun=NULL, silent=F)
 #' @export
 #'
 filterLowTotAbun <- function(dataset=NULL, top=NULL, min_totabun=NULL, silent=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(length(dataset$data$proc$selected)) {
+    message('\nRemoving selected feature list')
+    dataset$data$proc$selected <- NULL
   }
 
   filtering.defaults <- get('filtering.defaults',envir = mvDefaults)
@@ -446,11 +458,11 @@ filterLowTotAbun <- function(dataset=NULL, top=NULL, min_totabun=NULL, silent=F)
 #' @export
 #'
 filterLowVar <- function(dataset=NULL, top=NULL, var_type='sd', low_var_percentile=NULL, silent=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(length(dataset$data$proc$selected)) {
+    message('\nRemoving selected feature list')
+    dataset$data$proc$selected <- NULL
   }
 
   filtering.defaults <- get('filtering.defaults',envir = mvDefaults)
@@ -509,11 +521,11 @@ filterLowVar <- function(dataset=NULL, top=NULL, var_type='sd', low_var_percenti
 #' @export
 #'
 filterLowAbun <- function(dataset=NULL, min_abun=NULL, min_proportion=NULL, silent=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(length(dataset$data$proc$selected)) {
+    message('\nRemoving selected feature list')
+    dataset$data$proc$selected <- NULL
   }
 
   filtering.defaults <- get('filtering.defaults',envir = mvDefaults)
@@ -589,11 +601,11 @@ filterLowAbun <- function(dataset=NULL, min_abun=NULL, min_proportion=NULL, sile
 #' @export
 #'
 filterNAs <- function(dataset=NULL, keepNAs=F, ranks=NULL, silent=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(length(dataset$data$proc$selected)) {
+    message('\nRemoving selected feature list')
+    dataset$data$proc$selected <- NULL
   }
 
   if(dataset$features!='taxa') return(dataset)
@@ -611,6 +623,71 @@ filterNAs <- function(dataset=NULL, keepNAs=F, ranks=NULL, silent=F) {
   }
 
   if(!get('.loading',envir = mvEnv)) dataset <- processDataset(dataset, silent=silent)
+
+  return(dataset)
+}
+
+#' Select Specific Features
+#'
+#' @param dataset MicroVis dataset. Defaults to the active dataset
+#' @param features Vector of features (at any rank) to select
+#' @param temp This parameter has no use in this function and can be removed
+#' @param silent Argument that is ultimately passed onto runSampleFilter(),
+#'     runNormalization(), and runFeatureFilter(), telling them not to output
+#'     any messages.
+#'
+#' @return Dataset with list of selected features that is passed to runFeatureFilter
+#' @export
+#'
+selectFeatures <- function(dataset=NULL, features, temp=F, silent=F) {
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(length(names(dataset$data$proc$filtering)[!(names(dataset$data$proc$filtering)
+                                                 %in% c('filterlist','ftstats'))])) {
+    if(temp) removefilts <- T
+    else removefilts <- ifelse(select.list(c('Yes','No'), title='\nSelecting specific features will undo any filtering. Continue?')=='Yes', yes = T, no = T)
+
+    if(removefilts) dataset$data$proc$filtering <- NULL
+    else stop('Cannot select specific features from a dataset that has been filtered')
+  }
+
+  if(dataset$features=='taxa') alltaxa <- unique(unname(unlist(dataset$data$taxa_names)))
+  else alltaxa <- colnames(dataset$data$orig)
+
+  features <- unique(alltaxa[tolower(alltaxa) %in% tolower(features)])
+  if(!length(features)) stop('None of the features were found in "',dataset$name,'"')
+
+  if(dataset$features=='taxa') {
+    ft_names <- dataset$data$taxa_names
+    if(ncol(ft_names)>1) selected <- sapply(getRanks(dataset),
+                                            function(rank) features[features %in% ft_names[[rank]]])
+    else selected <- list('single_rank'=features)
+  } else selected <- list('functional'=features)
+
+  dataset$data$proc$selected <- selected
+
+  dataset <- processDataset(dataset, temp=temp, silent=silent)
+
+  return(dataset)
+}
+
+#' Undo Feature Selection
+#'
+#' @param dataset MicroVis dataset. Defaults to the active dataset
+#' @param temp This parameter has no use in this function and can be removed
+#' @param silent Argument that is ultimately passed onto runSampleFilter(),
+#'     runNormalization(), and runFeatureFilter(), telling them not to output
+#'     any messages.
+#'
+#' @return MicroVis dataset with the selected feature list cleared
+#' @export
+#'
+unselectFeatures <- function(dataset=NULL, temp=F, silent=F) {
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  dataset$data$proc$selected <- NULL
+
+  dataset <- processDataset(dataset, temp=temp, silent=silent)
 
   return(dataset)
 }
@@ -640,7 +717,7 @@ findSigFisher <- function(dataset, fts, lowabun_thresh=0, silent=F) {
 
   if(dataset$features=='taxa') {
     abun <- agglomTaxa(dataset$data, abun, from_rank = 'asv',
-                       to_rank=dataset$data$proc$filtering$filter_rank)
+                       to_rank=dataset$data$proc$filter_rank)
   }
   active_factor <- dataset$active_factor
 
@@ -672,16 +749,12 @@ findSigFisher <- function(dataset, fts, lowabun_thresh=0, silent=F) {
 #' @export
 #'
 getFtStats <- function(dataset=NULL, rank=NULL) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
-  if(is.null(dataset$data$proc$unranked)) dataset <- runSampleFilter(dataset,temp = T,silent = T)
+  # If a pre-filtered, unranked abundance table is not available, run normalization to get one
+  if(is.null(dataset$data$proc$unranked)) dataset <- runNormalization(dataset,temp = T,silent = T)
 
-  if(is.null(rank)) rank <- dataset$data$proc$filtering$filter_rank
+  if(is.null(rank)) rank <- dataset$data$proc$filter_rank
 
   ft_data <- dataset$data
   abd <- ft_data$proc$unranked

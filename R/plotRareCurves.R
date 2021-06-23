@@ -16,21 +16,20 @@ plotRareCurves <- function(dataset=NULL,
                            panels=TRUE,
                            labelSamples=FALSE,
                            getPlot=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   if(!is.null(dataset$data$proc$normalization)) dataset <- clearNormalization(dataset, temp=T, silent=T)
 
   rank <- dataset$data$proc$active_rank
   abd <- dataset$data$proc[[rank]]
 
-  clrs <- dataset$colors
   metadata <- dataset$metadata
-  cmpgrp <- setFVar(dataset)
+  factor <- setFVar(dataset)
+  colors <- dataset$colors
+  colors <- colors[names(colors) %in% factor$subset]
 
   maxrich <- max(rowSums(abd))
   minrich <- min(rowSums(abd))
@@ -51,29 +50,31 @@ plotRareCurves <- function(dataset=NULL,
   maxpts <- merge(maxpts, alldata)
 
   # Merge these two data tables with the metadata
-  maxtab <- cleanData(merge(metadata, maxpts), cmpgrp)
-  rctab <- cleanData(merge(metadata, alldata), cmpgrp)
+  maxtab <- cleanData(merge(metadata, maxpts), factor)
+  rctab <- cleanData(merge(metadata, alldata), factor)
 
   p <- ggplot(rctab, aes(sample_size,richness,group=sample))+
-    geom_line(aes(color=get(cmpgrp$name)),size=0.5)+
+    geom_line(aes(color=get(factor$name)),size=0.5)+
     scale_color_manual(values=clrs)+
-    labs(y='Genus Richness',x='Sample Size',colour=cmpgrp$txt)
+    labs(y='Genus Richness',x='Sample Size',colour=factor$txt)
   if(panels) {
-    p <- facet(p,cmpgrp$name)
+    p <- facet(p,factor$name)
   }
   if(labelSamples) {
     p<-p+geom_label_repel(data=maxtab,
                           aes(label=sample))
   }
 
-  if(getPlot) return(p)
-  else show(p)
+  if(!getPlot) {
+    saveResults(dataset$results_path,foldername = 'Rarefaction Curves',
+                factors = dataset$factors,
+                active_factor = factor$name,
+                suffix = '_rc')
 
-  saveResults(dataset$results_path,foldername = 'Rarefaction Curves',
-              factors = dataset$factors,
-              active_factor = cmpgrp$name,
-              suffix = '_rc')
+    show(p)
 
-  cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
-  return(dataset)
+    activate(dataset)
+  }
+
+  return(p)
 }

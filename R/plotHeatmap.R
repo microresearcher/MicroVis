@@ -33,12 +33,10 @@ plotHeatmap <- function(dataset=NULL,
                         scaleCol=1,
                         alpha=0.05,
                         width=6,height=12) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   factor <- dataset$active_factor
   rank <- dataset$data$proc$active_rank
@@ -51,20 +49,20 @@ plotHeatmap <- function(dataset=NULL,
     features <- ftlist
     suffix <- 'specific_fts'
   } else {
-    if(is.null(dataset$stats[[factor]][[rank]]$univar)) {
-      dataset <- univar(dataset,
+    if(is.null(dataset$stats[[factor]]$univar[[rank]])) {
+      dataset <- univar(data=dataset,
                         rank=rank,
                         param=param,
                         dataset_name=dataset_name)
     }
-    stats <- dataset$stats[[factor]][[rank]]$univar
+    stats <- dataset$stats[[factor]]$univar[[rank]]
     sigfts <- unique(stats$stats$.y.[stats$stats$p.adj<=alpha])
 
     if(length(sigfts)) {
       suffix <- paste0('_alpha_',alpha)
       suffix <- paste0(suffix,'_uniques')
       if(plotUniques) {
-        sigfts <- unique(unlist(listUniques(dataset,
+        sigfts <- unique(unlist(listUniques(dataset=dataset,
                                             dataset_name=dataset_name)))
 
       }
@@ -84,10 +82,10 @@ plotHeatmap <- function(dataset=NULL,
   # Melt the data to ensure only the samples we are analyzing are in the metadata
   #   and abundance table
   if(!is.null(stratifier)) {
-    melted <- data.frame(mvstratify(scaleFeatures(clearNormalization(dataset,temp = T,silent = T),
+    melted <- data.frame(mvstratify(scaleFeatures(clearProcessing(dataset,temp = T,silent = T),
                                                   scaling = 'relative',temp = T,silent = T)))
   } else {
-    melted <- mvmelt(scaleFeatures(clearNormalization(dataset,temp = T,silent = T),
+    melted <- mvmelt(scaleFeatures(clearProcessing(dataset,temp = T,silent = T),
                                    scaling = 'relative',temp = T,silent = T))
   }
 
@@ -173,8 +171,7 @@ plotHeatmap <- function(dataset=NULL,
               other_results = list(Values=hm_data),
               suffix = suffix)
 
-  cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
-  print(dataset)
+  activate(dataset)
 
   return(hm)
 }

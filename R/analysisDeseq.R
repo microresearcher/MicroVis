@@ -19,12 +19,10 @@ mvdeseq <- function(dataset=NULL,
                     rank=NULL,
                     compareAll=F,
                     dataset_name=NULL) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else if(is.null(dataset_name)) {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   rank <- rank[rank %in% getRanks(dataset)]
   if(is.null(rank)) rank <- dataset$data$proc$active_rank
@@ -45,10 +43,12 @@ mvdeseq <- function(dataset=NULL,
     comparison <- strsplit(gsub(paste0('.*',factor$name_text,' '),'',res@elementMetadata$description[2]),
                            split = ' vs ')[[1]]
 
-    base_grp <- factor$subset[gsub('[- ;,/]','\\.',factor$subset) %in% comparison[2]]
-    comp_grp <- factor$subset[gsub('[- ;,/]','\\.',factor$subset) %in% comparison[1]]
+    base_grp <- factor$subset[gsub('_',' ',
+                                   gsub('[- ;,/]','\\.',factor$subset)) %in% comparison[2]]
+    comp_grp <- factor$subset[gsub('_',' ',
+                                   gsub('[- ;,/]','\\.',factor$subset)) %in% comparison[1]]
 
-    cat('\n',paste(comp_grp,'vs',base_grp))
+    cat('\nAnalyzing ',comp_grp,' vs ',base_grp)
 
     temp <- cbind(Reference=rep(base_grp,nrow(res)),
                   Contrast=rep(comp_grp,nrow(res)),
@@ -68,7 +68,7 @@ mvdeseq <- function(dataset=NULL,
         base_grp <- contrast_levels[i]
         comp_grp <- contrast_levels[j]
 
-        cat('\n',paste(comp_grp,'vs',base_grp))
+        cat('\nAnalyzing ',comp_grp,' vs ',base_grp)
 
         res <- results(dds,contrast = c(factor$name,comp_grp,base_grp))
 
@@ -82,10 +82,12 @@ mvdeseq <- function(dataset=NULL,
     }
   }
 
-  dataset$stats[[factor$name]][[rank]]$deseq <- deseq_res
+  cat('\n')
 
-  if(dataset_name=='active_dataset') assign(dataset_name,dataset,envir = mvEnv)
-  else assign(dataset_name,dataset,1)
+  dataset$stats[[factor$name]]$deseq[[rank]] <- deseq_res
+
+  assign('active_dataset',dataset,envir = mvEnv)
+  if(dataset_name!='active_dataset') assign(dataset_name,dataset,1)
 
   return(dataset)
 }

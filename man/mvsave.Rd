@@ -4,7 +4,7 @@
 \alias{mvsave}
 \title{Save Dataset in its Current State}
 \usage{
-mvsave(name = NULL)
+mvsave(name)
 }
 \arguments{
 \item{name}{New name to save the currently active dataset

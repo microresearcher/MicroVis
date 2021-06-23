@@ -23,9 +23,13 @@ mvmerge <- function(dataset1,dataset2,
                     features1=NULL,features2=NULL,keepFiltered=F,
                     sigsOnly1=F,sigsOnly2=F,alpha=0.05) {
   # Load both datasets
+  dataset1_name <- dataset1$name
+  dataset2_name <- dataset2$name
   if(is.null(dataset1_name)) dataset1_name <- readline(cat('Provide a short name for the first dataset:\n'))
-  if(is.null(dataset1_name)) dataset1_name <- deparse(substitute(dataset1))
+  if(is.null(dataset2_name)) dataset2_name <- readline(cat('Provide a short name for the second dataset:\n'))
 
+  taxanames1 <- dataset1$data$taxa_names
+  ranks1 <- getRanks(dataset1)
   rank1 <- dataset1$data$proc$active_rank
   abun1 <- dataset1$data$proc[[rank1]]
   fts1 <- colnames(abun1)
@@ -33,9 +37,8 @@ mvmerge <- function(dataset1,dataset2,
   factors1 <- dataset1$factors
   clrs1 <- dataset1$colors
 
-  if(is.null(dataset2_name)) dataset2_name <- readline(cat('Provide a short name for the second dataset:\n'))
-  if(is.null(dataset2_name)) dataset2_name <- deparse(substitute(dataset2))
-
+  taxanames2 <- dataset2$data$taxa_names
+  ranks2 <- getRanks(dataset2)
   rank2 <- dataset2$data$proc$active_rank
   abun2 <- dataset2$data$proc[[rank2]]
   fts2 <- colnames(abun2)
@@ -57,7 +60,7 @@ mvmerge <- function(dataset1,dataset2,
                        rank=rank1,
                        features=fts1,
                        factor=dataset1$active_factor)$overall
-    stats1 <- dataset1$stats[[dataset1$active_factor]][[rank]]$stats
+    stats1 <- dataset1$stats[[dataset1$active_factor]]$univar[[rank]]$stats
     sigfts1 <- fts1[fts1 %in% stats1$.y.[stats1$p.adj < alpha]]
     if(length(sigfts1)) fts1 <- union(fts1,sigfts1)
     else message('\nNo significant features were found in ',dataset1_name,' that overlapped with already selected features\n')
@@ -69,7 +72,7 @@ mvmerge <- function(dataset1,dataset2,
                      rank=rank2,
                      features=fts2,
                      factor=dataset2$active_factor)$overall
-    stats2 <- dataset2$stats[[dataset2$active_factor]][[rank]]$stats
+    stats2 <- dataset2$stats[[dataset2$active_factor]]$univar[[rank]]$stats
     sigfts2 <- fts2[fts2 %in% stats2$.y.[stats2$p.adj < alpha]]
     if(length(sigfts2)) fts2 <- union(fts2,sigfts2)
     else message('\nNo significant features were found in ',dataset2_name,' that overlapped with already selected features\n')
@@ -89,13 +92,19 @@ mvmerge <- function(dataset1,dataset2,
   shared_samples <- merged_abun$Row.names
   merged_abun$Row.names <- NULL
 
-  if(!length(shared_samples)) return(message('\nERROR: ',dataset1_name,' and ',dataset2_name,' do not share any samples. Check the sample names to make sure they match.\n'))
+  if(!length(shared_samples)) return(message('\nERROR: ',
+                                             dataset1_name,' and ',dataset2_name,
+                                             ' do not share any samples. Check the sample names to make sure they match.\n'))
 
   lost_samples1 <- rownames(abun1)[!(rownames(abun1) %in% shared_samples)]
-  if(length(lost_samples1)) message('\nThe following samples in "',dataset1_name,'" were not in "',dataset2_name,'":\n ',paste0(lost_samples1,collapse = '\t'))
+  if(length(lost_samples1)) message('\nThe following samples in "',
+                                    dataset1_name,'" were not in "',dataset2_name,
+                                    '":\n ',paste0(lost_samples1,collapse = '\t'))
 
   lost_samples2 <- rownames(abun2)[!(rownames(abun2) %in% shared_samples)]
-  if(length(lost_samples2)) message('\nThe following samples in "',dataset2_name,'" were not in "',dataset1_name,'":\n ',paste0(lost_samples2,collapse = '\t'))
+  if(length(lost_samples2)) message('\nThe following samples in "',
+                                    dataset2_name,'" were not in "',dataset1_name,
+                                    '":\n ',paste0(lost_samples2,collapse = '\t'))
 
   # Turn the sample names into row names
   rownames(merged_abun) <- shared_samples
@@ -112,16 +121,31 @@ mvmerge <- function(dataset1,dataset2,
   features <- list(fts1,fts2)
   names(features) <- c(dataset1_name,dataset2_name)
 
+  rownames(taxanames1) <- paste0(dataset1_name,'_',rownames(taxanames1))
+  rownames(taxanames2) <- paste0(dataset2_name,'_',rownames(taxanames2))
+
+  taxanames1 <- taxanames1[!duplicated(taxanames1[[rank1]]),
+                           1:grep(rank1,colnames(taxanames1))]
+  taxanames2 <- taxanames2[!duplicated(taxanames2[[rank2]]),
+                           1:grep(rank2,colnames(taxanames2))]
+
+  taxanames <- bind_rows(taxanames1,taxanames2)
+
   merged_dataset <- list(metadata=metadata,
-                         data=list(proc=list(single_rank=merged_abun,active_rank='single_rank'),
+                         data=list(taxa_names=taxanames,
+                                   proc=list(single_rank=merged_abun,
+                                             active_rank='single_rank'),
                                    features=features),
                          features='merged',
                          factors=factors,
                          active_factor=dataset1$active_factor,
                          colors=clrs,
-                         results_path=dataset1$results_path)
+                         results_path=dataset1$results_path,
+                         name=paste0('mvmerged_',dataset1_name,'_and_',dataset2_name))
 
-  class(merged_dataset) <- 'mvdata.merged'
+  class(merged_dataset) <- 'mvmerged'
+
+  assign(merged_dataset$name, merged_dataset, 1)
 
   return(merged_dataset)
 }

@@ -11,7 +11,7 @@ makePS <- function(dataset=NULL) {
     dataset <- get('active_dataset',envir = mvEnv)
     dataset_name <- 'active_dataset'
   } else {
-    dataset_name <- deparse(substitute(dataset))
+    dataset_name <- dataset$name
   }
 
   if(dataset$features!='taxa') stop('Phyloseq is intended for taxonomic data only')
@@ -70,7 +70,7 @@ makeDeseq <- function(dataset=NULL,baseline=NULL) {
     dataset <- get('active_dataset',envir = mvEnv)
     dataset_name <- 'active_dataset'
   } else {
-    dataset_name <- deparse(substitute(dataset))
+    dataset_name <- dataset$name
   }
 
   dataset <- clearNormalization(dataset, temp = T, silent = T)
@@ -127,7 +127,7 @@ makeTaxMap <- function(dataset=NULL,unfiltered=F,ftlist=NULL) {
     dataset <- get('active_dataset',envir = mvEnv)
     dataset_name <- 'active_dataset'
   } else {
-    dataset_name <- deparse(substitute(dataset))
+    dataset_name <- dataset$name
   }
 
   if(dataset$features!='taxa') stop('"taxmap" objects are for taxonomic data only')
@@ -141,10 +141,10 @@ makeTaxMap <- function(dataset=NULL,unfiltered=F,ftlist=NULL) {
     # The original abundance table already has the ASV#'s instead of taxa names
     abun <- dataset$data$orig
   } else {
-    ftlist <- ftlist[ftlist %in% getFeatures(dataset)]
-    if(is.null(ftlist)) ftlist <- getFeatures(dataset)
-
     lowest_rank <- getLowestRank(dataset)
+
+    ftlist <- ftlist[ftlist %in% getFeatures(dataset)]
+    if(is.null(ftlist)) ftlist <- getFeatures(dataset, ranks=lowest_rank)
 
     abun <- dataset$data$proc[[lowest_rank]][ftlist]
     abun$Other <- NULL

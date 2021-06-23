@@ -22,14 +22,14 @@
 #' @importFrom grid textGrob gpar
 #' @importFrom picante pd prune.sample
 #' @importFrom taxa parse_tax_data
-#' @importFrom metacoder calc_taxon_abund
+#' @importFrom metacoder calc_taxon_abund heat_tree
 #' @importFrom circlize colorRamp2
 #' @importFrom ComplexHeatmap HeatmapAnnotation Heatmap draw
-#' @importFrom microbiomeMarker lefse
+#' @importFrom microbiomeMarker lefse plot_cladogram
 #' @importFrom phyloseq phyloseq otu_table tax_table sample_data merge_phyloseq ntaxa taxa_names UniFrac
 #' @importFrom DESeq2 DESeqDataSetFromMatrix DESeq resultsNames results
 #' @import rstudioapi
-#' @importFrom stats IQR aggregate formula sd as.formula median na.exclude relevel p.adjust prcomp cor as.dist cutree hclust
+#' @importFrom stats IQR aggregate formula sd as.formula median na.exclude relevel p.adjust prcomp cor as.dist cutree hclust complete.cases
 #' @importFrom utils head read.csv select.list type.convert
 #' @importFrom methods show
 #' @import stringr
@@ -51,6 +51,7 @@
 #' @importFrom scales pretty_breaks
 #' @importFrom limma lmFit eBayes
 #' @importFrom matrixStats colQuantiles
+#' @importFrom Hmisc rcorr
 #'
 mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_to_fxnl=NA,
                    autoProcess=T,combineDupes=T,combineDataSets=F) {

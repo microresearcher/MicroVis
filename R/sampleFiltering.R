@@ -17,12 +17,7 @@
 #'     3) Specific samples removed by the user using removeSamples()
 #'
 runSampleFilter <- function(dataset=NULL, temp=F, silent=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   if(!silent) cat(paste0('\n\n|~~~~~~~~~~~~~  FILTERING SAMPLES  ~~~~~~~~~~~~~~|\n'))
   # Reference variables
@@ -116,12 +111,7 @@ runSampleFilter <- function(dataset=NULL, temp=F, silent=F) {
 #' @export
 #'
 removeLowQuality <- function(dataset=NULL, silent=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   if(!is.null(dataset$data$proc$low_quality)) {
     rthresh <- dataset$data$proc$low_quality$reads_thresh
@@ -193,12 +183,7 @@ removeLowQuality <- function(dataset=NULL, silent=F) {
 #' @export
 #'
 chooseGrps <- function(dataset=NULL, factor_names=NULL) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   # This function alters these variables, so they will need to be passed back to
   #   "dataset" at the end before "dataset" is returned. We use the original
@@ -245,6 +230,45 @@ chooseGrps <- function(dataset=NULL, factor_names=NULL) {
   return(dataset)
 }
 
+#' Select specific samples to analyze
+#'
+#' @param dataset MicroVis dataset. Defaults to the active dataset
+#' @param samples List of samples to analyze
+#' @param includeLowQual Include samples even if they are low quality? Defaults
+#'     to FALSE
+#'
+#' @return Dataset with updated list of samples to ignore
+#' @export
+#'
+chooseSamples <- function(dataset=NULL, samples, includeLowQual=F) {
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  samples <- samples[samples %in% dataset$metadata$sample]
+  if(!length(samples)) stop('None of the specified samples are in the dataset')
+
+  current_samples <- mvmelt(dataset)$sample
+
+  low_quality <- dataset$data$proc$low_quality$low_quality
+  ignored_samples <- dataset$data$proc$ignored_samples
+
+  if(any(samples %in% low_quality)) {
+    if(includeLowQual) low_quality <- low_quality[!(low_quality %in% samples)]
+    else message('\nNote: The following samples are low quality at a reads threshold of ',
+                 dataset$data$proc$low_quality$reads_threshold,' and will not be included:\n',
+                 paste0(samples[samples %in% low_quality], collapse = '\t'),
+                 '\n\nTo include these samples, re-run this function with `includeLowQual=TRUE`\n')
+  }
+
+  ignored_samples <- current_samples[!(current_samples %in% samples)]
+
+  dataset$data$proc$low_quality$low_quality <- low_quality
+  dataset$data$proc$ignored_samples <- ignored_samples
+
+  dataset <- processDataset(dataset)
+
+  return(dataset)
+}
+
 #' Remove Groups
 #'
 #' @param dataset MicroVis dataset (mvdata object)
@@ -258,12 +282,7 @@ chooseGrps <- function(dataset=NULL, factor_names=NULL) {
 #' @export
 #'
 removeGrps <- function(dataset=NULL, factor_name=NULL, grps=NULL) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   # This function alters these variables, so they will need to be passed back to
   #   "dataset" at the end before "dataset" is returned. We use the original
@@ -324,12 +343,7 @@ removeGrps <- function(dataset=NULL, factor_name=NULL, grps=NULL) {
 #' @export
 #'
 addGrps <- function(dataset=NULL, factor_name=NULL, grps=NULL) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   # This function alters these variables, so they will need to be passed back to
   #   "dataset" at the end before "dataset" is returned. We use the original
@@ -397,12 +411,7 @@ addGrps <- function(dataset=NULL, factor_name=NULL, grps=NULL) {
 #' @export
 #'
 removeSamples <- function(dataset=NULL, metadata_column=NULL, samples) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   if(is.null(samples)) {
     message('\nERROR: Please enter a sample name (in quotes) or vector of sample names to exclude')
@@ -447,12 +456,7 @@ removeSamples <- function(dataset=NULL, metadata_column=NULL, samples) {
 #' @export
 #'
 addSamples <- function(dataset=NULL,samples) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   if(is.null(samples)) {
     message('\nERROR: Please enter a sample name (in quotes) or vector of sample names to add back')

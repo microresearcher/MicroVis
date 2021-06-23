@@ -7,6 +7,8 @@
 #'     "clark", "kulczynski", "gower", "altGower", "morisita", "horn", "mountford",
 #'     "raup", "binomial", "chao", "cao", "mahalanobis", "chisq" or "chord".
 #'     Defaults to "bray"
+#' @param weighted If performing unifract distance, whether to use weighted or
+#'     unweighted unifrac. Defults to FALSE (unweighted)
 #' @param clust_method Clustering method. One of either "ward.D", "ward.D2",
 #'     "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA),
 #'     "median" (= WPGMC) or "centroid" (= UPGMC). Defaults to "ward.D2"
@@ -20,15 +22,14 @@
 plotSimilarity <- function(dataset=NULL,
                            rank=NULL,
                            dist_method='bray',
+                           weighted=F,
                            clust_method='ward.D2',
                            clust_num=2,
                            r_cutoff=0) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   if(r_cutoff==0 | !(abs(r_cutoff)<1)) {
     r_cutoff <- 0
@@ -91,8 +92,7 @@ plotSimilarity <- function(dataset=NULL,
                                 suffix = paste0('_sample-similarity_',
                                                 dist_method,'_',clust_method))
 
-  cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
-  print(dataset)
+  activate(dataset)
 
   return(hm)
 }

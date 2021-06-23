@@ -36,11 +36,11 @@ plotBetaDiv <- function(dataset=NULL,
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   if(is.null(dataset$name)) dataset_name <- 'active_dataset'
-  else if(is.na(dataset$name)) dataset_name <- deparse(substitute(dataset))
   else dataset_name <- dataset$name
 
-  colors <- dataset$colors
   factor <- setFVar(dataset)
+  colors <- dataset$colors
+  colors <- colors[names(colors) %in% factor$subset]
   metadata <- dataset$metadata
 
   if(stratify & length(names(dataset$factors))>1) {
@@ -54,11 +54,11 @@ plotBetaDiv <- function(dataset=NULL,
   bdiv_results <- bdiv(dataset,stratifier=stratifier,method=method)
   coord_tab <- bdiv_results$coord_tab
   stats <- list()
-  stats$stattab <- bdiv_results$stats$aov.tab
+  stats$stats <- bdiv_results$stats$aov.tab
   if(length(stats)) {
-    rownames(stats$stattab)[1] <- factor$name
-    if(!is.null(stratifier)) rownames(stats$stattab)[2] <- stratifier
-    show(stats$stattab)
+    rownames(stats$stats)[1] <- factor$name
+    if(!is.null(stratifier)) rownames(stats$stats)[2] <- stratifier
+    show(stats$stats)
     cat('\n')
   }
 
@@ -104,8 +104,8 @@ plotBetaDiv <- function(dataset=NULL,
   lab.ypos <- 1.2*max(p$data$Axis.2)
 
   if(showStats) {
-    r2 <- paste('R2:', round(stats$stattab$R2[1],3))
-    pval <- paste('Pr(>F):',stats$stattab$`Pr(>F)`[1])
+    r2 <- paste('R2:', round(stats$stats$R2[1],3))
+    pval <- paste('Pr(>F):',stats$stats$`Pr(>F)`[1])
 
     p <- p+coord_cartesian(clip='off')+
       annotation_custom(grob = textGrob(label=r2,hjust=0.5,gp=gpar(cex=2)),
@@ -143,8 +143,7 @@ plotBetaDiv <- function(dataset=NULL,
               width = 10, height = 8,
               suffix = suffix)
 
-  cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
-  print(dataset)
+  activate(dataset)
 
   return(p)
 }

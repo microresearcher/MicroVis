@@ -11,16 +11,14 @@
 #' @export
 #'
 plotLEFSE <- function(dataset=NULL,factor=NULL,alpha=0.05,lda_cutoff=2,top=20,byrank=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   factor <- setFVar(dataset)
-  clrs <- dataset$colors
-  clrs <- clrs[names(clrs) %in% factor$subset]
+  colors <- dataset$colors
+  colors <- colors[names(colors) %in% factor$subset]
 
   if(is.null(dataset$stats[[factor$name]]$lefse)) dataset <- mvlefse(dataset,dataset_name)
 
@@ -38,7 +36,7 @@ plotLEFSE <- function(dataset=NULL,factor=NULL,alpha=0.05,lda_cutoff=2,top=20,by
   ranknames <- c('Kingdom','Phylum','Class','Order','Family','Genus','Species')
   names(ranknames) <- c('k','p','c','o','f','g','s')
   plottab$Rank <- sapply(plottab$Feature, function(ft) ranknames[substr(ft,1,1)])
-  plottab$Rank <- factor(plottab$Rank,levels=unname(ranknames))
+  plottab$Rank <- factor(plottab$Rank, levels=unname(ranknames))
   if(byrank) {
     taxanames <- plottab$Feature
     plottab$Feature <- gsub('.*__','',as.character(plottab$Feature))
@@ -50,7 +48,7 @@ plotLEFSE <- function(dataset=NULL,factor=NULL,alpha=0.05,lda_cutoff=2,top=20,by
                   add.params = list(size=2),
                   sorting = 'descending',
                   rotate = T)+
-    scale_color_manual(values=clrs)+
+    scale_color_manual(values=colors)+
     labs(y='LDA Score')+
     theme(axis.title = element_text(size=20),
           axis.text = element_text(size=18),
@@ -73,8 +71,7 @@ plotLEFSE <- function(dataset=NULL,factor=NULL,alpha=0.05,lda_cutoff=2,top=20,by
               width = 12, height = 10,
               suffix = suffix)
 
-  cat(paste0('\n  <|> Active Dataset: "',dataset_name,'" <|>\n'))
-  print(dataset)
+  activate(dataset)
 
   return(p)
 }

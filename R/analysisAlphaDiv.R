@@ -41,12 +41,7 @@ adiv <- function(dataset=NULL, method='chao1', rooted=F) {
 #' @export
 #'
 phyloDiversity <- function(dataset=NULL, rooted=F) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   dataset <- clearFeatureFilt(dataset, temp=T, silent=T)
 

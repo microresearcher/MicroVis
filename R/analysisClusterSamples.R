@@ -30,19 +30,17 @@ clusterSamples <- function(dataset=NULL,
                            clust_method='ward.D2',
                            clust_num=2,
                            dataset_name=NULL) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else if(is.null(dataset_name)) {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   rank <- rank[rank %in% getRanks(dataset)]
   if(is.null(rank)) rank <- dataset$data$proc$active_rank
 
   allfts <- getFeatures(dataset, ranks=rank)
 
-  dataset_rel <- scaleSamples(clearNormalization(dataset,temp = T,silent = T),
+  dataset_rel <- scaleSamples(clearProcessing(dataset,temp = T,silent = T),
                               scaling = 'relative', temp = T, silent = T)
 
   melted <- mvmelt(dataset_rel, rank=rank)
@@ -72,8 +70,9 @@ clusterSamples <- function(dataset=NULL,
   metadata_clustered <- merge(dataset$metadata, clustered_samples, 'sample')
 
   dataset$metadata <- metadata_clustered
-  if(dataset_name=='active_dataset') assign(dataset_name,dataset,envir = mvEnv)
-  else assign(dataset_name,dataset,1)
+
+  assign('active_dataset',dataset,envir = mvEnv)
+  if(dataset_name!='active_dataset') assign(dataset_name,dataset,1)
 
   return(list(dst=dst,clusters=metadata_clustered,data=melted))
 }

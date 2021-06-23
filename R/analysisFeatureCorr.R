@@ -2,7 +2,7 @@
 #'
 #' @param dataset1 MicroVis dataset. Defaults to the active dataset
 #' @param dataset2 (Optional) MicroVis dataset with features to correlate with
-#'     the dataset1
+#'     the `dataset1`
 #' @param method Correlation method. One of either "pearson", "spearman", or
 #'     "kendall". Defaults to "spearman"
 #' @param factor Factor to group samples by
@@ -10,6 +10,8 @@
 #'     If only one dataset is being used, then these features will be correlated
 #'     with features of the same dataset
 #' @param features2 (Optional) Specific features to consider from second dataset.
+#'     If no second dataset is provided, then `features1` will be correlated with
+#'     `features2` from `dataset1`
 #'
 #' @return List of correlation matrices for each group with additional matrices
 #'     containing p-values and adjusted p-values
@@ -19,12 +21,10 @@ ftcor <- function(dataset1=NULL,dataset2=NULL,
                   method=c('pearson','kendall','spearman'),
                   factor=NULL,
                   features1=NULL, features2=NULL) {
-  if(is.null(dataset1)) {
-    dataset1 <- get('active_dataset',envir = mvEnv)
-    dataset1_name <- 'active_dataset'
-  } else {
-    dataset1_name <- deparse(substitute(dataset1))
-  }
+  if(is.null(dataset1)) dataset1 <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset1$name)) dataset1_name <- 'active_dataset'
+  else dataset1_name <- dataset1$name
 
   if(length(method) > 1) method <- 'spearman'
 
@@ -34,11 +34,15 @@ ftcor <- function(dataset1=NULL,dataset2=NULL,
     abun_data <- mvmelt(dataset1)
     fts <- colnames(dataset1$data$proc[[rank]])
     fts <- fts[fts!='Other']
-    if(length(features1 %in% fts)) fts <- fts[fts %in% features1]
-    fts1 <- fts2 <- fts
+
+    if(length(features1 %in% fts)) fts1 <- fts[fts %in% features1]
+    else fts1 <- fts
+    if(length(features2 %in% fts)) fts2 <- fts[fts %in% features1]
+    else fts2 <- fts
+
     factor <- dataset1$factors[[dataset1$active_factor]]
   } else {
-    dataset2_name <- deparse(substitute(dataset2))
+    dataset2_name <- dataset2$name
     merged_dataset <- mvmerge(dataset1,dataset2,
                               features1=features1,features2=features2)
     abun_data <- mvmelt(merged_dataset)

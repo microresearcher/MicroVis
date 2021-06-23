@@ -8,7 +8,7 @@ plotHeatmap(
   dataset = NULL,
   clustNum = 0,
   ftlist = NULL,
-  plotSigs = T,
+  plotAll = F,
   plotUniques = F,
   param = F,
   aggregated = F,
@@ -29,7 +29,7 @@ plotHeatmap(
 
 \item{ftlist}{(Optional) List of specific features to plot}
 
-\item{plotSigs}{Plot only significant features? Defaults to TRUE}
+\item{plotAll}{Plot all features? Defaults to FALSE}
 
 \item{plotUniques}{Plot only features that are uniquely expressed in a certain
 group? Defaults to FALSE}

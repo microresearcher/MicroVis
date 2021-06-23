@@ -33,7 +33,8 @@ loadTaxaFile <- function(path_to_taxa=NA,metadata=NULL,combineDupes=T) {
 
   # List of invalid characters in taxonomy names to replace with an underscore
   invalid_chars <- c('-'='_',' '='_',':'='_','/'='_',
-                     '\\['='','\\]'='','\\('='_','\\)'='')
+                     '\\['='','\\]'='','\\('='_','\\)'='','\''='','"'='','\\'='_','/'='_',
+                     '\\$'='','@'='','#'='','%'='','\\^'='','&'='','\\*'='')
 
   taxa_data <- read.csv(file.path(taxafile),header=FALSE)
 
