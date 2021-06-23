@@ -35,6 +35,7 @@ plotFtCormat <- function(dataset1=NULL, dataset2=NULL,
                          r_cutoff=0, showlowrs=F,
                          features1=NULL, features2=NULL,
                          matchFts=F,
+                         theme=c('classic','modern'),
                          circles=F) {
   if(is.null(dataset)) dataset1 <- get('active_dataset',envir = mvEnv)
 
@@ -51,8 +52,22 @@ plotFtCormat <- function(dataset1=NULL, dataset2=NULL,
   #   as long as its absolute value is between 0 and 1
   r_cutoff <- abs(r_cutoff)
   if(!(r_cutoff>0 & r_cutoff<1)) r_cutoff <- 0
+
   if(circles) shape <- 'circle'
   else shape <- 'square'
+
+  theme <- match.arg(theme)
+  if(theme=='modern') {
+    color.low <- '#00daf2'
+    color.center <- '#363636'
+    color.high <- '#ed4d3b'
+    outline.color <- '#b8b8b8'
+  } else {
+    color.low <- '#003cff'
+    color.center <- 'white'
+    color.high <- '#ff2f00'
+    outline.color <- '#383838'
+  }
 
   cordata <- ftcor(dataset1=dataset1,dataset2=dataset2,
                    method=method,
@@ -79,8 +94,9 @@ plotFtCormat <- function(dataset1=NULL, dataset2=NULL,
 
     p <- ggcorrplot(cormat,
                     title=grp_txt,legend.title='R',
-                    outline.color='#383838',
-                    method=shape)
+                    outline.color=outline.color,
+                    method=shape,
+                    colors = c(color.low,color.center,color.high))
     p <- p+theme(plot.title = element_text(size=25,hjust = 0.5),
                  axis.text = element_text(size=20),
                  axis.text.x = element_text(angle = 75))
