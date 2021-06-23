@@ -237,9 +237,10 @@ plotFtCorlines <- function(dataset1=NULL,dataset2=NULL,
 
     if(saveFig) {
       save_directory <- saveResults(dataset$results_path,
-                                    foldername = file.path('Regressions',paste0(dataset1_name,
-                                                                                '_',
-                                                                                dataset2_name)),
+                                    foldername = file.path('Correlations',
+                                                           paste0(dataset1_name,
+                                                                  '_',
+                                                                  dataset2_name)),
                                     filename = paste0(ft1,'-',ft2),
                                     factors = dataset$factors,
                                     active_factor = factor$name,
