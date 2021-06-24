@@ -84,19 +84,17 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
   }
 
   if(bySample) {
-    compareby <- 'sample'
     data$sample <- as.character(data$sample)
   } else {
     if(stratify) {
       facet <- select.list(names(dataset$factors)[!(names(dataset$factors) %in% factor)],graphics = T)
       if(is.null(facet)) stratify <- F
       else {
-        compareby <- paste(factor,facet,sep = '+')
+        # compareby <- paste(factor,facet,sep = '+')
         data <- data[c(factor,facet,fts)]
         suffix <- paste0(suffix,'_stratified')
       }
     } else {
-      compareby <- factor
       data <- data[c(factor,fts)]
     }
     aggformula <- formula(paste('. ~',compareby))
@@ -141,22 +139,37 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
   data_pivoted[[rank]] <- factor(data_pivoted[[rank]],
                                  levels=c('Other',namedfts))
 
-  p <- ggbarplot(data_pivoted,x=factor,y=abundance_type,
-                 fill=tempds$data$proc$active_rank,color='white')+
-    labs(fill=capitalize(rank),
-         x=dataset$factors[[factor]]$name_text)+
-    theme(axis.title = element_text(size=25),
-          axis.text = element_text(size=22),
-          legend.position = 'right',
-          legend.title = element_text(size = 22),
-          legend.text = element_text(size=15),
-          legend.key.size = unit(1,'cm'))
+  if(bySample) {
+    p <- ggplot(data_pivoted, aes(x=as.numeric(factor(.data$sample)), y=.data[[abundance_type]]))+
+      geom_area(aes(fill=.data[[rank]]))+
+      labs(fill=capitalize(rank))+
+      facet_wrap(facets = factor, scales = 'free_x')+
+      theme(axis.title = element_text(size=25),
+            axis.text = element_text(size=22),
+            axis.title.x = element_blank(),
+            axis.text.x = element_blank(),
+            axis.ticks.x = element_blank(),
+            legend.position = 'right',
+            legend.title = element_text(size = 22),
+            legend.text = element_text(size=15),
+            legend.key.size = unit(1,'cm'))
+  } else {
+    p <- ggbarplot(data_pivoted,x=factor,y=abundance_type,
+                   fill=tempds$data$proc$active_rank,color='white')+
+      labs(fill=capitalize(rank),
+           x=dataset$factors[[factor]]$name_text)+
+      theme(axis.title = element_text(size=25),
+            axis.text = element_text(size=22),
+            legend.position = 'right',
+            legend.title = element_text(size = 22),
+            legend.text = element_text(size=15),
+            legend.key.size = unit(1,'cm'))
+  }
 
   if(stratify) {
     p <- facet(p,facet.by=facet)+
       theme(strip.text = element_text(size = 18))
   }
-  # if(bySample) p <- facet(p,facet.by = factor,nrow = 1)
 
   show(p)
 

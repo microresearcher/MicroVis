@@ -28,7 +28,8 @@ mvmerge <- function(dataset1,dataset2,
   if(is.null(dataset1_name)) dataset1_name <- readline(cat('Provide a short name for the first dataset:\n'))
   if(is.null(dataset2_name)) dataset2_name <- readline(cat('Provide a short name for the second dataset:\n'))
 
-  taxanames1 <- dataset1$data$taxa_names
+  if(dataset1$features=='taxa') ftnames1 <- dataset1$data$taxa_names
+  else ftnames1 <- data.frame(functional=colnames(dataset1$data$orig))
   ranks1 <- getRanks(dataset1)
   rank1 <- dataset1$data$proc$active_rank
   abun1 <- dataset1$data$proc[[rank1]]
@@ -37,7 +38,8 @@ mvmerge <- function(dataset1,dataset2,
   factors1 <- dataset1$factors
   clrs1 <- dataset1$colors
 
-  taxanames2 <- dataset2$data$taxa_names
+  if(dataset2$features=='taxa') ftnames2 <- dataset2$data$taxa_names
+  else ftnames2 <- data.frame(functional=colnames(dataset2$data$orig))
   ranks2 <- getRanks(dataset2)
   rank2 <- dataset2$data$proc$active_rank
   abun2 <- dataset2$data$proc[[rank2]]
@@ -121,18 +123,19 @@ mvmerge <- function(dataset1,dataset2,
   features <- list(fts1,fts2)
   names(features) <- c(dataset1_name,dataset2_name)
 
-  rownames(taxanames1) <- paste0(dataset1_name,'_',rownames(taxanames1))
-  rownames(taxanames2) <- paste0(dataset2_name,'_',rownames(taxanames2))
+  rownames(ftnames1) <- paste0(dataset1_name,'_',rownames(ftnames1))
+  rownames(ftnames2) <- paste0(dataset2_name,'_',rownames(ftnames2))
 
-  taxanames1 <- taxanames1[!duplicated(taxanames1[[rank1]]),
-                           1:grep(rank1,colnames(taxanames1))]
-  taxanames2 <- taxanames2[!duplicated(taxanames2[[rank2]]),
-                           1:grep(rank2,colnames(taxanames2))]
+  ftnames1 <- ftnames1[!duplicated(ftnames1[[rank1]]),
+                           1:grep(rank1,colnames(ftnames1))]
+  ftnames2 <- ftnames2[!duplicated(ftnames2[[rank2]]),
+                           1:grep(rank2,colnames(ftnames2))]
 
-  taxanames <- bind_rows(taxanames1,taxanames2)
+  ftnames <- list(ftnames1, ftnames2)
+  names(ftnames) <- c(dataset1_name, dataset2_name)
 
   merged_dataset <- list(metadata=metadata,
-                         data=list(taxa_names=taxanames,
+                         data=list(ftnames=ftnames,
                                    proc=list(single_rank=merged_abun,
                                              active_rank='single_rank'),
                                    features=features),
