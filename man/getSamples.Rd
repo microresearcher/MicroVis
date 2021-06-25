@@ -7,11 +7,14 @@
 getSamples(dataset = NULL, id_cols = NULL, complete = NULL, filter = NULL)
 }
 \arguments{
+\item{dataset}{MicroVis dataset. Defaults to the active dataset}
+
 \item{id_cols}{Vector of names of metadata columns that uniquely identify subjects}
 
-\item{filter}{Vector of names of metadata columns that each subject must have all of}
+\item{complete}{Get samples with all instances (complete cases) of this variable
+in the metadata}
 
-\item{data}{MicroVis dataset. Defaults to the active dataset}
+\item{filter}{Vector of names of metadata columns that each subject must have all of}
 }
 \value{
 Data table with just the samples identifiedy by "id_cols" that have

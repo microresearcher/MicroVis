@@ -30,6 +30,8 @@ treated as if they are at this value for coloring}
 
 \item{alpha}{Significance threshold. Defaults to 0.05}
 
+\item{initial_layout}{Initial layout for the tree}
+
 \item{layout}{Type of tree layout}
 }
 \value{

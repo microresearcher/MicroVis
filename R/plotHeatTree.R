@@ -9,6 +9,7 @@
 #'     treated as if they are at this value for coloring
 #' @param alpha Significance threshold. Defaults to 0.05
 #' @param layout Type of tree layout
+#' @param initial_layout Initial layout for the tree
 #'
 #' @return MicroVis dataset
 #' @export

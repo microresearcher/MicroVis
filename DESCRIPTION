@@ -1,7 +1,7 @@
 Package: MicroVis
 Type: Package
 Title: Analysis and Visualization of Metagenomic and other Large Datasets
-Version: 0.9.0
+Version: 1.0.0
 Author: Soham Ali (soham-ali@uiowa.edu)
 Maintainer: Soham Ali <soham-ali@uiowa.edu>
 Description: More about what it does (maybe more than one line)
@@ -43,3 +43,6 @@ Imports:
     matrixStats,
     magrittr,
     Hmisc
+Suggests:
+    SpiecEasi (>= 1.0.0),
+    mdine (>= 1.0.0)

@@ -1,8 +1,10 @@
 #' Get samples with certain metadata characteristics from a dataset
 #'
-#' @param data MicroVis dataset. Defaults to the active dataset
+#' @param dataset MicroVis dataset. Defaults to the active dataset
 #' @param id_cols Vector of names of metadata columns that uniquely identify subjects
 #' @param filter Vector of names of metadata columns that each subject must have all of
+#' @param complete Get samples with all instances (complete cases) of this variable
+#'     in the metadata
 #'
 #' @return Data table with just the samples identifiedy by "id_cols" that have
 #'     all the values in filter
@@ -33,6 +35,8 @@ getSamples <- function(dataset=NULL, id_cols=NULL, complete=NULL, filter=NULL) {
 #' @param data Data table with metadata
 #' @param id_cols Vector of names of columns that uniquely identify subjects
 #' @param filter (Optional) Vector of names of columns that each subject must have all of
+#' @param complete Get samples with all instances (complete cases) of this variable
+#'     in the metadata
 #'
 #' @return Data table with just the samples identified by "id_cols" that have
 #'     all the values in filter

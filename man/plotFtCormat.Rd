@@ -18,6 +18,7 @@ plotFtCormat(
   features1 = NULL,
   features2 = NULL,
   matchFts = F,
+  theme = c("classic", "modern"),
   circles = F
 )
 }
@@ -55,6 +56,8 @@ with features of the same dataset}
 \item{matchFts}{Show the same features in the correlation matrices for all groups?
 This can be helpful when comparing correlations between groups. Defaults
 to FALSE}
+
+\item{theme}{Coloring theme. One of "classic" or "modern". Defaults to classic}
 
 \item{circles}{Use circles instead of squares to make the matrix? Defaults to
 FALSE}

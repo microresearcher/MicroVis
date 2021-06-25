@@ -11,6 +11,9 @@ samplesWith(data, id_cols, complete = NULL, filter = NULL)
 
 \item{id_cols}{Vector of names of columns that uniquely identify subjects}
 
+\item{complete}{Get samples with all instances (complete cases) of this variable
+in the metadata}
+
 \item{filter}{(Optional) Vector of names of columns that each subject must have all of}
 }
 \value{

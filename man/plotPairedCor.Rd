@@ -17,6 +17,8 @@ are more than 2 groups in the column, user will be asked to select 2 to
 compare}
 
 \item{fts}{Vector of features to correlate between the two sets}
+
+\item{invert}{Switch the x and y axes?}
 }
 \value{
 Scatter plot with trendline

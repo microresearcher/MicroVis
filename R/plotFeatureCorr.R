@@ -23,6 +23,7 @@
 #'     to FALSE
 #' @param circles Use circles instead of squares to make the matrix? Defaults to
 #'     FALSE
+#' @param theme Coloring theme. One of "classic" or "modern". Defaults to classic
 #'
 #' @return List of the one or two datasets used for this plot
 #' @export

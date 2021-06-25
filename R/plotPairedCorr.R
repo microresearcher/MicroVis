@@ -7,6 +7,7 @@
 #'     are more than 2 groups in the column, user will be asked to select 2 to
 #'     compare
 #' @param fts Vector of features to correlate between the two sets
+#' @param invert Switch the x and y axes?
 #'
 #' @return Scatter plot with trendline
 #' @export

@@ -54,7 +54,7 @@ mvmerge <- function(dataset1,dataset2,
   # Select features if any are specified
   if(length(features1 %in% fts1)) fts1 <- fts1[fts1 %in% features1]
   if(sigsOnly1) {
-    dataset1 <- univar(dataset=dataset1,
+    dataset1 <- univar(data=dataset1,
                        rank=rank1,
                        features=fts1,
                        factor=dataset1$active_factor)$overall
@@ -66,7 +66,7 @@ mvmerge <- function(dataset1,dataset2,
 
   if(length(features2 %in% fts2)) fts2 <- fts2[fts2 %in% features2]
   if(sigsOnly2) {
-    stats2 <- univar(dataset=dataset2,
+    stats2 <- univar(data=dataset2,
                      rank=rank2,
                      features=fts2,
                      factor=dataset2$active_factor)$overall
