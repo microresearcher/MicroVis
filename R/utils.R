@@ -150,6 +150,10 @@ getFeatures <- function(dataset=NULL,ranks=NULL,allRanks=F) {
 
   features <- features[!(features %in% 'Other')]
 
+  # Un-rename any taxa that were silently renamed by R (eg R adds an 'X' in front
+  #   of column names that start with a number, so we want to reverse that)
+  for(i in 1:length(features)) if(startsWith(features[i],'X') & is.numeric(type.convert(substr(features[i],2,2)))) features[i] <- sub('X','',features[i])
+
   return(features)
 }
 
