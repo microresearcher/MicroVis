@@ -17,9 +17,7 @@ mvNetwork <- function(dataset=NULL,
                       factor=NULL,
                       rank=NULL,
                       fts=NULL,
-                      method=c('spieceasi','mdine','cclasso'),
-                      fill_by=NULL,
-                      outline_by=NULL) {
+                      method=c('spieceasi','mdine','cclasso')) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   rank <- rank[rank %in% getRanks(dataset)]
