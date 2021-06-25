@@ -138,7 +138,7 @@ mvmerge <- function(dataset1,dataset2,
   } else if(exists('ftnames1')) {
     ftnames <- ftnames1
   } else if(exists('ftnames2')) {
-    ftnames <- ftanmes2
+    ftnames <- ftnames2
   } else ftnames <- NULL
 
   merged_dataset <- list(metadata=metadata,
