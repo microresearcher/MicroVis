@@ -49,7 +49,7 @@ mvNetwork <- function(dataset=NULL,
   return(dataset)
 }
 
-#' CClasso Network Analyssi
+#' CClasso Network Analysis
 #'
 #' @param dataset MicroVis dataset. Defaults to the active dataset
 #' @param r_cutoff Coefficient cutoff. Defaults to 0 (none)
