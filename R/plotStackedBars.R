@@ -142,8 +142,9 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
   if(bySample) {
     p <- ggplot(data_pivoted, aes(x=as.numeric(factor(.data$sample)), y=.data[[abundance_type]]))+
       geom_area(aes(fill=.data[[rank]]))+
+      theme_pubr()+
       labs(fill=capitalize(rank))+
-      facet_wrap(facets = factor, scales = 'free_x')+
+      facet_wrap(facets = factor, scales = 'free_x',ncol = 1)+
       theme(axis.title = element_text(size=25),
             axis.text = element_text(size=22),
             axis.title.x = element_blank(),
@@ -152,7 +153,8 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
             legend.position = 'right',
             legend.title = element_text(size = 22),
             legend.text = element_text(size=15),
-            legend.key.size = unit(1,'cm'))
+            legend.key.size = unit(1,'cm'),
+            strip.text = element_text(size = 18))
   } else {
     p <- ggbarplot(data_pivoted,x=factor,y=abundance_type,
                    fill=tempds$data$proc$active_rank,color='white')+
