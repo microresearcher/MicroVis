@@ -28,7 +28,8 @@ mvNetwork <- function(dataset=NULL,
 
   data$Other <- NULL
 
-  if(requireNamespace('SpiecEasi')) {
+  if(requireNamespace('SpiecEasi',quietly = T)) {
+    cat('Building network with SpiecEasi')
     ### Using spiec-easi ###
     # https://mibwurrepo.github.io/Microbial-bioinformatics-introductory-course-Material-2018/inference-of-microbial-ecological-networks.html
     net.se <- SpiecEasi::spiec.easi(as.matrix(data), method='mb', icov.select.params=list(rep.num=50))
@@ -37,9 +38,12 @@ mvNetwork <- function(dataset=NULL,
     netcoefs <- SpiecEasi::symBeta(getOptBeta(net.se))
 
     colnames(netcoefs) <- rownames(netcoefs) <- colnames(optnet) <- rownames(optnet) <- colnames(data)
-  } else if(requireNamespace('mdine')) {
+  } else {
+    cat('Building network with SparCC')
+    netcoefs <- sparcc(as.matrix(data))$Cov
 
-  } else stop('Either install Spiec-Easi or MDiNE for network analysis')
+    colnames(netcoefs) <- rownames(netcoefs) <- colnames(data)
+  }
 
   dataset$networks[[rank]] <- netcoefs
 
@@ -173,7 +177,7 @@ cclasso <- function(x, counts = F, pseudo = 0.5, sig = NULL,
     k.loss <- n_lam;
     n.b <- floor(n / K);
     # loss <- rep(0, n_lam);
-    cat(' Testing lambda values:')
+    cat('Testing lambda values:')
     for(i in 1:n_lam) {
       cat('',i)
       loss.cur <- 0;
@@ -212,9 +216,10 @@ cclasso <- function(x, counts = F, pseudo = 0.5, sig = NULL,
     if (k.loss == 1 || k.loss == n_lam) {
       cat("Warning:", "Tuning (", lamA ,") on boundary!\n");
     }
-    cat('\n Selected ',lamA,' for lambda\n')
+    cat('\nSelected ',lamA,' for lambda')
   }
   #-------------------------------------------------------------------------------
+  cat('\nRunning CCLasso\n')
   res <- cclasso.sub(vx = vx, wd = wd, lam = lamA,
                      u.f = u.f, u0.wd = u0.wd, d0.wd = d0.wd,
                      sig = res$sig, rho = rho, kmax = kmax);
