@@ -5,10 +5,6 @@
 #' @param rank Rank of features to analyze. Defaults to the active rank
 #' @param fts (Optional) Vector of feature names to analyze. Defaults to all the
 #'     features in the filtered dataset
-#' @param fill_by (Optional) How to choose the fill color of the nodes. Defaults
-#'     to the highest rank for taxonomic data, or a single color for other data
-#' @param outline_by (Optional) How to choose the outline color of the nodes.
-#'     Defaults to no outline color
 #'
 #' @return MicroVis dataset with network coefficients attached
 #' @export
