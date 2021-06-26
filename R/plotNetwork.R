@@ -52,7 +52,8 @@ plotNetwork <- function(dataset=NULL,
   netcoefs <- getNetwork(dataset,
                          factor=factor,
                          rank=rank, fts=fts,
-                         method=method)
+                         method=method,
+                         format='igraph')
 
   netcoefs <- dataset$networks[[rank]]
 
