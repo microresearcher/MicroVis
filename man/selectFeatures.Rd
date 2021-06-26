@@ -4,7 +4,7 @@
 \alias{selectFeatures}
 \title{Select Specific Features}
 \usage{
-selectFeatures(dataset = NULL, features, temp = F, silent = F)
+selectFeatures(dataset = NULL, features, ranks = NULL, temp = F, silent = F)
 }
 \arguments{
 \item{dataset}{MicroVis dataset. Defaults to the active dataset}
@@ -16,6 +16,9 @@ selectFeatures(dataset = NULL, features, temp = F, silent = F)
 \item{silent}{Argument that is ultimately passed onto runSampleFilter(),
 runNormalization(), and runFeatureFilter(), telling them not to output
 any messages.}
+
+\item{rank}{(Optional) Specify a rank from which to select features. Searches
+through all ranks by default}
 }
 \value{
 Dataset with list of selected features that is passed to runFeatureFilter

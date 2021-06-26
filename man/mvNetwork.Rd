@@ -4,7 +4,13 @@
 \alias{mvNetwork}
 \title{Construct an association network between features}
 \usage{
-mvNetwork(dataset = NULL, factor = NULL, rank = NULL, fts = NULL, fill = NULL)
+mvNetwork(
+  dataset = NULL,
+  factor = NULL,
+  rank = NULL,
+  fts = NULL,
+  method = c("spieceasi", "sparcc")
+)
 }
 \arguments{
 \item{dataset}{MicroVis dataset. Defaults to the active dataset}
@@ -16,8 +22,7 @@ mvNetwork(dataset = NULL, factor = NULL, rank = NULL, fts = NULL, fill = NULL)
 \item{fts}{(Optional) Vector of feature names to analyze. Defaults to all the
 features in the filtered dataset}
 
-\item{fill}{(Optional) How to choose the fill color of the nodes. Defaults to
-the highest rank for taxonomic data, or a single color for other data.}
+\item{method}{Co-occurence analysis method}
 }
 \value{
 MicroVis dataset with network coefficients attached
