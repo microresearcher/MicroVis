@@ -9,7 +9,7 @@ plotNetwork(
   factor = NULL,
   rank = NULL,
   fts = NULL,
-  method = c("spieceasi", "mdine", "cclasso"),
+  method = c("spieceasi", "sparcc"),
   fill = NULL,
   outline = NULL,
   labelFts = NULL,
