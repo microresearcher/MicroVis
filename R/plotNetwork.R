@@ -23,6 +23,8 @@ plotNetwork <- function(dataset=NULL,
 
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
+  factor <- factor[factor %in% names(dataset$factors)]
+
   rank <- rank[rank %in% getRanks(dataset)]
   if(is.null(rank)) rank <- dataset$data$proc$active_rank
 
@@ -47,10 +49,10 @@ plotNetwork <- function(dataset=NULL,
   data <- getdata(dataset, rank = rank, metadata = F)
   data$Other <- NULL
 
-  if(is.null(dataset$networks[[rank]])) dataset <- mvNetwork(dataset,
-                                                             factor=factor,
-                                                             rank=rank, fts=fts,
-                                                             method=method)
+  netcoefs <- getNetwork(dataset,
+                         factor=factor,
+                         rank=rank, fts=fts,
+                         method=method)
 
   netcoefs <- dataset$networks[[rank]]
 
