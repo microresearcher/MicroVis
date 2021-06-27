@@ -111,10 +111,9 @@ getNetwork <- function(dataset=NULL,
 #'     features in the filtered dataset
 #' @param method Co-occurence analysis method
 #'
-#' @return
+#' @return List of feature clusters
 #' @export
 #'
-#' @examples
 networkClusters <- function(dataset=NULL,
                             factor=NULL,
                             rank=NULL, fts=NULL,

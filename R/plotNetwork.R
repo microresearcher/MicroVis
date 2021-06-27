@@ -29,7 +29,7 @@ plotNetwork <- function(dataset=NULL,
   if(is.null(rank)) rank <- dataset$data$proc$active_rank
 
   fts <- fts[fts %in% getFeatures(dataset, ranks = rank)]
-  if(is.null(fts)) fts <- getFeatures(dataset, ranks = rank)
+  if(!length(fts)) fts <- getFeatures(dataset, ranks = rank)
 
   if(length(fill)>1) {
     if(length(fill)!=length(fts)) fill <- NULL
