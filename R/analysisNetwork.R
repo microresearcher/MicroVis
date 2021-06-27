@@ -13,7 +13,7 @@
 mvNetwork <- function(dataset=NULL,
                       factor=NULL,
                       rank=NULL, fts=NULL,
-                      method=c('spieceasi','sparcc')) {
+                      method=c('spieceasi','spearman')) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   factor <- factor[factor %in% names(dataset$factors)]
@@ -44,11 +44,14 @@ mvNetwork <- function(dataset=NULL,
     netcoefs <- SpiecEasi::symBeta(getOptBeta(net.se))
 
     colnames(netcoefs) <- rownames(netcoefs) <- colnames(optnet) <- rownames(optnet) <- colnames(data)
+  # } else if(method=='sparcc') {
+  #   ### THIS DOES NOT WORK -- SPARCC.R SCRIPTS NEED TO BE FIXED BUT NOT SURE HOW
+  #   cat('\nBuilding network with SparCC\n')
+  #   netcoefs <- sparcc(as.matrix(data))$Cov
+  #
+  #   colnames(netcoefs) <- rownames(netcoefs) <- colnames(data)
   } else {
-    cat('\nBuilding network with SparCC\n')
-    netcoefs <- sparcc(as.matrix(data))$Cov
-
-    colnames(netcoefs) <- rownames(netcoefs) <- colnames(data)
+    stop('Networks can currently only be built with SpiecEasi, but SpiecEasi is not installed')
   }
 
   dataset$networks[[rank]] <- netcoefs
