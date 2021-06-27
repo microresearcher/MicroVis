@@ -34,6 +34,8 @@ plotNetwork <- function(dataset=NULL,
 
   r_cutoff <- abs(r_cutoff)
 
+  method <- match.arg(method)
+
   if(length(fill)>1) {
     if(length(fill)!=length(fts)) fill <- NULL
     else filllist <- fill
@@ -42,8 +44,7 @@ plotNetwork <- function(dataset=NULL,
   if(length(fill)<=1) {
     fill <- fill[fill %in% getRanks(dataset)]
     if(!length(fill)) fill <- getRanks(dataset)[2]
-    filllist <- getParentTaxa(fts,
-                              from=rank,to=fill,
+    filllist <- getParentTaxa(fts, from=rank, to=fill,
                               dataset$data$taxa_names)
   }
 
@@ -59,7 +60,7 @@ plotNetwork <- function(dataset=NULL,
 
   totaledges <- length(as.matrix(net)[as.matrix(net)!=0])/2
   if(totaledges) cat('\n',totaledges,'significant correlations identified\n')
-  else stop('No significant correlations were identified using',method)
+  else stop('No significant correlations were identified using ',method)
 
   net <- graph_from_adjacency_matrix(net, weighted = T)
 
