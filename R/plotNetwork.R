@@ -68,7 +68,7 @@ plotNetwork <- function(dataset=NULL,
 
   E(net)$polarity <- E(net)$weight/abs(E(net)$weight)
   E(net)$weight <- abs(E(net)$weight)
-  E(net)$width <- abs(E(net)$weight)*20
+  E(net)$width <- abs(E(net)$weight)
   E(net)$arrow.size <- 0
 
   if(!labelAll) V(net)$label <- rep(NA, length(V(net)$name))
