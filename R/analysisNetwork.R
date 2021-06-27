@@ -36,7 +36,9 @@ mvNetwork <- function(dataset=NULL,
     cat('\nBuilding network with SpiecEasi\n')
     ### Using spiec-easi ###
     # https://mibwurrepo.github.io/Microbial-bioinformatics-introductory-course-Material-2018/inference-of-microbial-ecological-networks.html
-    net.se <- SpiecEasi::spiec.easi(as.matrix(data), method='mb', icov.select.params=list(rep.num=50))
+    net.se <- SpiecEasi::spiec.easi(as.matrix(data),
+                                    method='mb',
+                                    icov.select.params=list(rep.num=50))
 
     optnet <- net.se$refit$stars
     netcoefs <- SpiecEasi::symBeta(getOptBeta(net.se))
@@ -95,8 +97,11 @@ getNetwork <- function(dataset=NULL,
 
   format <- match.arg(format)
 
-  if(format=='igraph') net <- graph_from_adjacency_matrix(dataset$networks[[rank]],
-                                                          weighted = T)
+  if(format=='igraph' & requireNamespace('igraph')) {
+    library(igraph)
+    net <- graph_from_adjacency_matrix(dataset$networks[[rank]],
+                                       weighted = T)
+  }
   else net <- dataset$networks[[rank]]
 
   return(net)
