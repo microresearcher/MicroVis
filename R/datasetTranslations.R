@@ -7,12 +7,7 @@
 #'
 makePS <- function(dataset=NULL) {
   # https://vaulot.github.io/tutorials/Phyloseq_tutorial.html
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- dataset$name
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   if(dataset$features!='taxa') stop('Phyloseq is intended for taxonomic data only')
 
@@ -66,12 +61,7 @@ makePS <- function(dataset=NULL) {
 #' @export
 #'
 makeDeseq <- function(dataset=NULL,baseline=NULL) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- dataset$name
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   dataset <- clearNormalization(dataset, temp = T, silent = T)
 
@@ -123,12 +113,7 @@ makeDeseq <- function(dataset=NULL,baseline=NULL) {
 #' @export
 #'
 makeTaxMap <- function(dataset=NULL,unfiltered=F,ftlist=NULL) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- dataset$name
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   if(dataset$features!='taxa') stop('"taxmap" objects are for taxonomic data only')
 

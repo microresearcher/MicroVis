@@ -67,8 +67,6 @@ plotNetwork <- function(dataset=NULL,
   vsize <- glog(apply(data, 2, mean))
   vsize[vsize<(max(vsize)/5)] <- max(vsize)/5
 
-  E(net)$polarity <- E(net)$weight/abs(E(net)$weight)
-  E(net)$weight <- abs(E(net)$weight)
   E(net)$width <- abs(E(net)$weight)
   E(net)$arrow.size <- 0
 

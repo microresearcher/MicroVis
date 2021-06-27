@@ -104,6 +104,8 @@ getNetwork <- function(dataset=NULL,
     library(igraph)
     net <- graph_from_adjacency_matrix(dataset$networks[[rank]],
                                        weighted = T)
+    E(net)$polarity <- E(net)$weight/abs(E(net)$weight)
+    E(net)$weight <- abs(E(net)$weight)
   }
   else net <- dataset$networks[[rank]]
 
