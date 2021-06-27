@@ -20,7 +20,7 @@ plotNetwork <- function(dataset=NULL,
                         method=c('spieceasi','sparcc'),
                         fill=NULL, outline=NULL, labelfts=NULL, labelAll=F,
                         deg_cutoff=0, r_cutoff=0, top_r_prop=100,
-                        layout=c('fr','circle')) {
+                        layout=c('fr','circle','sphere','dh','nicely')) {
 
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
@@ -112,6 +112,9 @@ plotNetwork <- function(dataset=NULL,
 
   if(layout=='fr') lay <- layout_with_fr(net.clean)
   else if(layout=='circle') lay <- layout_in_circle(net.clean)
+  else if(layout=='sphere') lay <- layout_on_sphere(net.clean)
+  else if(layout=='dh') lay <- layout_with_dh(net.clean)
+  else if(layout=='nicely') lay <- layout_nicely(net.clean)
 
   plot(net.clean, layout=lay)
   legend(x=-1.5, y=-0.6, unique(V(net.clean)$fill), pch=21,
