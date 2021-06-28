@@ -13,7 +13,7 @@
 mvNetwork <- function(dataset=NULL,
                       factor=NULL,
                       rank=NULL, fts=NULL,
-                      method=c('spieceasi','spearman')) {
+                      method=c('se.mb','se.glasso')) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   factor <- factor[factor %in% names(dataset$factors)]
@@ -31,13 +31,14 @@ mvNetwork <- function(dataset=NULL,
   data$Other <- NULL
 
   method <- match.arg(method)
-  if(method=='spieceasi' & requireNamespace('SpiecEasi',quietly = T)) {
+  if(length(grep('se\\.',method)) & requireNamespace('SpiecEasi',quietly = T)) {
     library(SpiecEasi)
+    method <- gsub('se\\.','',method)
     cat('\nBuilding network with SpiecEasi\n')
     ### Using spiec-easi ###
     # https://mibwurrepo.github.io/Microbial-bioinformatics-introductory-course-Material-2018/inference-of-microbial-ecological-networks.html
     net.se <- SpiecEasi::spiec.easi(as.matrix(data),
-                                    method='mb',
+                                    method=method,
                                     icov.select.params=list(rep.num=50))
 
     optnet <- net.se$refit$stars
@@ -51,7 +52,8 @@ mvNetwork <- function(dataset=NULL,
   #
   #   colnames(netcoefs) <- rownames(netcoefs) <- colnames(data)
   } else {
-    stop('Networks can currently only be built with SpiecEasi, but SpiecEasi is not installed')
+    stop('Networks can currently only be built with SpiecEasi, but SpiecEasi is not installed\n
+         SpiecEasi can be installed from github: https://github.com/zdk123/SpiecEasi')
   }
 
   dataset$networks[[rank]] <- netcoefs
@@ -79,7 +81,7 @@ mvNetwork <- function(dataset=NULL,
 getNetwork <- function(dataset=NULL,
                        factor=NULL,
                        rank=NULL, fts=NULL,
-                       method=c('spieceasi','sparcc'),
+                       method=c('se.mb','se.glasso'),
                        format=c('none','network','igraph')) {
 
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
@@ -127,7 +129,7 @@ getNetwork <- function(dataset=NULL,
 networkClusters <- function(dataset=NULL,
                             factor=NULL,
                             rank=NULL, fts=NULL,
-                            method=c('spieceasi','sparcc')) {
+                            method=c('se.mb','se.glasso')) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   factor <- factor[factor %in% names(dataset$factors)]

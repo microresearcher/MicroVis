@@ -17,10 +17,12 @@
 plotNetwork <- function(dataset=NULL,
                         factor=NULL,
                         rank=NULL, fts=NULL,
-                        method=c('spieceasi','sparcc'),
+                        method=c('se.mb','se.glasso'),
                         fill=NULL, outline=NULL, labelfts=NULL, labelAll=F,
                         deg_cutoff=0, r_cutoff=0, top_r_prop=100,
                         layout=c('fr','circle','sphere','dh','nicely')) {
+  if(requireNamespace('igraph',quietly = T)) library(igraph)
+  else stop('Must install igraph to plot networks')
 
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
@@ -36,6 +38,8 @@ plotNetwork <- function(dataset=NULL,
 
   method <- match.arg(method)
 
+  layout <- match.arg(layout)
+
   if(length(fill)>1) {
     if(length(fill)!=length(fts)) fill <- NULL
     else filllist <- fill
@@ -47,8 +51,6 @@ plotNetwork <- function(dataset=NULL,
     filllist <- getParentTaxa(fts, from=rank, to=fill,
                               dataset$data$taxa_names)
   }
-
-  layout <- match.arg(layout)
 
   data <- getdata(dataset, rank = rank, metadata = F)
   data$Other <- NULL
