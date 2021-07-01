@@ -55,7 +55,7 @@ plotRareCurves <- function(dataset=NULL,
 
   p <- ggplot(rctab, aes(sample_size,richness,group=sample))+
     geom_line(aes(color=get(factor$name)),size=0.5)+
-    scale_color_manual(values=clrs)+
+    scale_color_manual(values=colors)+
     labs(y='Genus Richness',x='Sample Size',colour=factor$txt)
   if(panels) {
     p <- facet(p,factor$name)

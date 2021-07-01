@@ -25,7 +25,7 @@ plotLEFSE <- function(dataset=NULL,factor=NULL,alpha=0.05,lda_cutoff=2,top=20,by
   mm <- dataset$stats[[factor$name]]$lefse
   lefse_results <- data.frame(Feature=mm@marker_table$feature,
                               Enriched=mm@marker_table$enrich_group,
-                              LDA_Score=mm@marker_table$lda,
+                              LDA_Score=mm@marker_table$ef_lda,
                               p=mm@marker_table$pvalue,
                               q=mm@marker_table$padj)
 
