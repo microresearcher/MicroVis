@@ -9,7 +9,7 @@ mvNetwork(
   factor = NULL,
   rank = NULL,
   fts = NULL,
-  method = c("spieceasi", "sparcc")
+  method = c("se.mb", "se.glasso")
 )
 }
 \arguments{

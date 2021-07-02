@@ -9,12 +9,16 @@ plotNetwork(
   factor = NULL,
   rank = NULL,
   fts = NULL,
-  method = c("spieceasi", "sparcc"),
+  method = c("se.mb", "se.glasso"),
+  format = c("ggplot", "igraph"),
   fill = NULL,
   outline = NULL,
-  labelFts = NULL,
+  labelfts = NULL,
   labelAll = F,
-  layout = c("fr", "circle")
+  deg_cutoff = 0,
+  r_cutoff = 0,
+  top_r_prop = 100,
+  layout = c("fr", "circle", "sphere", "dh", "nicely")
 )
 }
 \arguments{
@@ -28,14 +32,25 @@ plotNetwork(
 
 \item{method}{Co-occurence analysis method}
 
+\item{format}{Use ggplot or igraph to plot the network?}
+
 \item{fill}{How node colors are chosen}
 
 \item{outline}{(Optional) How node outlines are chosen, if at all. Defaults to
 no outline}
 
-\item{layout}{Layout for nodes}
-
 \item{labelfts}{Which nodes are labeled, if any. Defaults to none}
+
+\item{labelAll}{Label all features in the network? Defaults to FALSE}
+
+\item{deg_cutoff}{Only display nodes with at least this many connections/edges.
+Defaults to 0}
+
+\item{r_cutoff}{Only display connections/edges with an absolute value of this or more}
+
+\item{top_r_prop}{Only display the top percentile of connections by absolute value}
+
+\item{layout}{Layout for nodes}
 }
 \value{
 Network plot

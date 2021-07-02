@@ -232,3 +232,18 @@ mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_
 
   return(cat('\nType "mvhelp()" then press Enter to see the available functions!\n\n'))
 }
+
+#' MicroVis ggplot theme
+#'
+#' @return NULL
+#' @export
+#'
+theme_mv <- function() {
+  theme_pubr()+
+    theme(plot.title = element_text(hjust = 0.5, size=25),
+          axis.title = element_text(size=25),
+          axis.text = element_text(size=22),
+          legend.title = element_blank(),
+          legend.text = element_text(size=20, margin=margin(r=10)),
+          legend.key.size = unit('5','mm'))
+}

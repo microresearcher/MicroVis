@@ -10,6 +10,12 @@
 #'     no outline
 #' @param labelfts Which nodes are labeled, if any. Defaults to none
 #' @param layout Layout for nodes
+#' @param format Use ggplot or igraph to plot the network?
+#' @param labelAll Label all features in the network? Defaults to FALSE
+#' @param deg_cutoff Only display nodes with at least this many connections/edges.
+#'     Defaults to 0
+#' @param r_cutoff Only display connections/edges with an absolute value of this or more
+#' @param top_r_prop Only display the top percentile of connections by absolute value
 #'
 #' @return Network plot
 #' @export
@@ -18,6 +24,7 @@ plotNetwork <- function(dataset=NULL,
                         factor=NULL,
                         rank=NULL, fts=NULL,
                         method=c('se.mb','se.glasso'),
+                        format=c('ggplot','igraph'),
                         fill=NULL, outline=NULL, labelfts=NULL, labelAll=F,
                         deg_cutoff=0, r_cutoff=0, top_r_prop=100,
                         layout=c('fr','circle','sphere','dh','nicely')) {
@@ -55,6 +62,9 @@ plotNetwork <- function(dataset=NULL,
   data <- getdata(dataset, rank = rank, metadata = F)
   data$Other <- NULL
 
+  vsize <- glog(apply(data, 2, mean))
+  vsize[vsize<(max(vsize)/5)] <- max(vsize)/5
+
   net <- getNetwork(dataset,
                     factor=factor,
                     rank=rank, fts=fts,
@@ -64,61 +74,89 @@ plotNetwork <- function(dataset=NULL,
   if(totaledges) cat('\n',totaledges,'significant correlations identified\n')
   else stop('No significant correlations were identified using ',method)
 
-  net <- graph_from_adjacency_matrix(net, weighted = T)
+  if(format=='ggplot' & requireNamespace('ggnetwork')) {
+    net <- as.network(as.matrix(net),
+                      matrix.type='adjacency',
+                      directed=T,
+                      ignore.eval=F,
+                      names.eval='value')
 
-  vsize <- glog(apply(data, 2, mean))
-  vsize[vsize<(max(vsize)/5)] <- max(vsize)/5
+    deg <- sna::degree(net)
 
-  E(net)$width <- abs(E(net)$weight)
-  E(net)$arrow.size <- 0
+    net %v% 'fill' <- filllist
+    net %v% 'nodesize' <- vsize
+    net %v% 'degree' <- deg
 
-  if(!labelAll) V(net)$label <- rep(NA, length(V(net)$name))
-  if(length(labelfts)) V(net)$label[which(V(net)$name %in% labelfts)] <- labelfts
+    net.clean <- net
+    delete.vertices(net.clean, which(net.clean %v% 'degree'==0))
 
-  V(net)$size <- vsize*20
-  V(net)$fill <- filllist
+    p <- ggplot(net.clean, aes(x = x, y = y, xend = xend, yend = yend))+
+      geom_edges()+
+      geom_nodes(aes(color=fill, size=nodesize))+
+      theme_mv()+
+      theme(axis.title = element_blank(),
+            axis.text = element_blank(),
+            axis.ticks = element_blank(),
+            axis.line = element_blank())+
+      guides(color = guide_legend(override.aes = list(size=5)),
+             size = 'none')
 
-  if(r_cutoff>0 & r_cutoff<1) {
-    cutoff <- r_cutoff
-    net.filt <- delete_edges(net, E(net)[weight<cutoff])
-    cat('  Filtered out',length(E(net)[weight<cutoff]),
-        'correlations less than', r_cutoff,'\n')
+    show(p)
 
-    emptyvs.filt <- V(net.filt)[degree(net.filt)<=deg_cutoff]
-    cat('  Removed nodes with',deg_cutoff,'or fewer correlations\n')
+  } else if(format=='igraph' & requireNamespace('igraph')) {
+    net <- graph_from_adjacency_matrix(net, weighted = T)
 
-    net.clean <- delete_vertices(net.filt, emptyvs.filt)
-  } else if(top_r_prop>0 & top_r_prop<100) {
-    cutoff <- min(E(net)$weight[order(E(net)$weight,decreasing = T)]
-                  [floor((top_r_prop/100)*length(E(net)$weight))+1])
-    net.filt <- delete_edges(net, E(net)[weight<cutoff])
-    cat('  Filtered out',length(E(net)[weight<cutoff]),
-        'correlations in the bottom',100-top_r_prop,'percentile\n')
+    E(net)$width <- abs(E(net)$weight)
+    E(net)$arrow.size <- 0
 
-    emptyvs.filt <- V(net.filt)[degree(net.filt)<=deg_cutoff]
-    cat('  Removed nodes with',deg_cutoff,'or fewer correlations\n')
+    if(!labelAll) V(net)$label <- rep(NA, length(V(net)$name))
+    if(length(labelfts)) V(net)$label[which(V(net)$name %in% labelfts)] <- labelfts
 
-    net.clean <- delete_vertices(net.filt, emptyvs.filt)
-  } else {
-    emptyvs <- V(net)[degree(net)<=deg_cutoff]
-    net.clean <- delete_vertices(net, emptyvs)
+    V(net)$size <- vsize*20
+    V(net)$fill <- filllist
+
+    if(r_cutoff>0 & r_cutoff<1) {
+      cutoff <- r_cutoff
+      net.filt <- delete_edges(net, E(net)[weight<cutoff])
+      cat('  Filtered out',length(E(net)[weight<cutoff]),
+          'correlations less than', r_cutoff,'\n')
+
+      emptyvs.filt <- V(net.filt)[degree(net.filt)<=deg_cutoff]
+      cat('  Removed nodes with',deg_cutoff,'or fewer correlations\n')
+
+      net.clean <- delete_vertices(net.filt, emptyvs.filt)
+    } else if(top_r_prop>0 & top_r_prop<100) {
+      cutoff <- min(E(net)$weight[order(E(net)$weight,decreasing = T)]
+                    [floor((top_r_prop/100)*length(E(net)$weight))+1])
+      net.filt <- delete_edges(net, E(net)[weight<cutoff])
+      cat('  Filtered out',length(E(net)[weight<cutoff]),
+          'correlations in the bottom',100-top_r_prop,'percentile\n')
+
+      emptyvs.filt <- V(net.filt)[degree(net.filt)<=deg_cutoff]
+      cat('  Removed nodes with',deg_cutoff,'or fewer correlations\n')
+
+      net.clean <- delete_vertices(net.filt, emptyvs.filt)
+    } else {
+      emptyvs <- V(net)[degree(net)<=deg_cutoff]
+      net.clean <- delete_vertices(net, emptyvs)
+    }
+
+    colors <- rainbow(length(unique(V(net.clean)$fill)), alpha = 0.5)
+    names(colors) <- unique(V(net.clean)$fill)
+
+    V(net.clean)$color <- colors[V(net.clean)$fill]
+    V(net.clean)$frame.color <- NA
+
+    if(layout=='fr') lay <- layout_with_fr(net.clean)
+    else if(layout=='circle') lay <- layout_in_circle(net.clean)
+    else if(layout=='sphere') lay <- layout_on_sphere(net.clean)
+    else if(layout=='dh') lay <- layout_with_dh(net.clean)
+    else if(layout=='nicely') lay <- layout_nicely(net.clean)
+
+    plot(net.clean, layout=lay)
+    legend(x=-1.5, y=-0.6, unique(V(net.clean)$fill), pch=21,
+           col="#ffffff", pt.bg=colors, pt.cex=2, cex=.8, bty="n", ncol=1)
   }
-
-  colors <- rainbow(length(unique(V(net.clean)$fill)), alpha = 0.5)
-  names(colors) <- unique(V(net.clean)$fill)
-
-  V(net.clean)$color <- colors[V(net.clean)$fill]
-  V(net.clean)$frame.color <- NA
-
-  if(layout=='fr') lay <- layout_with_fr(net.clean)
-  else if(layout=='circle') lay <- layout_in_circle(net.clean)
-  else if(layout=='sphere') lay <- layout_on_sphere(net.clean)
-  else if(layout=='dh') lay <- layout_with_dh(net.clean)
-  else if(layout=='nicely') lay <- layout_nicely(net.clean)
-
-  plot(net.clean, layout=lay)
-  legend(x=-1.5, y=-0.6, unique(V(net.clean)$fill), pch=21,
-         col="#ffffff", pt.bg=colors, pt.cex=2, cex=.8, bty="n", ncol=1)
 
   return(dataset)
 }

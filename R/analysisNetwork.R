@@ -102,14 +102,29 @@ getNetwork <- function(dataset=NULL,
 
   format <- match.arg(format)
 
-  if(format=='igraph' & requireNamespace('igraph')) {
+  if(format=='network' & requireNamespace('network')) {
+    library('network')
+
+    net <- as.network(as.matrix(dataset$networks[[rank]]),
+                      matrix.type='adjacency',
+                      directed=T,
+                      ignore.eval=F,
+                      names.eval='value')
+
+    deg <- sna::degree(net)
+
+    net %e% 'polarity' <- (net %e% 'value')/abs(net %e% 'value')
+    net %e% 'weight' <- abs(net %e% 'value')
+
+  } else if(format=='igraph' & requireNamespace('igraph')) {
     library(igraph)
     net <- graph_from_adjacency_matrix(dataset$networks[[rank]],
                                        weighted = T)
+
     E(net)$polarity <- E(net)$weight/abs(E(net)$weight)
     E(net)$weight <- abs(E(net)$weight)
-  }
-  else net <- dataset$networks[[rank]]
+
+  } else net <- dataset$networks[[rank]]
 
   return(net)
 }
