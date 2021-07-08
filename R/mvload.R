@@ -25,7 +25,7 @@
 #' @importFrom metacoder calc_taxon_abund heat_tree
 #' @importFrom circlize colorRamp2
 #' @importFrom ComplexHeatmap HeatmapAnnotation Heatmap draw
-#' @importFrom microbiomeMarker run_lefse plot_cladogram
+#' @importFrom microbiomeMarker mm_lefse plot_cladogram
 #' @importFrom phyloseq phyloseq otu_table tax_table sample_data merge_phyloseq ntaxa taxa_names UniFrac
 #' @importFrom DESeq2 DESeqDataSetFromMatrix DESeq resultsNames results
 #' @import rstudioapi
