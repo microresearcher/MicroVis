@@ -18,7 +18,7 @@ mvlefse <- function(dataset=NULL, dataset_name=NULL) {
   factor <- setFVar(dataset)
 
   phylodata <- makePS(dataset)
-  mm_lefse <- run_lefse(phylodata,
+  mm <- run_lefse(phylodata,
               norm='CPM',
               class=factor$name,
               bootstrap_n=1000,
@@ -26,7 +26,7 @@ mvlefse <- function(dataset=NULL, dataset_name=NULL) {
 
   mm@marker_table$BHadjust <- p.adjust(mm@marker_table$pvalue,method = 'BH')
 
-  dataset$stats[[factor$name]]$lefse <- mm_lefse
+  dataset$stats[[factor$name]]$lefse <- mm
 
   assign('active_dataset', dataset,envir = mvEnv)
   if(dataset_name!='active_dataset') assign(dataset_name,dataset,1)
