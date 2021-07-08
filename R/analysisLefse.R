@@ -18,7 +18,7 @@ mvlefse <- function(dataset=NULL, dataset_name=NULL) {
   factor <- setFVar(dataset)
 
   phylodata <- makePS(dataset)
-  mm <- lefse(phylodata,
+  mm <- run_lefse(phylodata,
               norm='CPM',
               class=factor$name,
               bootstrap_n=1000,
