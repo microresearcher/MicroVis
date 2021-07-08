@@ -29,6 +29,7 @@ processDataset <- function(dataset, temp=F, silent=F) {
   }
 
   dataset$stats <- list()
+  dataset$networks <- NULL
   dataset$data$proc$filtering$ftstats <- NULL
   class(dataset) <- 'mvdata'
 

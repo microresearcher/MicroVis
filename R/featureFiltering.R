@@ -631,6 +631,8 @@ filterNAs <- function(dataset=NULL, keepNAs=F, ranks=NULL, silent=F) {
 #'
 #' @param dataset MicroVis dataset. Defaults to the active dataset
 #' @param features Vector of features (at any rank) to select
+#' @param rank (Optional) Specify a rank from which to select features. Searches
+#'     through all ranks by default
 #' @param temp This parameter has no use in this function and can be removed
 #' @param silent Argument that is ultimately passed onto runSampleFilter(),
 #'     runNormalization(), and runFeatureFilter(), telling them not to output
@@ -639,7 +641,7 @@ filterNAs <- function(dataset=NULL, keepNAs=F, ranks=NULL, silent=F) {
 #' @return Dataset with list of selected features that is passed to runFeatureFilter
 #' @export
 #'
-selectFeatures <- function(dataset=NULL, features, temp=F, silent=F) {
+selectFeatures <- function(dataset=NULL, features, ranks=NULL, temp=F, silent=F) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   if(length(names(dataset$data$proc$filtering)[!(names(dataset$data$proc$filtering)
@@ -663,6 +665,9 @@ selectFeatures <- function(dataset=NULL, features, temp=F, silent=F) {
                                             function(rank) features[features %in% ft_names[[rank]]])
     else selected <- list('single_rank'=features)
   } else selected <- list('functional'=features)
+
+  ranks <- ranks[ranks %in% getRanks(dataset)]
+  if(!is.null(ranks)) selected[!(names(selected) %in% ranks)] <- NULL
 
   dataset$data$proc$selected <- selected
 
