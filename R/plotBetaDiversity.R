@@ -132,6 +132,13 @@ plotBetaDiv <- function(dataset=NULL,
     if(!exists('p_legend',inherits = F)) p_legend <- as_ggplot(get_legend(p))
     p <- p+theme(legend.position = 'none')
     suffix <- paste0(suffix,'_nolegend')
+    legend_output_location <- paste0(dataset$results_path,'/Results_',Sys.Date(),'/Beta Diversity/')
+    if(exists('p_legend')) ggsave(legend_output_location,
+                                  filename="Legend.png",
+                                  plot=p_legend,
+                                  device = 'png',
+                                  width = 16,
+                                  height = 6)
   }
 
   show(p)
@@ -143,13 +150,13 @@ plotBetaDiv <- function(dataset=NULL,
               width = 10, height = 8,
               suffix = suffix)
 
-  legend_output_location <- paste0(dataset$results_path,'/Results_',Sys.Date(),'/Beta Diversity/')
-  if(exists('p_legend')) ggsave(legend_output_location,
-                                filename="Legend.png",
-                                plot=p_legend,
-                                device = 'png',
-                                width = 16,
-                                height = 6)
+  # legend_output_location <- paste0(dataset$results_path,'/Results_',Sys.Date(),'/Beta Diversity/')
+  # if(exists('p_legend')) ggsave(legend_output_location,
+  #                               filename="Legend.png",
+  #                               plot=p_legend,
+  #                               device = 'png',
+  #                               width = 16,
+  #                               height = 6)
 
   activate(dataset)
 
