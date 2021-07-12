@@ -128,6 +128,14 @@ plotAlphaDiv <- function(dataset=NULL,
               width = 8, height = 6,
               suffix = paste0('_adiv_',method))
 
+  legend_output_location <- paste0(dataset$results_path,'/Results_',Sys.Date(),'/Alpha Diversity')
+  if(exists('p_legend')) ggsave(legend_output_location,
+                                filename="Legend.png",
+                                plot=p_legend,
+                                device = 'png',
+                                width = 16,
+                                height = 6)
+
   activate(dataset)
   return(p)
 }
