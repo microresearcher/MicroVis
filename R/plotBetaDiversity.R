@@ -143,7 +143,7 @@ plotBetaDiv <- function(dataset=NULL,
               width = 10, height = 8,
               suffix = suffix)
 
-  legend_output_location <- paste0(dataset$results_path,'/Results_',Sys.Date(),'/Beta Diversity')
+  legend_output_location <- paste0(dataset$results_path,'/Results_',Sys.Date(),'/Beta Diversity/')
   if(exists('p_legend')) ggsave(legend_output_location,
                                 filename="Legend.png",
                                 plot=p_legend,
