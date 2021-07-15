@@ -21,8 +21,7 @@
 #' @importFrom graphics barplot
 #' @importFrom grid textGrob gpar
 #' @importFrom picante pd prune.sample
-#' @importFrom taxa parse_tax_data
-#' @importFrom metacoder calc_taxon_abund heat_tree
+#' @importFrom metacoder calc_taxon_abund heat_tree parse_tax_data
 #' @importFrom circlize colorRamp2
 #' @importFrom ComplexHeatmap HeatmapAnnotation Heatmap draw
 #' @importFrom microbiomeMarker run_lefse plot_cladogram

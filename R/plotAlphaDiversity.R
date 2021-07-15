@@ -102,6 +102,7 @@ plotAlphaDiv <- function(dataset=NULL,
       pw_stats$y.position <- 1.1*pw_stats$y.position
       p <- p+stat_pvalue_manual(pw_stats,
                                 label='p.adj.signif',
+                                label.size = 9,
                                 step.increase=0.03,
                                 bracket.size=1,
                                 tip.length=0,

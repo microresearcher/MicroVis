@@ -25,7 +25,6 @@ Imports:
     grDevices,
     utils,
     S4Vectors,
-    taxa,
     phyloseq,
     randomForest,
     Boruta,

@@ -85,6 +85,7 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
 
   if(bySample) {
     data$sample <- as.character(data$sample)
+    suffix <- paste0(suffix,'_bySample')
   } else {
     if(stratify) {
       facet <- select.list(names(dataset$factors)[!(names(dataset$factors) %in% factor)],graphics = T)
@@ -97,10 +98,10 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
     } else {
       data <- data[c(factor,fts)]
     }
-    aggformula <- formula(paste('. ~',compareby))
+    aggformula <- formula(paste('. ~',factor))
     # data <- aggregate(aggformula, data, function(x) sum(x))
     agglist <- list()
-    for(ft in fts) agglist[[ft]] <- aggregate(aggformula,data[c(compareby,ft)],
+    for(ft in fts) agglist[[ft]] <- aggregate(aggformula,data[c(factor,ft)],
                                               function(x) mean(x,na.rm=T))
     data <- purrr::reduce(agglist,merge)
   }
