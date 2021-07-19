@@ -90,7 +90,7 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
       facet <- select.list(names(dataset$factors)[!(names(dataset$factors) %in% factor)],graphics = T)
       if(is.null(facet)) stratify <- F
       else {
-        compareby <- paste(factor,facet,sep = '+')
+        # compareby <- paste(factor,facet,sep = '+')
         data <- data[c(factor,facet,fts)]
         suffix <- paste0(suffix,'_stratified')
       }
