@@ -74,12 +74,12 @@ plotNetwork <- function(dataset=NULL,
   if(totaledges) cat('\n',totaledges,'significant correlations identified\n')
   else stop('No significant correlations were identified using ',method)
 
-  if(format=='ggplot' & requireNamespace('ggnetwork')) {
-    net <- as.network(as.matrix(net),
-                      matrix.type='adjacency',
-                      directed=T,
-                      ignore.eval=F,
-                      names.eval='value')
+  if(format=='ggplot' & requireNamespace('ggnetwork') & requireNamespace('network')) {
+    net <- network::as.network(as.matrix(net),
+                               matrix.type='adjacency',
+                               directed=T,
+                               ignore.eval=F,
+                               names.eval='value')
 
     deg <- sna::degree(net)
 
