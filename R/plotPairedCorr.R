@@ -12,13 +12,17 @@
 #'     to the second highest rank in the dataset
 #' @param alpha Significance threshold. Defaults to 0.05
 #' @param padj Adjust the p-values for multiple testing? Defaults to TRUE
+#' @param rthresh R value cutoff for coloring the figures of each figure.
+#'     Defaults to 0.7
+#' @param showstats Whether or not to show R and p-value. Defaults to TRUE
 #'
 #' @return Scatter plot with trendline
 #' @export
 #'
 plotPairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
                           invert=F,
-                          rthresh=0.7, alpha=0.05, padj=T) {
+                          rthresh=0.7, alpha=0.05, padj=T,
+                          showstats=T) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   # If no valid rank was specified, default to the second highest rank
@@ -68,16 +72,17 @@ plotPairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
                                                               values_from=ft)
     if(cor_rvals[match(ft,fts)] >= rthresh & cor_pvals[match(ft,fts)] <= alpha) {
       ptemp <- ggscatter(pivoted, groups[1], groups[2], color='#00c700', size=4,
-                           add='reg.line', add.params=list(size=1.2), conf.int=T,
-                           title=ft)
+                         add='reg.line', add.params=list(size=1.2), conf.int=T,
+                         title=ft)
     } else {
       ptemp <- ggscatter(pivoted, groups[1], groups[2], color='red', size=4, shape=18,
-                           add='reg.line', add.params=list(size=1.2), conf.int=T,
-                           title=ft)
+                         add='reg.line', add.params=list(size=1.2), conf.int=T,
+                         title=ft)
     }
 
+    if(showstats) ptemp <- stat_cor(size=7,show.legend=F)
+
     p[[ft]] <- ptemp+
-        stat_cor(size=7,show.legend=F)+
         theme(plot.title = element_text(size=25, hjust=0.5),
               axis.title = element_text(size=25),
               axis.text = element_text(size=20),
