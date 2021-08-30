@@ -80,7 +80,7 @@ plotPairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
                          title=ft)
     }
 
-    if(showstats) ptemp <- stat_cor(size=7,show.legend=F)
+    if(showstats) ptemp <- ptemp + stat_cor(size=7,show.legend=F)
 
     p[[ft]] <- ptemp+
         theme(plot.title = element_text(size=25, hjust=0.5),
