@@ -37,13 +37,13 @@ plotClad <- function(dataset=NULL, factor=NULL) {
   clad <- clad+theme(legend.position = 'none')
 
   show(clad)
-  show(clad_legend)
 
   save_directory <- saveResults(dataset$results_path,foldername = 'Cladogram',
                                 factors = dataset$factors,
                                 active_factor = dataset$active_factor,
                                 verbose = F)
 
+  show(clad_legend)
   if(!is.null(save_directory)) {
     ggsave(file.path(save_directory,paste0(nameAnalysis(dataset$factors,dataset$active_factor),
                                            'legend.png')),clad_legend,device='png',
