@@ -131,7 +131,15 @@ makeTaxMap <- function(dataset=NULL,unfiltered=F,ftlist=NULL) {
     ftlist <- ftlist[ftlist %in% getFeatures(dataset)]
     if(is.null(ftlist)) ftlist <- getFeatures(dataset, ranks=lowest_rank)
 
-    abun <- dataset$data$proc[[lowest_rank]][ftlist]
+    abun <- dataset$data$proc[[lowest_rank]]
+    # Correct column names
+    colnames(abun) <- lapply(colnames(abun), function(x) {
+      if(startsWith(x,'X') & is.numeric(type.convert(substr(x,2,2)))) {
+        sub('X','',x)
+      } else {
+        x
+      }})
+    abun <- abun[ftlist]
     abun$Other <- NULL
 
     # Need to convert taxa names in processed abundance tables to ASV#'s
