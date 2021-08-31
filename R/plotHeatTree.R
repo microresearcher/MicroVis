@@ -17,7 +17,7 @@
 plotHeatTree <- function(dataset=NULL,
                          test='univar',ftlist=NULL,showAll=F,
                          color_limit=2,
-                         alpha=0.05,
+                         alpha=0.05, sigsOnly=T,
                          initial_layout='fruchterman-reingold',
                          layout='reingold-tilford') {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
@@ -32,7 +32,10 @@ plotHeatTree <- function(dataset=NULL,
     sigfts <- listsigs(dataset, allRanks=T,
                        dataset_name=dataset_name,
                        silent=T, alpha=alpha)
-  } else if(is.null(ftlist)) ftlist <- getFeatures(dataset, ranks=rank)
+  }
+
+  if(sigsOnly) ftlist <- listsigs(dataset, ranks=rank, silent=T)
+  else if(is.null(ftlist)) ftlist <- getFeatures(dataset, ranks=rank)
 
   fc_tab <- foldChange(dataset, allRanks=T)
   fc_tab$FC[is.na(fc_tab$FC) | is.infinite(fc_tab$FC)] <- 0
@@ -44,21 +47,43 @@ plotHeatTree <- function(dataset=NULL,
 
   mvtaxmap <- makeTaxMap(dataset, ftlist=ftlist)
 
+  # Ensure that fc_tab and mvtaxmap match
+  fc_tab <- fc_tab[fc_tab$Feature %in% mvtaxmap$taxon_names(),]
+
   color_limit <- abs(color_limit)
   #TODO: Unfortunately, it seems node_color must be a number... so we can only
   #       compare 2 groups at a time
   set.seed(999)
   for(grp in unique(fc_tab$Comparison)) {
+    #TODO: Make node size a yes/no thing that is big for significant ones and small for non-significant ones
+    #TODO: Same with the node font size
+    #TODO: Color will also be a discrete rather than gradiant so we can depict more than 2 groups
+
+    sizes_list <- fc_tab$Log2FC[fc_tab$Comparison==grp]
+
     ht <- heat_tree(mvtaxmap,
                     node_label = mvtaxmap$taxon_names(),
-                    node_size = mvtaxmap$n_obs(),
+                    # node_label_size = (sizes_list-min(sizes_list))*2,
+                    node_size = mvtaxmap$n_obs()*20,
                     node_size_axis_label = 'Prevalence',
                     node_color = fc_tab$Log2FC[fc_tab$Comparison==grp],
                     node_color_interval = c(-1*color_limit,color_limit),
                     node_color_axis_label = paste0('Log2FC ',grp,'/',
                                                    fc_tab$Reference[[1]]),
                     node_color_range = c('cyan', 'gray', 'red'),
+                    edge_size = 0.01,
                     layout = layout)
+
+    # ht <- heat_tree(mvtaxmap,
+    #                 node_label = mvtaxmap$taxon_names(),
+    #                 node_size_axis_label = 'Prevalence',
+    #                 node_color = fc_tab$Log2FC[fc_tab$Comparison==grp],
+    #                 node_color_interval = c(-1*color_limit,color_limit),
+    #                 node_color_axis_label = paste0('Log2FC ',grp,'/',
+    #                                                fc_tab$Reference[[1]]),
+    #                 node_color_range = c('cyan', 'gray', 'red'),
+    #                 layout = layout)
+
     print(ht)
 
     if(!exists('save_one_all',inherits = F)) save_one_all <- NULL
