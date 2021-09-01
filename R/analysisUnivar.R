@@ -154,6 +154,9 @@ calcUniVar <- function(data,factor,stratifiers=NULL,features,
   for(ft in features) {
     ftTab <- data[c(factor,stratifiers,ft)]
 
+    # Fix features that start with a number
+    if(is.numeric(type.convert(substr(ft,1,1)))) ft <- paste0('`',ft,'`')
+
     ### Pre-Analaysis Data Check ###
     #------------------------------#
     # Check if any two groups have the same mean in the factor being analyzed
@@ -163,8 +166,7 @@ calcUniVar <- function(data,factor,stratifiers=NULL,features,
 
     if(is.null(stratifiers)) {
       if(any(duplicated(statdf[[ft]]))) stats_skipped <- c(stats_skipped, ft)
-    }
-    else {
+    } else {
       # In case the feature values are integers, convert them to numeric
       #   (which tibbles store as double) so that any value adjustments
       #   that may be made will be retained and not converted back to integer
