@@ -102,9 +102,13 @@ plotDeseq <- function(dataset=NULL,
       facet_grid(rows=vars(Feature),scales = 'free_y',space = 'free')+
       theme(strip.background = element_blank(),strip.text = element_blank())
 
+    max_y_limit <- max(abs(ggplot_build(p_unique)$layout$panel_scales_y[[1]]$range$range))
+
     p_unique <- p_unique+
-      expand_limits(y=c(min(-10,ggplot_build(p_unique)$layout$panel_scales_y[[1]]$range$range[1]),
-                        max(10,ggplot_build(p_unique)$layout$panel_scales_y[[1]]$range$range[2])))
+      expand_limits(y=c(min(-max_y_limit/3,
+                            ggplot_build(p_unique)$layout$panel_scales_y[[1]]$range$range[1]),
+                        max(max_y_limit/3,
+                            ggplot_build(p_unique)$layout$panel_scales_y[[1]]$range$range[2])))
 
     if(any(plottab.unique$Contrast %in% plottab.unique$Reference)) p_unique <- p_unique+
       labs(y=paste0('Log2FC'))
