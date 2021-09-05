@@ -37,6 +37,9 @@ plotDeseq <- function(dataset=NULL,
   deseq_res <- dataset$stats[[factor$name]]$deseq[[rank]]
 
   plottab.all <- deseq_res[!is.na(deseq_res$padj) & deseq_res$padj<=alpha,]
+
+  if(nrow(plottab.all)==0) stop('No significant features identified at the ',rank,' rank with DESeq')
+
   ftorder <- aggregate(log2FoldChange~Feature,data=plottab.all,mean)
   ftorder <- ftorder[order(ftorder$log2FoldChange),]
 
@@ -68,9 +71,18 @@ plotDeseq <- function(dataset=NULL,
   if(length(unique_fts)) {
     plottab.unique <- plottab.all[plottab.all$Feature %in% unique_fts,]
 
-    p_uniques <- ggbarplot(plottab.unique, x='Feature', y='log2FoldChange',
-                           fill='Contrast', color='white',
-                           position = position_dodge(), order=ftorder$Feature)+
+    # If there are only two groups being shown here, then switch coloring scheme
+    #     so that negative values are colored with the ref group instead
+    if(length(unique(plottab.unique$Contrast))==1) {
+      plottab.unique$Contrast <- sapply(1:nrow(plottab.unique), function(x) {
+        if(plottab.unique[x,]$log2FoldChange<0) plottab.unique[x,]$Reference
+        else plottab.unique[x,]$Contrast
+      })
+    }
+
+    p_unique <- ggbarplot(plottab.unique, x='Feature', y='log2FoldChange',
+                          fill='Contrast', color='white',
+                          position = position_dodge(), order=ftorder$Feature)+
       geom_hline(yintercept=0, linetype='solid', color='darkgray', size=1)+
       scale_fill_manual(values=colors[names(colors) %in% as.character(unique(plottab.unique$Contrast))])+
       labs(y=paste0('Log2FC vs ', plottab.unique$Reference))+
@@ -90,7 +102,14 @@ plotDeseq <- function(dataset=NULL,
       facet_grid(rows=vars(Feature),scales = 'free_y',space = 'free')+
       theme(strip.background = element_blank(),strip.text = element_blank())
 
-    show(p_uniques)
+    p_unique <- p_unique+
+      expand_limits(y=c(min(-10,ggplot_build(p_unique)$layout$panel_scales_y[[1]]$range$range[1]),
+                        max(10,ggplot_build(p_unique)$layout$panel_scales_y[[1]]$range$range[2])))
+
+    if(any(plottab.unique$Contrast %in% plottab.unique$Reference)) p_unique <- p_unique+
+      labs(y=paste0('Log2FC'))
+
+    show(p_unique)
     savedirectory <- saveResults(dataset$results_path,foldername = 'DESeq2',
                                  factors = dataset$factors,
                                  active_factor = factor$name,
