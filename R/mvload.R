@@ -79,6 +79,7 @@ mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_
         '\n\n All results will be stored in:\n ',file.path(get('project_dir',envir = mvEnv),'Results'))
   }
 
+  #### Combine Datasets if Desired ####
   if(combineDataSets) {
     combined_ds_paths <- mvcombine(get('project_dir',envir = mvEnv))
     if(is.null(combined_ds_paths)) return(message('\nSelected data files could not be combined'))
@@ -88,11 +89,12 @@ mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_
     assign('project_dir',combined_ds_paths$project,envir = mvEnv)
   }
 
+  #### Load Metadata ####
   if(get('.loading',envir = mvEnv)) {metadata <- loadMDFile(path_to_metadata=path_to_metadata)}
   cat('\n')
-  if(get('.loading',envir = mvEnv) &
-     ifelse(select.list(title='\nWould you like to load a taxonomic dataset?',
-                        choices=c('Yes','No'))=='Yes',T,F)) {
+
+  #### Load Taxonomic Data ####
+  if(get('.loading',envir = mvEnv) & ifelse(select.list(title='\nWould you like to load a taxonomic dataset?', choices=c('Yes','No'))=='Yes',T,F)) {
     taxadata <- loadTaxaFile(path_to_taxa=path_to_taxa,metadata=metadata,combineDupes=combineDupes)
 
     if(!is.null(taxadata)) {
@@ -103,6 +105,7 @@ mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_
     }
   }
 
+  #### Load Non-Taxonomic Data ####
   add_ds_list <- list()
   while(ifelse(select.list(title = '\nWould you like to add a non-taxonomic dataset?',
                            choices=c('Yes','No'))=='Yes',T,F)) {
@@ -126,6 +129,7 @@ mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_
     }
   }
 
+  #### Sanity Checks and Data Packaging ####
   if(!exists('taxadata') & !exists('fxnldata')) {
     # If neither taxonomic nor functional data could be loaded, then exit
     return(cat('\n!!!\nERROR: No valid taxonomy or functional abundance data found! Exiting\n!!!'))
@@ -214,6 +218,7 @@ mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_
     }
   }
 
+  #### Output Messages ####
   if(do_taxa) cat('\nRaw taxonomy dataset is stored in "taxa_raw"')
   if(do_fxnl) for(ds in add_ds_list) cat(paste0('\nRaw functional dataset is stored in "',
                                                 sub('_([^_]*)$','',ds),'_raw"'))

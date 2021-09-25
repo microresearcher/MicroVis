@@ -35,6 +35,7 @@ loadMDFile <- function(path_to_metadata=NA) {
 
   colnames(metadata)[1] <- 'sample'
 
-  return(metadata)
   cat(paste0('\n\n>>> METADATA FILE LOADED SUCCESSFULLY <<<\n'))
+
+  return(metadata)
 }
