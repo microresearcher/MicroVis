@@ -7,7 +7,7 @@ templateFunction <- function(dataset=NULL) {
   ### Your code here
 
   # If this is a plotting function, it is recommended
-  #   to activate the dataset (uncomment the line below)
+  #   to activate the dataset at the end (uncomment the line below)
   #activate(dataset)
 
   # If this is an analysis function that takes a while, it is recommended to

@@ -4,7 +4,18 @@
 \alias{plotPairedCor}
 \title{Correlate abundance of features between paired samples}
 \usage{
-plotPairedCor(dataset = NULL, ids, compare, fts = NULL, invert = F)
+plotPairedCor(
+  dataset = NULL,
+  ids,
+  compare,
+  fts = NULL,
+  rank = NULL,
+  invert = F,
+  rthresh = 0.7,
+  alpha = 0.05,
+  padj = T,
+  showstats = T
+)
 }
 \arguments{
 \item{dataset}{MicroVis dataset. Defaults to the active dataset}
@@ -18,7 +29,19 @@ compare}
 
 \item{fts}{Vector of features to correlate between the two sets}
 
+\item{rank}{Taxonomic rank at which to perform the paired correlation. Defaults
+to the second highest rank in the dataset}
+
 \item{invert}{Switch the x and y axes?}
+
+\item{rthresh}{R value cutoff for coloring the figures of each figure.
+Defaults to 0.7}
+
+\item{alpha}{Significance threshold. Defaults to 0.05}
+
+\item{padj}{Adjust the p-values for multiple testing? Defaults to TRUE}
+
+\item{showstats}{Whether or not to show R and p-value. Defaults to TRUE}
 }
 \value{
 Scatter plot with trendline

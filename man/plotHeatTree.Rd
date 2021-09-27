@@ -11,6 +11,7 @@ plotHeatTree(
   showAll = F,
   color_limit = 2,
   alpha = 0.05,
+  sigsOnly = T,
   initial_layout = "fruchterman-reingold",
   layout = "reingold-tilford"
 )
