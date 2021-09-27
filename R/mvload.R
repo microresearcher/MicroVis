@@ -38,7 +38,7 @@
 #' @import ggpubr
 #' @importFrom ggrepel geom_label_repel geom_text_repel
 #' @import rstatix
-#' @importFrom vegan rrarefy rarecurve diversity vegdist adonis adonis2
+#' @importFrom vegan rrarefy rarecurve diversity vegdist adonis adonis2 betadisper
 #' @importFrom ape rtree pcoa biplot.pcoa
 #' @importFrom randomForest randomForest
 #' @importFrom Boruta Boruta TentativeRoughFix
