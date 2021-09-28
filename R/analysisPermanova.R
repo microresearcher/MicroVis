@@ -98,7 +98,7 @@ pnova <- function(dataset=NULL, dist='bray', weighted=F, allFactors=T, factors=N
 
   formula <- as.formula(paste('dst ~ ',paste0('f$',names(f),collapse = '+')))
 
-  dst_stats <- list()
+  dst_stats <- list(dist=dst_results)
   dst_stats$pnova <- adonis(formula)
 
   dst_stats$permdisp <- list()
