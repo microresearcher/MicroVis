@@ -96,10 +96,12 @@ pnova <- function(dataset=NULL, dist='bray', weighted=F, allFactors=T, factors=N
 
   f <- unlist(lapply(factors, function(x) dst_results$metadata[x]),recursive = F)
 
+  #TODO: Need to check groups and stratified groups for sample sizes > ...1? 3?
+
   formula <- as.formula(paste('dst ~ ',paste0('f$',names(f),collapse = '+')))
 
   dst_stats <- list(dist=dst_results)
-  dst_stats$pnova <- adonis(formula)
+  dst_stats$pnova <- adonis2(formula, by='margin')
 
   dst_stats$permdisp <- list()
   dst_stats$summary <- data.frame(Factor='factor',
@@ -109,7 +111,7 @@ pnova <- function(dataset=NULL, dist='bray', weighted=F, allFactors=T, factors=N
   for(grping in names(f)) {
     dst_stats$permdisp[[sub('f\\$','',grping)]] <- anova(betadisper(dst, f[[grping]]))
 
-    pnova_res <- dst_stats$pnova$aov.tab[paste0('f$',grping),'Pr(>F)']
+    pnova_res <- dst_stats$pnova[paste0('f$',grping),'Pr(>F)']
     disp_res <- dst_stats$permdisp[[sub('f\\$','',grping)]]$`Pr(>F)`[[1]]
     overall_res <- ifelse(pnova_res <= alpha & disp_res > alpha, 'Yes', 'No')
 
