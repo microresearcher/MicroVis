@@ -76,7 +76,7 @@ mvdist <- function(dataset=NULL, method='bray', weighted=F, allFactors=T, factor
 #' @param alpha Significance threshold for PERMANOVA results before performing
 #'     PERMDISP analysis. Defaults to 0.05
 #'
-#' @return PERMANOVA results
+#' @return PERMANOVA and PERMDISP results
 #' @export
 #'
 pnova <- function(dataset=NULL, dist='bray', weighted=F, allFactors=T, factors=NULL, alpha=0.05) {
