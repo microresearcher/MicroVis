@@ -100,20 +100,28 @@ plotBetaDiv <- function(dataset=NULL,
 
   suffix <- paste0(suffix,'_',dataset$data$proc$active_rank)
 
-  lab.xpos <- 0.9*max(p$data$Axis.1)
-  lab.ypos <- 1.2*max(p$data$Axis.2)
-
   if(showStats) {
     r2 <- paste('R2:', round(stats$stats$R2[1],3))
     pval <- paste('Pr(>F):',stats$stats$`Pr(>F)`[1])
 
-    p <- p+coord_cartesian(clip='off')+
+    x_range <- ggplot_build(p)$layout$panel_scales_x[[1]]$range$range
+    y_range <- ggplot_build(p)$layout$panel_scales_y[[1]]$range$range
+
+    p <- p+coord_cartesian(xlim=c(x_range[[1]],
+                                  x_range[[2]]+0.2*(x_range[[2]]-x_range[[1]])),
+                           ylim=c(y_range[[1]],
+                                  y_range[[2]]+0.2*(y_range[[2]]-y_range[[1]])),
+                           clip='off')+
       annotation_custom(grob = textGrob(label=r2,hjust=0.5,gp=gpar(cex=2)),
-                        ymin=lab.ypos,ymax=lab.ypos,
-                        xmin=lab.xpos,xmax=lab.xpos)+
+                        ymin=1.2*y_range[[2]],
+                        ymax=1.2*y_range[[2]],
+                        xmin=x_range[[2]],
+                        xmax=x_range[[2]])+
       annotation_custom(grob = textGrob(label=pval,hjust=0.5,gp=gpar(cex=2)),
-                        ymin=.9*lab.ypos,ymax=.9*lab.ypos,
-                        xmin=lab.xpos,xmax=lab.xpos)
+                        ymin=y_range[[2]],
+                        ymax=y_range[[2]],
+                        xmin=x_range[[2]],
+                        xmax=x_range[[2]])
   }
 
   p <- p+theme(axis.title = element_text(size = 20),
