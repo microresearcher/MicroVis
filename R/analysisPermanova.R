@@ -101,6 +101,7 @@ pnova <- function(dataset=NULL, dist='bray', weighted=F, allFactors=T, factors=N
   dst_stats <- list()
   dst_stats$pnova <- adonis(formula)
 
+  dst_stats$permdisp <- list()
   dst_stats$summary <- data.frame(Factor='factor',
                                   Permanova=alpha,
                                   Dispersion=alpha,
