@@ -26,9 +26,11 @@ bdiv <- function(dataset=NULL, factor=NULL, stratifier=NULL, method='bray', weig
   if(!is.null(stratifier)) stratifier <- setFVar(dataset,factor_name = stratifier)
 
   abd$sample <- rownames(abd)
-  abd.tmp <- cleanData(merge(metadata,abd),factor)
+  abd.tmp <- cleanData(merge(metadata[metadata$sample %in% abd$sample,],abd),factor)
 
   if(!is.null(stratifier)) abd.tmp <- cleanData(abd.tmp,stratifier)
+
+  metadata <- abd.tmp[1:ncol(metadata)]
 
   abd <- abd.tmp[(ncol(metadata)+1):ncol(abd.tmp)]
   rownames(abd) <- abd.tmp$sample
