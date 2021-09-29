@@ -95,6 +95,9 @@ pnova <- function(dataset=NULL, dist='bray', weighted=F, allFactors=T, factors=N
   dst <- dst_results$dst
 
   f <- unlist(lapply(factors, function(x) dst_results$metadata[x]),recursive = F)
+  # adonis2 is in some different environment and can't access this varaible "f"
+  #   for some reason, so we need to make it global
+  assign('f', f, pos = 1)
 
   #TODO: Need to check groups and stratified groups for sample sizes > ...1? 3?
 
@@ -121,6 +124,9 @@ pnova <- function(dataset=NULL, dist='bray', weighted=F, allFactors=T, factors=N
                                           Dispersion=disp_res,
                                           Significant=overall_res))
   }
+
+  # Remove that global variable we had to create for some mysterious reason
+  rm(f, pos=1)
 
   return(dst_stats)
 }
