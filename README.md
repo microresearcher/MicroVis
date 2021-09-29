@@ -6,6 +6,32 @@
 
 MicroVis is a package for flexible analysis of metagenomic data and generation of customizable, publication-ready figures
 
+## Examples
+The following analysis and figures are examples of what MicroVis can do. These results have been generated using a 2012 study by Kostic et al (linked in the walk-through below) examining the gut microbiome of human colorectal cancer versus healthy controls. The walk-through below (not yet complete) will guide you through the steps to do this analysis and make these figures with the same data.
+
+### Alpha Diversity
+![shannon](https://user-images.githubusercontent.com/73134383/135261971-0488ecc4-60ef-4c12-b86c-686e0c071f39.png)
+
+### Beta Diversity
+![unifrac](https://user-images.githubusercontent.com/73134383/135261990-9dec0d8a-7953-4bb7-85b5-62df7c72cb75.png)
+
+### Stacked Abundance Barplots
+![stackedbars](https://user-images.githubusercontent.com/73134383/135262014-8f175c22-412e-482c-a255-b6c1ad7c9794.png)
+
+### Random Forest Feature Selection
+![rfimp](https://user-images.githubusercontent.com/73134383/135262113-54d9c620-b2ce-4cf4-8978-a0fcafd42101.png)
+
+### Classic Univariate Analysis
+#### Bar graph of significantly different features at the phylum to genus ranks
+![groupedbars](https://user-images.githubusercontent.com/73134383/135262046-52ee7a63-5b6c-4522-9124-da5b9c6d9185.png)
+
+#### Boxplot of _Fusobacterium_ genus
+![Fusobacterium](https://user-images.githubusercontent.com/73134383/135262151-21491f46-ca46-41f5-8a09-b416be68c3a4.png)
+
+### Linear discriminant analysis Effect Size (LEfSe)
+![lefse](https://user-images.githubusercontent.com/73134383/135262172-ef55ad45-4393-4187-82fd-eeda267a2333.png)
+
+
 ## Installation
 
 Before installing MicroVis, make sure to install these dependencies separately for full functionality:
