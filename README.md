@@ -12,16 +12,20 @@ The following analysis and figures are examples of what MicroVis can do. These r
 ### Alpha Diversity
 ![shannon](https://user-images.githubusercontent.com/73134383/135261971-0488ecc4-60ef-4c12-b86c-686e0c071f39.png)
 
-### Beta Diversity
+### Beta Diversity (unweighted unifrac)
+Statistics shown in the figure are calculated from a PERMANOVA analysis using the "adonis" function from the vegan package
 ![unifrac](https://user-images.githubusercontent.com/73134383/135261990-9dec0d8a-7953-4bb7-85b5-62df7c72cb75.png)
 
 ### Stacked Abundance Barplots
 ![stackedbars](https://user-images.githubusercontent.com/73134383/135262014-8f175c22-412e-482c-a255-b6c1ad7c9794.png)
 
 ### Random Forest Feature Selection
+These features are selected by training a random forest model, then using the [Boruta algorithm](https://www.datacamp.com/community/tutorials/feature-selection-R-boruta) to identify features with a statistically significant impact on predicting Healthy vs Tumor.
 ![rfimp](https://user-images.githubusercontent.com/73134383/135262113-54d9c620-b2ce-4cf4-8978-a0fcafd42101.png)
 
 ### Classic Univariate Analysis
+These are done using Wilcoxon rank sum tests and then corrected for multiple comparisons using the Benjamini-Hochberg method.
+
 #### Bar graph of significantly different features at the phylum to genus ranks
 ![groupedbars](https://user-images.githubusercontent.com/73134383/135262046-52ee7a63-5b6c-4522-9124-da5b9c6d9185.png)
 
