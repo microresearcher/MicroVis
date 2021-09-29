@@ -54,6 +54,7 @@ mvdist <- function(dataset=NULL, method='bray', weighted=F, allFactors=T, factor
   coord_tab <- data.frame(sample=sample_names,
                           PCoA$vectors)
 
+  dst_results$coord_tab <- coord_tab
   dst_results$eigbars <- barplot(PCoA$values$Relative_eig[1:10])
   dst_results$biplot <- biplot.pcoa(PCoA,abd)
 
@@ -105,6 +106,7 @@ pnova <- function(dataset=NULL, dist='bray', weighted=F, allFactors=T, factors=N
 
   dst_stats <- list(dist=dst_results)
   dst_stats$pnova <- adonis2(formula, by='margin')
+  rownames(dst_stats$pnova) <- sub('f\\$','',rownames(dst_stats$pnova))
 
   dst_stats$permdisp <- list()
   dst_stats$summary <- data.frame(Factor='factor',
@@ -114,8 +116,8 @@ pnova <- function(dataset=NULL, dist='bray', weighted=F, allFactors=T, factors=N
   for(grping in names(f)) {
     dst_stats$permdisp[[sub('f\\$','',grping)]] <- anova(betadisper(dst, f[[grping]]))
 
-    pnova_res <- dst_stats$pnova[paste0('f$',grping),'Pr(>F)']
-    disp_res <- dst_stats$permdisp[[sub('f\\$','',grping)]]$`Pr(>F)`[[1]]
+    pnova_res <- dst_stats$pnova[paste0(grping),'Pr(>F)']
+    disp_res <- dst_stats$permdisp[[grping]]$`Pr(>F)`[[1]]
     overall_res <- ifelse(pnova_res <= alpha & disp_res > alpha, 'Yes', 'No')
 
     dst_stats$summary <- rbind(dst_stats$summary,

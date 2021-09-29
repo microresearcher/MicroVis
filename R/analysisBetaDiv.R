@@ -16,59 +16,14 @@
 bdiv <- function(dataset=NULL, factor=NULL, stratifier=NULL, method='bray', weighted=F) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
-  dataset <- transData(dataset,temp=T,silent=T,transform_method = 'none')
+  factor <- factor[factor %in% names(dataset$factors)]
+  if(!length(factor)) factor <- dataset$active_factor
 
-  rank <- dataset$data$proc$active_rank
-  abd <- dataset$data$proc[[rank]]
-  abd$Other <- NULL
-  metadata <- dataset$metadata
-  if(is.null(factor)) factor <- setFVar(dataset)
-  if(!is.null(stratifier)) stratifier <- setFVar(dataset,factor_name = stratifier)
+  stratifier <- stratifier[stratifier %in% names(dataset$factors)[!(names(dataset$factors) %in% factor)]]
 
-  abd$sample <- rownames(abd)
-  abd.tmp <- cleanData(merge(metadata[metadata$sample %in% abd$sample,],abd),factor)
-
-  if(!is.null(stratifier)) abd.tmp <- cleanData(abd.tmp,stratifier)
-
-  metadata <- abd.tmp[1:ncol(metadata)]
-
-  abd <- abd.tmp[(ncol(metadata)+1):ncol(abd.tmp)]
-  rownames(abd) <- abd.tmp$sample
-  sample_names <- rownames(abd)
-
-  results <- list()
-  if(tolower(method)=='euclidean' & get('mga',envir = mvEnv)) {
-    PCoA <- prcomp(abd, center = F, scale = F)
-    colnames(PCoA$x) <- c(paste0('Axis.',1:ncol(PCoA$x)))
-    coord_tab <- data.frame(sample=sample_names,
-                            PCoA$x)
-  } else {
-    if(tolower(method)=='unifrac') {
-      dst <- mvunifrac(dataset, weighted = weighted, normalized=F)
-    } else {
-      dst <- vegdist(abd, method=tolower(method))
-    }
-
-    attributes(dst)$Labels <- sample_names
-    PCoA <- pcoa(dst)
-    coord_tab <- data.frame(sample=sample_names,
-                            PCoA$vectors)
-
-    grouping1 <- metadata[metadata$sample %in% sample_names,][[factor$name]]
-    if(is.null(stratifier)) dst_stats <- adonis(dst ~ grouping1)
-    else {
-      grouping2 <- metadata[metadata$sample %in% sample_names,][[stratifier$name]]
-      dst_stats <- adonis(dst ~ grouping1 + grouping2)
-    }
-
-    # show(dst_stats)
-    results$stats <- dst_stats
-
-    results$eigbars <- barplot(PCoA$values$Relative_eig[1:10])
-    results$biplot <- biplot.pcoa(PCoA,abd)
-  }
-
-  results$coord_tab <- coord_tab
+  results <- pnova(dataset,
+                   dist=method, weighted=weighted,
+                   factors=c(factor, stratifier))
 
   return(results)
 }

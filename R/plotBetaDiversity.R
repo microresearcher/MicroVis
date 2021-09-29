@@ -52,12 +52,10 @@ plotBetaDiv <- function(dataset=NULL,
 
   # Calculate beta-diversity
   bdiv_results <- bdiv(dataset,stratifier=stratifier,method=method)
-  coord_tab <- bdiv_results$coord_tab
+  coord_tab <- bdiv_results$dist$coord_tab
   stats <- list()
-  stats$stats <- bdiv_results$stats$aov.tab
+  stats$stats <- bdiv_results$pnova
   if(length(stats)) {
-    rownames(stats$stats)[1] <- factor$name
-    if(!is.null(stratifier)) rownames(stats$stats)[2] <- stratifier
     show(stats$stats)
     cat('\n')
   }
