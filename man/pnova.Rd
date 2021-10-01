@@ -9,12 +9,8 @@ pnova(
   dist = "bray",
   weighted = F,
   allFactors = T,
-<<<<<<< HEAD
   factors = NULL,
   alpha = 0.05
-=======
-  factors = NULL
->>>>>>> b6b42a4a35d743328f8cd039c9bbab42215e7fc3
 )
 }
 \arguments{
@@ -33,15 +29,12 @@ if no factors are specified (below)}
 
 \item{factors}{(Optional) Specify factors to perform PERMANOVA on. If none are
 specified, then all factors will be included}
-<<<<<<< HEAD
 
 \item{alpha}{Significance threshold for PERMANOVA results before performing
 PERMDISP analysis. Defaults to 0.05}
-=======
->>>>>>> b6b42a4a35d743328f8cd039c9bbab42215e7fc3
 }
 \value{
-PERMANOVA results
+PERMANOVA and PERMDISP results
 }
 \description{
 PERMANOVA Analysis

@@ -41,7 +41,8 @@ Imports:
     limma,
     matrixStats,
     magrittr,
-    Hmisc
+    Hmisc,
+    zCompositions
 Suggests:
     SpiecEasi (>= 1.0.0),
     mdine (>= 1.0.0)

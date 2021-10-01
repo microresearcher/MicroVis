@@ -89,7 +89,7 @@ plotBetaDiv <- function(dataset=NULL,
     p <- ggscatter(coord_data, x='Axis.1',y='Axis.2',
                    color=stratified_factor,shape=stratified_factor,size = 3,
                    ellipse = ellipse,ellipse.level = ci,ellipse.alpha = 0,
-                   star.plot = spokes)+
+                   star.plot = spokes, star.plot.lwd = 1)+
       labs(colour=gsub('_',' and ',stratified_factor))+
       guides(shape=F)
 

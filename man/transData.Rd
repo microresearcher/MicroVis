@@ -7,8 +7,9 @@
 transData(
   dataset = NULL,
   temp = F,
-  transform_method = c("glog", "pseudolog", "log", "gmpr", "none"),
+  trans_method = c("clr", "glog", "pseudolog", "log", "gmpr", "none"),
   log_base = 10,
+  impute_method = c("GBM", "SQ", "BL", "CZM"),
   silent = F
 )
 }
@@ -18,7 +19,7 @@ transData(
 \item{temp}{If set to TRUE, it tells processDataset() to NOT update the active
 dataset.}
 
-\item{transform_method}{Method for transforming data. Choices are "glog"
+\item{trans_method}{Method for transforming data. Choices are "glog"
 (generalized log), "none", "pseudolog", and "log".}
 
 \item{log_base}{Base of log transformation.}

@@ -51,6 +51,7 @@
 #' @importFrom limma lmFit eBayes
 #' @importFrom matrixStats colQuantiles
 #' @importFrom Hmisc rcorr
+#' @importFrom zCompositions cmultRepl
 #'
 mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_to_fxnl=NA,
                    autoProcess=T,combineDupes=T,combineDataSets=F) {
@@ -175,7 +176,7 @@ mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_
     if(autoProcess) {
       taxa_ds$name <- 'taxa_proc'
       taxa_ds <- scaleSamples(taxa_ds, scaling = 'sum', silent = T)
-      taxa_ds <- transData(taxa_ds, transform_method = 'glog', silent = T)
+      taxa_ds <- transData(taxa_ds, trans_method = 'glog', silent = T)
       taxa_ds <- filterLowPrev(taxa_ds, silent = T)
       taxa_ds <- filterLowRelAbun(taxa_ds, silent = T)
       taxa_ds <- filterNAs(taxa_ds,ranks = 'domain',silent = T)

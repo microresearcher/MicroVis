@@ -76,18 +76,41 @@ runNormalization <- function(dataset=NULL, temp=F, silent=F) {
       colnames(normalized) <- cn
       ft_data$proc$unranked <- normalized
     } else if(norm=='transformation') {
-      if(!silent) cat('\n  Transforming data by',normalization[[norm]]$transform_method)
+      if(!silent) cat('\n  Transforming data by',normalization[[norm]]$trans_method)
+      # If performing CLR transformation:
+      #   1) Remove any filtering options that no longer make sense with CLR
+      #   2) Remove any features with all zeros
+      if(normalization[[norm]]$trans_method=='clr') {
+        if(!silent) cat('\n    Removing feature filters except NA, top prevalence, and variance filters, if they exist')
+        ft_data$proc$filtering[!(names(ft_data$proc$filtering) %in% c('NAfilter',
+                                                                      'top_prevalence',
+                                                                      'low_var_percentile',
+                                                                      'top_var'))] <- NULL
+
+        zerofts <- colnames(ft_data$proc$unranked)[colSums(ft_data$proc$unranked)==0]
+        if(!silent) cat('\n    Removing',length(zerofts),'features absent in all subsetted samples')
+        ft_data$proc$unranked <- ft_data$proc$unranked[!(colnames(ft_data$proc$unranked) %in% zerofts)]
+        ft_data$proc$filtering$filterlist$zeros <- ASVtoTaxa(ft_data,
+                                                             zerofts,
+                                                             getLowestRank(dataset))
+      }
+
       rn <- rownames(ft_data$proc$unranked)
       cn <- colnames(ft_data$proc$unranked)
+
       # Perform a function to all values
       # This one is transposed too because GMPR and RLE transformation
       #   are performed with samples as columns
       normalized <- data.frame(t(normalizer(data.frame(t(ft_data$proc$unranked)),
-                                            norm_type = normalization[[norm]]$transform_method,
+                                            norm_type = normalization[[norm]]$trans_method,
                                             log_base = normalization[[norm]]$log_base)))
       rownames(normalized) <- rn
       colnames(normalized) <- cn
       ft_data$proc$unranked <- normalized
+
+      # Ensure that, if CLR transformation was performed, features with all zeros
+      #   are forcibly filtered out
+      ft_data$proc
     }
   }
 
@@ -283,7 +306,7 @@ scaleFeatures <- function(dataset=NULL, temp=F,
 #' @param dataset MicroVis dataset (mvdata object)
 #' @param temp If set to TRUE, it tells processDataset() to NOT update the active
 #'     dataset.
-#' @param transform_method Method for transforming data. Choices are "glog"
+#' @param trans_method Method for transforming data. Choices are "glog"
 #'     (generalized log), "none", "pseudolog", and "log".
 #' @param log_base Base of log transformation.
 #' @param silent Argument that is ultimately passed onto runSampleFilter(),
@@ -294,8 +317,9 @@ scaleFeatures <- function(dataset=NULL, temp=F,
 #' @export
 #'
 transData <- function(dataset=NULL, temp=F,
-                      transform_method=c('glog', 'pseudolog', 'log', 'gmpr', 'none'),
+                      trans_method=c('clr', 'glog', 'pseudolog', 'log', 'gmpr', 'none'),
                       log_base=10,
+                      impute_method=c('GBM','SQ','BL','CZM'),
                       silent=F) {
   if(is.null(dataset)) {
     dataset <- get('active_dataset',envir = mvEnv)
@@ -310,41 +334,41 @@ transData <- function(dataset=NULL, temp=F,
   #-----------------------------#
   # First get the recorded data transformation parameters (NULL if they don't exist)
   transformation <- dataset$data$proc$normalization$transformation
-  transtypes <- c('glog', 'pseudolog', 'log', 'gmpr', 'none')
+  transtypes <- c('clr', 'glog', 'pseudolog', 'log', 'gmpr', 'none')
   # If no valid input parameters were provided:
   #   1) default to recorded data transformation parameters, if they exist
   #     or
   #   2) have user select a data transformation option
-  if(length(transform_method)>1 | !(transform_method[[1]] %in% transtypes)) {
+  if(length(trans_method)>1 | !(trans_method[[1]] %in% transtypes)) {
     if(!is.null(transformation)) {
-      transform_method <- transformation$transform_method
+      trans_method <- transformation$trans_method
       log_base <- transformation$log_base
     } else {
       message('\nPlease choose a method to transform data by\n')
       Sys.sleep(0.1)
-      transform_method <- select.list(transtypes, title = 'Data transformation method:', graphics = T)
+      trans_method <- select.list(transtypes, title = 'Data transformation method:', graphics = T)
     }
   }
 
   ### Format Data Transformation Parameters ###
   #-------------------------------------------#
-  if(transform_method=='none' | transform_method=='') {
+  if(trans_method=='none' | trans_method=='') {
     transformation <- NULL
   } else {
-    if(!(transform_method %in% c('glog', 'pseudolog', 'log'))) {
+    if(!(trans_method %in% c('clr', 'glog', 'pseudolog', 'log'))) {
       log_base <- NULL
     }
-    if(transform_method %in% c('gmpr','rle')) {
+    if(trans_method %in% c('clr','gmpr','rle')) {
       if(!is.null(dataset$data$proc$normalization$sample_scale)) {
         dataset$data$proc$normalization$sample_scale <- NULL
-        message('\nWARNING: ',transform_method,' overrides data scaling - no sample scaling will be done')
+        message('\nWARNING: ',trans_method,' overrides data scaling - no sample scaling will be done')
       }
       if(!is.null(dataset$data$proc$normalization$feature_scale)) {
         dataset$data$proc$normalization$feature_scale <- NULL
-        message('\nWARNING: ',transform_method,' overrides data scaling - no feature scaling will be done')
+        message('\nWARNING: ',trans_method,' overrides data scaling - no feature scaling will be done')
       }
     }
-    transformation <- list(transform_method=transform_method, log_base=log_base)
+    transformation <- list(trans_method=trans_method, log_base=log_base)
   }
 
   ### Record Data Transformation Parameters in Dataset ###
@@ -373,7 +397,11 @@ transData <- function(dataset=NULL, temp=F,
 #'
 #' @return Normalized abundance table.
 #'
-normalizer <- function(data, norm_type, sum_scale=NA, log_base=NA) {
+normalizer <- function(data,
+                       norm_type,
+                       sum_scale=NA,
+                       log_base=NA,
+                       impute_method=c('GBM','SQ','BL','CZM')) {
   norm_type <- tolower(norm_type)
 
   rn <- rownames(data)
@@ -409,6 +437,20 @@ normalizer <- function(data, norm_type, sum_scale=NA, log_base=NA) {
     # (x-mean)/range
     normalized <- data.frame(sapply(data, function(x) (x-mean(x,na.rm = T))/(max(x,na.rm = T)-min(x,na.rm = T)) ))
     normalized[is.na(normalized)] <- 0
+
+  } else if(norm_type=='clr') {
+    # Centered-log ratio
+    #   First, zeros are imputed with zcomposition package using the specified methods
+    #   Second, centered-log ratio is performed
+    #   Finally, those features with all zeros are re-attached to the data.frame
+    #     These features will be forcibly removed during the filtering step
+    data.imputed <- data.frame(zCompositions::cmultRepl(data,
+                                                        output = 'p-counts',
+                                                        suppress.print = T))
+    normalized <- data.frame(t(apply(data.imputed, 1,
+                                     function(x) log(x/exp(mean(log(x))), base=log_base) )))
+
+    normalized <- cbind(normalized)
 
   } else if(norm_type=='glog') {
     # Generalized log formula whose domain includes ALL real numbers,

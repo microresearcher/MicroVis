@@ -18,7 +18,7 @@
 mvdist <- function(dataset=NULL, method='bray', weighted=F, allFactors=T, factors=NULL) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
-  dataset <- transData(dataset,temp=T,silent=T,transform_method = 'none')
+  dataset <- transData(dataset,temp=T,silent=T,trans_method = 'none')
 
   rank <- dataset$data$proc$active_rank
   abd <- dataset$data$proc[[rank]]
@@ -83,7 +83,7 @@ mvdist <- function(dataset=NULL, method='bray', weighted=F, allFactors=T, factor
 pnova <- function(dataset=NULL, dist='bray', weighted=F, allFactors=T, factors=NULL, alpha=0.05) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
-  dataset <- transData(dataset,temp=T,silent=T,transform_method = 'none')
+  dataset <- transData(dataset,temp=T,silent=T,trans_method = 'none')
 
   factors <- factors[factors %in% names(dataset$factors)]
   if(!length(factors)) {

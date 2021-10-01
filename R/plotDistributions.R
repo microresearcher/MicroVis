@@ -15,8 +15,7 @@ plotSampleDensity <- function(dataset=NULL,bySample=T) {
   if(bySample) {
     colorby <- 'Sample'
     opaqueness <- 0.02
-  }
-  else {
+  } else {
     colorby <- 'turquoise'
     opaqueness <- 0.5
   }

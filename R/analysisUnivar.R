@@ -104,8 +104,12 @@ univar <- function(data=NULL,
     melted <- data
   }
 
-  stat_results <- calcUniVar(melted,factor,stratifiers,features,
-                             param=param,pairwise_comparisons=pairwise_comparisons)
+  stat_results <- calcUniVar(data = melted,
+                             factor = factor,
+                             stratifiers = stratifiers,
+                             features = features,
+                             param=param,
+                             pairwise_comparisons=pairwise_comparisons)
 
   # Record the results in the dataset if a dataset was passed to this function
   if(inherits(data,'mvdata')) {
@@ -170,7 +174,7 @@ calcUniVar <- function(data,factor,stratifiers=NULL,features,
       # In case the feature values are integers, convert them to numeric
       #   (which tibbles store as double) so that any value adjustments
       #   that may be made will be retained and not converted back to integer
-      ftTab[[ft]] <- as.numeric(ftTab[[ft]])
+      ftTab[[gsub('`','',ft)]] <- as.numeric(ftTab[[gsub('`','',ft)]])
 
       statdf$strata <- interaction(statdf[stratifiers])
       for(stratum_name in unique(statdf$strata)) {

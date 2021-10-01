@@ -4,7 +4,13 @@
 \alias{normalizer}
 \title{Normalizing Function}
 \usage{
-normalizer(data, norm_type, sum_scale = NA, log_base = NA)
+normalizer(
+  data,
+  norm_type,
+  sum_scale = NA,
+  log_base = NA,
+  impute_method = c("GBM", "SQ", "BL", "CZM")
+)
 }
 \arguments{
 \item{data}{Abundance table that will be normalized by in columns. In other
