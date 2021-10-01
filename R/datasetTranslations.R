@@ -51,6 +51,35 @@ makePS <- function(dataset=NULL) {
   return(phylodata)
 }
 
+#' Make an ALDEx2 CLR Object
+#'
+#' @param dataset MicroVis dataset. Default is the active dataset
+#' @param factor Factor to use as condition in making the ALDEx2 object
+#'
+#' @return An aldex.clr object
+#' @export
+#'
+makeAldex <- function(dataset=NULL, factor=NULL) {
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  dataset <- clearNormalization(dataset, temp = T, silent = T)
+
+  factor <- setFVar(dataset)
+
+  active_rank <- dataset$data$proc$active_rank
+  abun <- dataset$data$proc[[active_rank]]
+  abun$Other <- NULL
+
+  abun$sample <- rownames(abun)
+  data <- cleanData(merge(dataset$metadata,abun), factor)
+  metadata <- data[1:ncol(dataset$metadata)]
+  abun <- data[(ncol(metadata)+1):ncol(data)]
+
+  aldex_obj <- aldex.clr(data.frame(t(abun)), metadata[[factor$name]])
+
+  return(aldex_obj)
+}
+
 #' Make a DESeq object from a MicroVis dataset
 #'
 #' @param dataset MicroVis dataset. Default is the active dataset
