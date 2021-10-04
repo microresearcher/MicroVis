@@ -21,8 +21,7 @@ mvlefse <- function(dataset=NULL, dataset_name=NULL) {
   mm <- run_lefse(phylodata,
                   group=factor$name,
                   norm='CPM',
-                  bootstrap_n=1000,
-                  correct='2')
+                  bootstrap_n=1000)
 
   mm@marker_table$BHadjust <- p.adjust(mm@marker_table$pvalue,method = 'BH')
 

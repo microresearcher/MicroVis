@@ -45,7 +45,7 @@ TaxatoASV <- function(taxa_data, taxalist, taxa_rank=NULL) {
     taxa_rank <- taxa_data$proc$active_rank
   }
 
-  for(i in 1:length(taxalist)) if(startsWith(taxalist[i],'X') & is.numeric(type.convert(substr(taxalist[i],2,2)))) taxalist[i] <- sub('X','',taxalist[i])
+  for(i in 1:length(taxalist)) if(startsWith(taxalist[i],'X') & is.numeric(type.convert(substr(taxalist[i],2,2), as.is=T))) taxalist[i] <- sub('X','',taxalist[i])
 
   if(ncol(taxa_names_tab)==1) asvs <- rownames(taxa_names_tab)[taxa_names_tab %in% taxalist]
   else asvs <- rownames(taxa_names_tab)[taxa_names_tab[[taxa_rank]] %in% taxalist]
@@ -96,7 +96,7 @@ agglomTaxa <- function(taxa_data, abundance_table, from_rank, to_rank) {
   abundance_table <- data.frame(t(rowsum(t(abundance_table),group = colnames(abundance_table))))
 
   for(i in 1:ncol(abundance_table)) {
-    if(startsWith(colnames(abundance_table)[i],'X') & is.numeric(type.convert(substr(colnames(abundance_table)[i],2,2)))) {
+    if(startsWith(colnames(abundance_table)[i],'X') & is.numeric(type.convert(substr(colnames(abundance_table)[i],2,2), as.is=T))) {
       colnames(abundance_table)[i] <- sub('X','',colnames(abundance_table)[i])
     }
   }
@@ -122,7 +122,7 @@ getParentTaxa <- function(taxalist, from, to, taxanames) {
   if(!length(to)) stop(to,' is not a taxa rank in the dataset')
 
   taxalist <- unlist(lapply(taxalist, function(x) {
-    if(startsWith(x,'X') & is.numeric(type.convert(substr(x,2,2)))) {
+    if(startsWith(x,'X') & is.numeric(type.convert(substr(x,2,2), as.is=T))) {
       x <- sub('X','',x)
     } else x
   }))

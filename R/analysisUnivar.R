@@ -159,7 +159,7 @@ calcUniVar <- function(data,factor,stratifiers=NULL,features,
     ftTab <- data[c(factor,stratifiers,ft)]
 
     # Fix features that start with a number
-    if(is.numeric(type.convert(substr(ft,1,1)))) ft <- paste0('`',ft,'`')
+    if(is.numeric(type.convert(substr(ft,1,1), as.is=T))) ft <- paste0('`',ft,'`')
 
     ### Pre-Analaysis Data Check ###
     #------------------------------#

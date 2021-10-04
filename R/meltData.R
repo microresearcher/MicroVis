@@ -25,7 +25,7 @@ mvmelt <- function(dataset=NULL,rank=NULL,features=NULL,min_n=3) {
   # Any taxa names that start with a number get prepended with "X", so this "X"
   #   character needs to be removed
   colnames(abun) <- lapply(colnames(abun), function(x) {
-    if(startsWith(x,'X') & is.numeric(type.convert(substr(x, 2, 2)))) {
+    if(startsWith(x,'X') & is.numeric(type.convert(substr(x, 2, 2), as.is=T))) {
       sub('X','',x)
     } else {
       x

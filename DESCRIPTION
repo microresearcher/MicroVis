@@ -45,5 +45,4 @@ Imports:
     zCompositions,
     ALDEx2
 Suggests:
-    SpiecEasi (>= 1.0.0),
-    mdine (>= 1.0.0)
+    SpiecEasi (>= 1.0.0)

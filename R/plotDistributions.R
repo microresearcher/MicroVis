@@ -31,6 +31,9 @@ plotSampleDensity <- function(dataset=NULL,bySample=T) {
                                               names_to = 'Feature',
                                               values_to = 'Normalized Abundance Values')
 
+  # Determine x-axis limits for truncating graph, if needed
+  xmax <- mean(histocounts$`Normalized Abundance Values`)*(diff(range(histocounts$`Normalized Abundance Values`))/sd(histocounts$`Normalized Abundance Values`))
+
   p_histocounts <- ggdensity(histocounts,x='Normalized Abundance Values',y='..count..',
                              color=colorby,size=1,
                              fill = 'lightblue',alpha=opaqueness)+
@@ -39,6 +42,12 @@ plotSampleDensity <- function(dataset=NULL,bySample=T) {
           axis.title = element_text(size=22), axis.text = element_text(size=18),
           axis.ticks.length = unit(0.25,'cm'))+
     scale_x_continuous(expand = c(0, 0)) + scale_y_continuous(expand = c(0, 0))
+
+  # If the median value is equal to the minimum value, zoom in using the above defined axis limits
+  if(median(histocounts$`Normalized Abundance Values`)==min(histocounts$`Normalized Abundance Values`)) {
+    p_histocounts <- p_histocounts+
+      coord_cartesian(xlim = c(0,xmax))
+  }
 
   return(p_histocounts)
 }
@@ -55,12 +64,10 @@ plotSampleDensity <- function(dataset=NULL,bySample=T) {
 #'
 plotFeatureDensity <- function(dataset=NULL,byFeature=T,
                                rank=NULL,ftlist=NULL) {
-  if(is.null(dataset)) {
-    dataset <- get('active_dataset',envir = mvEnv)
-    dataset_name <- 'active_dataset'
-  } else {
-    dataset_name <- deparse(substitute(dataset))
-  }
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  else dataset_name <- dataset$name
 
   if(byFeature) {
     colorby <- 'Feature'
@@ -88,6 +95,9 @@ plotFeatureDensity <- function(dataset=NULL,byFeature=T,
                                               names_to = 'Sample',
                                               values_to = 'Normalized Abundance Values')
 
+  # Determine x-axis limits for truncating graph, if needed
+  xmax <- mean(histocounts$`Normalized Abundance Values`)*(diff(range(histocounts$`Normalized Abundance Values`))/sd(histocounts$`Normalized Abundance Values`))
+
   p_histocounts <- ggdensity(histocounts,x='Normalized Abundance Values',y='..count..',
                              color='#03fcbe33',size=1,
                              fill = colorby,alpha=opaqueness)+
@@ -96,6 +106,12 @@ plotFeatureDensity <- function(dataset=NULL,byFeature=T,
           axis.title = element_text(size=22), axis.text = element_text(size=18),
           axis.ticks.length = unit(0.25,'cm'))+
     scale_x_continuous(expand = c(0, 0)) + scale_y_continuous(expand = c(0, 0))
+
+  # If the median value is equal to the minimum value, zoom in using the above defined axis limits
+  if(median(histocounts$`Normalized Abundance Values`)==min(histocounts$`Normalized Abundance Values`)) {
+    p_histocounts <- p_histocounts+
+      coord_cartesian(xlim = c(0,xmax),clip = 'off')
+  }
 
   return(p_histocounts)
 }

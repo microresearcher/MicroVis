@@ -26,7 +26,7 @@ chooseFactors <- function(dataset) {
     #   Also create a 'subset' element that will contain only selected groups
     #   that the user chooses
     for(f in chosen_factors) {
-      if(is.numeric(type.convert(metadata[[f]]))) {
+      if(is.numeric(type.convert(metadata[[f]], as.is=T))) {
         continuous <- ifelse(select.list(c('Yes','No'),
                                          title = paste('\nIs',f,'a continuous variable?'))=='Yes',T,F)
         if(continuous) {
@@ -107,7 +107,7 @@ rangetotext <- function(factor) {
       uppertext <- paste0(gsub('\\]','',gsub('\\)','',rangesplit[2])))
     }
 
-    if(is.numeric(type.convert(c(lowertext,uppertext)))) rangetext <- paste(lowertext,'to',uppertext)
+    if(is.numeric(type.convert(c(lowertext,uppertext), as.is=T))) rangetext <- paste(lowertext,'to',uppertext)
     else rangetext <- paste0(lowertext,uppertext)
 
     renamedlevels[renamedlevels==range] <- rangetext

@@ -163,7 +163,7 @@ makeTaxMap <- function(dataset=NULL,unfiltered=F,ftlist=NULL) {
     abun <- dataset$data$proc[[lowest_rank]]
     # Correct column names
     colnames(abun) <- lapply(colnames(abun), function(x) {
-      if(startsWith(x,'X') & is.numeric(type.convert(substr(x,2,2)))) {
+      if(startsWith(x,'X') & is.numeric(type.convert(substr(x,2,2), as.is=T))) {
         sub('X','',x)
       } else {
         x

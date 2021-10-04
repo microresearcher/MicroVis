@@ -39,7 +39,7 @@ makeRankTabs <- function(ft_data) {
         # Un-rename any taxa that were silently renamed by R (eg R adds an 'X' in front
         #   of column names that start with a number, so we want to reverse that)
         colnames(new_ft_data.proc[[colnames(taxa_names_tab)[i]]]) <- sapply(colnames(new_ft_data.proc[[colnames(taxa_names_tab)[i]]]), function(x) {
-          if(startsWith(x,'X') & is.numeric(type.convert(substr(x,2,2)))) {
+          if(startsWith(x,'X') & is.numeric(type.convert(substr(x,2,2), as.is=T))) {
             x <- sub('X','',x)
           } else x
         })
