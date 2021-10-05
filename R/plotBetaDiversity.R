@@ -91,7 +91,7 @@ plotBetaDiv <- function(dataset=NULL,
                    ellipse = ellipse,ellipse.level = ci,ellipse.alpha = 0,
                    star.plot = spokes, star.plot.lwd = 1)+
       labs(colour=gsub('_',' and ',stratified_factor))+
-      guides(shape=F)
+      guides(shape='none')
 
     suffix <- paste0(suffix,'_by_',stratifier)
   }
@@ -127,7 +127,7 @@ plotBetaDiv <- function(dataset=NULL,
                legend.key.size = unit(1,'cm'),
                legend.text = element_text(size = 20,margin = margin(r=20)),
                legend.title = element_blank())+
-    guides(fill=F)
+    guides(fill='none')
 
   if(labelSamples) {
     p<-p+geom_label_repel(aes(label=sample))
