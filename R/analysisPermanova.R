@@ -18,7 +18,10 @@
 mvdist <- function(dataset=NULL, method='bray', weighted=F, allFactors=T, factors=NULL) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
-  dataset <- transData(dataset,temp=T,silent=T,trans_method = 'none')
+  if(method=='aitch') {
+    dataset <- transData(dataset,temp=T,silent=T,trans_method = 'clr')
+    method <- 'euclidean'
+  } else dataset <- transData(dataset,temp=T,silent=T,trans_method = 'none')
 
   rank <- dataset$data$proc$active_rank
   abd <- dataset$data$proc[[rank]]
