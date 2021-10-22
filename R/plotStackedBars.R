@@ -129,7 +129,7 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
     data$Other <- data$Other + rowSums(data[low_abun])
     data[low_abun] <- NULL
     fts <- c(fts[!(fts %in% low_abun)],'Other')
-    suffix <- paste0('_top_',top,suffix)
+    suffix <- paste0('_top',top,suffix)
   }
 
   data_pivoted <- data %>% pivot_longer(fts,
@@ -195,7 +195,7 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
   if(!is.null(save_directory)) {
     if(exists('p_legend')) {
       ggsave(save_directory,
-             filename="Legend.png",
+             filename=paste0('Legend_top',top,'.png'),
              plot=p_legend,
              device = 'png',
              width = 20,
