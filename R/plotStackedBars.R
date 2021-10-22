@@ -45,6 +45,7 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
 
   if(unfiltered) tempds <- clearProcessing(dataset, temp = T, silent = T)
   else tempds <- clearNormalization(dataset, temp = T, silent = T)
+
   if(!(rank %in% intersect(taxaranks,names(tempds$data$proc)))) {
     rank <- tempds$data$proc$active_rank
   } else tempds$data$proc$active_rank <- rank
@@ -53,6 +54,8 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
   factor <- dataset$active_factor
   mdcolnum <- ncol(tempds$metadata)
   fts <- colnames(data[(mdcolnum+1):ncol(data)])
+  fts <- fts[fts!='Other']
+
   if(length(ftlist)) suffix <- paste0('_selected_',rank)
   else suffix <- paste0('_',rank)
 
@@ -61,15 +64,8 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
                        factor=factor,
                        ranks=rank,
                        alpha=alpha,
-                       silent=T
-                       ,dataset_name=dataset_name)
-    # stats <- runStats(dataset_name = dataset_name,
-    #                   merged_data = mvmelt(dataset),
-    #                   ft_name = rank,
-    #                   features = colnames(dataset$data$proc[[rank]]),
-    #                   factor = factor)$overall
-
-    # sigfts <- stats$stats[stats$stats$p.adj<alpha,]$Feature
+                       silent=T,
+                       dataset_name=dataset_name)
     if(!length(sigfts)) message('\nNo significant features were found\n')
     else suffix <- paste0('_sig-alpha_',alpha,suffix)
     ftlist <- c(ftlist,sigfts)
@@ -183,23 +179,41 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
     p <- p+theme(legend.position = 'none')
     suffix <- paste0(suffix,'_nolegend')
     legend_output_location <- paste0(dataset$results_path,'/Results_',Sys.Date(),'/Stacked Bar Graphs/')
-    if(exists('p_legend')) ggsave(legend_output_location,
-                                  filename="Legend.png",
-                                  plot=p_legend,
-                                  device = 'png',
-                                  width = 20,
-                                  height = 8)
+
+    show(p_legend)
   }
 
   show(p)
 
-  saveResults(dataset$results_path,foldername = 'Stacked Bar Graphs',
-              factors = dataset$factors,
-              active_factor = dataset$active_factor,
-              width = 12, height = 8,
-              suffix = paste0(suffix,'_',abundance_type))
+  save_directory <- saveResults(dataset$results_path,foldername = 'Stacked Bar Graphs',
+                                factors = dataset$factors,
+                                active_factor = dataset$active_factor,
+                                width = 12, height = 8,
+                                suffix = paste0(suffix,'_',abundance_type),
+                                verbose = F)
+
+  if(!is.null(save_directory)) {
+    if(exists('p_legend')) {
+      ggsave(save_directory,
+             filename="Legend.png",
+             plot=p_legend,
+             device = 'png',
+             width = 20,
+             height = 8,
+             dpi=600)
+    }
+    cat('\nFigure(s) saved to:\n ',save_directory,'\n')
+  }
 
   activate(dataset)
+
+  total_props <- aggregate(data_pivoted$`Proportional Abundance`[data_pivoted[[rank]] %in% namedfts],by=list(data_pivoted[[factor]][data_pivoted[[rank]] %in% namedfts]), sum)
+
+  cat('Top',top,'features make up:\n')
+  cat('',paste0(signif(100*mean(total_props$x),3),'%'),
+      'across all samples')
+  for(grp in total_props$Group.1) cat('\n',paste0(signif(100*mean(total_props$x[total_props$Group.1==grp]),3),'%'),'in',grp)
+  cat('\n\n')
 
   return(p)
 }
