@@ -22,6 +22,8 @@
 #' @param plotSigs Plot only the significant features? Defaults to FALSE
 #' @param alpha Significance threshold for selecting significant features. Defaults
 #'     to 0.05
+#' @param separateLegend Whether to separate the legend from the plot. Defaults
+#'     to FALSE
 #'
 #' @return Stacked bar plot of feature abundances of selected features with the
 #'     other features lumped into an "Other" category
@@ -32,7 +34,8 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
                             bySample=F,
                             unfiltered=T,rank=NA,
                             top=15, top_by='max',
-                            ftlist=c(),plotSigs=F,alpha=0.05) {
+                            ftlist=c(),plotSigs=F,alpha=0.05,
+                            separateLegend=F) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   if(is.null(dataset$name)) dataset_name <- 'active_dataset'
@@ -41,7 +44,7 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
   taxaranks <- get('taxaRanks',envir = mvEnv)
 
   if(unfiltered) tempds <- clearProcessing(dataset, temp = T, silent = T)
-  else tempds <- dataset
+  else tempds <- clearNormalization(dataset, temp = T, silent = T)
   if(!(rank %in% intersect(taxaranks,names(tempds$data$proc)))) {
     rank <- tempds$data$proc$active_rank
   } else tempds$data$proc$active_rank <- rank
@@ -119,6 +122,7 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
                           min=apply(data[fts],2,function(x) min(x)),
                           mean=apply(data[fts],2,function(x) mean(x)),
                           sum=apply(data[fts],2,function(x) sum(x)))
+    ftstats <- ftstats[!(rownames(ftstats) %in% 'Other'),]
 
     if(top_by=='max') low_abun <- rownames(slice_min(ftstats, order_by=max, n=(length(fts)-top)))
     if(top_by=='min') low_abun <- rownames(slice_min(ftstats, order_by=min, n=(length(fts)-top)))
@@ -172,6 +176,19 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
   if(stratify) {
     p <- facet(p,facet.by=facet)+
       theme(strip.text = element_text(size = 18))
+  }
+
+  if(separateLegend) {
+    if(!exists('p_legend',inherits = F)) p_legend <- as_ggplot(get_legend(p))
+    p <- p+theme(legend.position = 'none')
+    suffix <- paste0(suffix,'_nolegend')
+    legend_output_location <- paste0(dataset$results_path,'/Results_',Sys.Date(),'/Stacked Bar Graphs/')
+    if(exists('p_legend')) ggsave(legend_output_location,
+                                  filename="Legend.png",
+                                  plot=p_legend,
+                                  device = 'png',
+                                  width = 20,
+                                  height = 8)
   }
 
   show(p)

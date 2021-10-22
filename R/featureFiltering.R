@@ -772,8 +772,11 @@ getFtStats <- function(dataset=NULL, rank=NULL) {
   # Compute prevalence, total abundance, proportional prevalence, and relative abundance of each feature
   ftstats <- data.frame(Prevalence=apply(abd, 2, function(x) sum(x>0,na.rm = T)),
                         Total_Abundance=apply(abd, 2, function(x) sum(x,na.rm = T)),
+                        Mean_Abundance=apply(abd, 2, function(x) mean(x,na.rm = T)),
                         Relative_Abundance=apply(apply(abd,1,function(x) x/sum(x,na.rm = T)),
                                                  1,function(x) max(x,na.rm = T)),
+                        Mean_Relative_Abundance=apply(apply(abd,1,function(x) x/sum(x,na.rm = T)),
+                                                 1,function(x) mean(x,na.rm = T)),
                         StDev=apply(abd, 2, function(x) sd(x,na.rm = T)),
                         IQR=apply(abd, 2, function(x) IQR(x,na.rm = T)))
 
