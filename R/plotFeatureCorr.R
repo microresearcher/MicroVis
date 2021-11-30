@@ -38,7 +38,7 @@ plotFtCormat <- function(dataset1=NULL, dataset2=NULL,
                          matchFts=F,
                          theme=c('classic','modern'),
                          circles=F) {
-  if(is.null(dataset)) dataset1 <- get('active_dataset',envir = mvEnv)
+  if(is.null(dataset1)) dataset1 <- get('active_dataset',envir = mvEnv)
 
   if(is.null(dataset1$name)) dataset1_name <- 'active_dataset'
   else dataset1_name <- dataset1$name
