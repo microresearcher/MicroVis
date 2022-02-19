@@ -30,6 +30,8 @@ print.mvdata <- function(x, ...) {
   factors <- x$factors
   active_factor <- x$active_factor
 
+  excluded <- x$data$proc$excluded_features
+
   rarefied <- x$data$proc$rarefied
 
   filtering <- x$data$proc$filtering[!(names(x$data$proc$filtering) %in% c('filterlist','ftstats'))]
@@ -57,6 +59,13 @@ print.mvdata <- function(x, ...) {
     else bullet <- ' * '
     cat(paste0(' |      ',bullet,f$name,' with ',crayon::green$bold(length(f$subset)),
                ' out of ',crayon::cyan$bold(length(f$groups)),' groups\n'))
+  }
+
+  # Print excluded features and number of ASVs in each
+  if(length(excluded)) {
+    cat(paste0(' |   > Excluded Features:\n'))
+    for(ft in names(excluded)) cat(paste0(' |       * ',crayon::yellow(ft),
+                                          ' (',length(excluded[[ft]]),' ASVs)\n'))
   }
 
   # Print rarefaction minimum richness
