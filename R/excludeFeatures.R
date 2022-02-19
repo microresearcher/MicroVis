@@ -61,7 +61,8 @@ excludeFeatures <- function(dataset=NULL, features, rank=NULL, temp=F, silent=F)
   if(is.null(rank)) rank <- allranks[(allranks %in% getRanks(dataset))][[1]]
 
   if(!(rank %in% c('single_rank','functional'))) {
-    new_excluded <- sapply(features, function(ft) TaxatoASV(dataset$data,ft,taxa_rank=rank))
+    new_excluded <- sapply(features,
+                           function(ft) list(TaxatoASV(dataset$data,ft,taxa_rank=rank)))
     names(new_excluded) <- paste(names(new_excluded),rank)
   }
 
