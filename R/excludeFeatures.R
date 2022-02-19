@@ -10,14 +10,20 @@
 #' @param silent Argument that is ultimately passed onto runSampleFilter(),
 #'     runNormalization(), and runFeatureFilter(), telling them not to output
 #'     any messages.
+#' @param reset Reset the feature remover to include all features prior to processing
 #'
 #' @return MicroVis dataset (mvdata object) with features filtered out based on
 #'     parameters set by the filter___ feature filtering functions
 #'
-runFeatureRemover <- function(dataset=NULL, temp=F, silent=F) {
+runFeatureRemover <- function(dataset=NULL, reset=F, temp=F, silent=F) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   if(!silent) cat(paste0('\n\n|~~~~~~~~~~~~~  EXCLUDING FEATURES  ~~~~~~~~~~~~~|\n'))
+
+  if(reset) {
+    dataset$data$proc$excluded_features <- NULL
+    return(dataset)
+  }
 
   excluded <- dataset$data$proc$excluded_features
 

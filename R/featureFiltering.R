@@ -615,7 +615,7 @@ filterNAs <- function(dataset=NULL, keepNAs=F, ranks=NULL, silent=F) {
 
   if(dataset$features!='taxa') return(dataset)
 
-  if(keepNAs) dataset$data$proc$filtering$NAfilter$ranks <- NULL
+  if(keepNAs) dataset$data$proc$filtering$NAfilter <- NULL
   else {
     # If not keeping NAs, then by default remove any taxa in just the highest
     #   rank of the dataset
