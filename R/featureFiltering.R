@@ -175,6 +175,11 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
         filterlist.ids <- TaxatoASV(ft_data, unique(unlist(filterlist)), filter_rank)
       } else filterlist.ids <- unique(unlist(filterlist))
 
+      # Remove any ASVs that were excluded prior to processing as they are
+      #   unnecessary to have in filterlist.ids and will cause issues
+      excluded <- unname(unlist(ft_data$proc$excluded_features))
+      filterlist.ids <- filterlist.ids[!(filterlist.ids %in% excluded)]
+
       # Make a new abundance table of just the features that made it through
       #   the filter
       abd_filtered <- abd_temp[!(colnames(abd_temp) %in% filterlist.ids)]
