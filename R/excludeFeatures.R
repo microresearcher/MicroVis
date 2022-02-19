@@ -28,9 +28,9 @@ runFeatureRemover <- function(dataset=NULL, temp=F, silent=F) {
 
     dataset$data$orig <- new_orig
 
-    for(ft in names(excluded)) cat(paste0('\n  Excluding ',
-                                          length(excluded[[ft]]),' ASVs from ',
-                                          ft))
+    if(!silent) for(ft in names(excluded)) cat(paste0('\n  Excluding ',
+                                                      length(excluded[[ft]]),' ASVs from ',
+                                                      ft))
   }
 
   return(dataset)
