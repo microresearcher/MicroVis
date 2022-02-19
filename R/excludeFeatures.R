@@ -31,7 +31,7 @@ runFeatureRemover <- function(dataset=NULL, temp=F, silent=F) {
     if(!silent) for(ft in names(excluded)) cat(paste0('\n  Excluding ',
                                                       length(excluded[[ft]]),' ASVs from ',
                                                       ft))
-  }
+  } else if(!is.null(dataset$data$raw_input)) dataset$data$orig <- dataset$data$raw_input
 
   return(dataset)
 }
