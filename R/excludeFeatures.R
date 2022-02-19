@@ -17,11 +17,11 @@
 runFeatureRemover <- function(dataset=NULL, temp=F, silent=F) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
-  if(!silent) cat(paste0('\n\n|~~~~~~~~~~~~~  EXCLUDING FEATURES  ~~~~~~~~~~~~~|\n'))
-
   excluded <- dataset$data$proc$excluded_features
 
   if(length(excluded)) {
+    if(!silent) cat(paste0('\n\n|~~~~~~~~~~~~~  EXCLUDING FEATURES  ~~~~~~~~~~~~~|\n'))
+
     new_orig <- dataset$data$raw_input <- dataset$data$orig
 
     new_orig <- new_orig[!(colnames(new_orig) %in% unname(unlist(excluded)))]

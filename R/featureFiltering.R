@@ -161,7 +161,7 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
       if(!silent) cat(paste0('\n  Identified ',
                              length(filterlist$NAs),' features without assigned ',
                              paste0(filtering$NAfilter$ranks,collapse = ', ')))
-    }
+    } else filterlist$NAs <- NULL
 
     # Reload the normalized ft_data and abundance table
     ft_data <- dataset$data
