@@ -57,6 +57,7 @@ excludeFeatures <- function(dataset=NULL, features, reset=F, rank=NULL, temp=F, 
 
   if(reset) {
     dataset$data$proc$excluded_features <- NULL
+    dataset <- processDataset(dataset, temp=temp, silent=silent)
     return(dataset)
   }
 
