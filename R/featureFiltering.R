@@ -631,7 +631,7 @@ filterNAs <- function(dataset=NULL, keepNAs=F, ranks=NULL, silent=F) {
 #'
 #' @param dataset MicroVis dataset. Defaults to the active dataset
 #' @param features Vector of features (at any rank) to select
-#' @param rank (Optional) Specify a rank from which to select features. Searches
+#' @param ranks (Optional) Specify a rank from which to select features. Searches
 #'     through all ranks by default
 #' @param temp This parameter has no use in this function and can be removed
 #' @param silent Argument that is ultimately passed onto runSampleFilter(),

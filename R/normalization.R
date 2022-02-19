@@ -81,11 +81,12 @@ runNormalization <- function(dataset=NULL, temp=F, silent=F) {
       #   1) Remove any filtering options that no longer make sense with CLR
       #   2) Remove any features with all zeros
       if(normalization[[norm]]$trans_method=='clr') {
-        if(!silent) cat('\n    Removing feature filters except NA, top prevalence, and variance filters, if they exist')
-        ft_data$proc$filtering[!(names(ft_data$proc$filtering) %in% c('NAfilter',
-                                                                      'top_prevalence',
-                                                                      'low_var_percentile',
-                                                                      'top_var'))] <- NULL
+        if(!silent) cat('\n    Note: We do not currently recommended using filtering with CLR normalization')
+        # if(!silent) cat('\n    Removing feature filters except NA, top prevalence, and variance filters, if they exist')
+        # ft_data$proc$filtering[!(names(ft_data$proc$filtering) %in% c('NAfilter',
+        #                                                               'top_prevalence',
+        #                                                               'low_var_percentile',
+        #                                                               'top_var'))] <- NULL
 
         zerofts <- colnames(ft_data$proc$unranked)[colSums(ft_data$proc$unranked)==0]
         if(!silent) cat('\n    Removing',length(zerofts),'features absent in all subsetted samples')

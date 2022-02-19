@@ -11,14 +11,14 @@ selectFeatures(dataset = NULL, features, ranks = NULL, temp = F, silent = F)
 
 \item{features}{Vector of features (at any rank) to select}
 
+\item{ranks}{(Optional) Specify a rank from which to select features. Searches
+through all ranks by default}
+
 \item{temp}{This parameter has no use in this function and can be removed}
 
 \item{silent}{Argument that is ultimately passed onto runSampleFilter(),
 runNormalization(), and runFeatureFilter(), telling them not to output
 any messages.}
-
-\item{rank}{(Optional) Specify a rank from which to select features. Searches
-through all ranks by default}
 }
 \value{
 Dataset with list of selected features that is passed to runFeatureFilter

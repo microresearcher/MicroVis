@@ -15,6 +15,7 @@ processDataset <- function(dataset, temp=F, silent=F) {
     dataset <- cleanUnkTaxa(dataset)
   }
 
+  dataset <- runFeatureRemover(dataset, silent=silent)
   dataset <- runSampleFilter(dataset, silent=silent)
 
   if(!silent) p_beforeproc <- plotSampleDensity(dataset)

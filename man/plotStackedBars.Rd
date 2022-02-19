@@ -16,7 +16,8 @@ plotStackedBars(
   top_by = "max",
   ftlist = c(),
   plotSigs = F,
-  alpha = 0.05
+  alpha = 0.05,
+  separateLegend = F
 )
 }
 \arguments{
@@ -53,6 +54,9 @@ at the rank}
 
 \item{alpha}{Significance threshold for selecting significant features. Defaults
 to 0.05}
+
+\item{separateLegend}{Whether to separate the legend from the plot. Defaults
+to FALSE}
 }
 \value{
 Stacked bar plot of feature abundances of selected features with the
