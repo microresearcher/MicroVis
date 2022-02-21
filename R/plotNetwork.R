@@ -61,6 +61,7 @@ plotNetwork <- function(dataset=NULL,
 
   data <- getdata(dataset, rank = rank, metadata = F)
   data$Other <- NULL
+  data$Unknown <- NULL
 
   vsize <- glog(apply(data, 2, mean))
   vsize[vsize<(max(vsize)/5)] <- max(vsize)/5

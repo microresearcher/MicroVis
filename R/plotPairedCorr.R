@@ -31,6 +31,7 @@ plotPairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
 
   data <- mvmelt(dataset, rank = rank)
   data$Other <- NULL
+  data$Unknown <- NULL
   paired_samples <- getSamples(dataset, id_cols = ids, complete = compare)$sample
 
   data.paired <- data[data$sample %in% paired_samples,]

@@ -23,7 +23,9 @@ ASVtoTaxa <- function(taxa_data, asvlist, taxa_rank=NULL, uniqueOnly=F) {
   if(uniqueOnly) taxanames <- unique(taxanames)
 
   others_index <- grep('Other',asvlist)
+  unk_index <- grep('Unknown',asvlist)
   if(length(others_index)) taxanames[[others_index]] <- 'Other'
+  if(length(unk_index)) taxanames[[unk_index]] <- 'Unknown'
 
   return(taxanames)
 }
@@ -45,6 +47,8 @@ TaxatoASV <- function(taxa_data, taxalist, taxa_rank=NULL) {
     taxa_rank <- taxa_data$proc$active_rank
   }
 
+  if(!length(taxalist)) return(taxalist)
+
   for(i in 1:length(taxalist)) if(startsWith(taxalist[i],'X') & is.numeric(type.convert(substr(taxalist[i],2,2), as.is=T))) taxalist[i] <- sub('X','',taxalist[i])
 
   if(ncol(taxa_names_tab)==1) asvs <- rownames(taxa_names_tab)[taxa_names_tab %in% taxalist]
@@ -60,7 +64,9 @@ TaxatoASV <- function(taxa_data, taxalist, taxa_rank=NULL) {
   }
 
   others_index <- grep('Other',taxalist)
+  unk_index <- grep('Unknown',taxalist)
   if(length(others_index)) asvs[[others_index]] <- 'Other'
+  if(length(unk_index)) asvs[[unk_index]] <- 'Unknown'
 
   return(asvs)
 }

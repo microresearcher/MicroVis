@@ -33,7 +33,10 @@ changeFactor <- function(dataset=NULL, factor_name=NULL, temp=F) {
     return(dataset)
   }
 
-  new_dataset <- processDataset(new_dataset,temp=temp,silent=temp)
+  # Shouldn't need to process the dataset again since the sample subset isn't changing
+  # new_dataset <- processDataset(new_dataset,temp=temp,silent=temp)
+
+  activate(new_dataset)
 
   return(new_dataset)
 }

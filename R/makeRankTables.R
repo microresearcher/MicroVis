@@ -26,7 +26,7 @@ makeRankTabs <- function(ft_data) {
         #   at the appropriate taxa level. This way, if we are using the
         #   filtered abundance table, we only look for the taxa names of
         #   remaining taxa
-        asvs <- colnames(abd_temp)[colnames(abd_temp)!='Other']
+        asvs <- colnames(abd_temp)[!(colnames(abd_temp) %in% c('Other','Unknown'))]
         for(asv in asvs) {
           colnames(abd_temp)[which(colnames(abd_temp)==asv)] <- taxa_names_tab[asv,i]
         }
@@ -48,7 +48,7 @@ makeRankTabs <- function(ft_data) {
         new_ft_data.proc$active_rank <- rev(taxaRanks[taxaRanks %in% colnames(taxa_names_tab)])[[1]]
       }
     } else {
-      asvs <- colnames(abd)[colnames(abd)!='Other']
+      asvs <- colnames(abd)[!(colnames(abd) %in% c('Other','Unknown'))]
       for(asv in asvs) {
         colnames(abd)[which(colnames(abd)==asv)] <- taxa_names_tab[rownames(taxa_names_tab)==asv,1]
       }

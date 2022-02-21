@@ -29,6 +29,7 @@ mvNetwork <- function(dataset=NULL,
                   metadata = F, rank = rank)
 
   data$Other <- NULL
+  data$Unknown <- NULL
 
   method <- match.arg(method)
   if(length(grep('se\\.',method)) & requireNamespace('SpiecEasi',quietly = T)) {

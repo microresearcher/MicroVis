@@ -24,6 +24,7 @@ rfboruta <- function(dataset=NULL,
   data <- mvmelt(dataset)
   abun <- data[(mdcolnum+1):ncol(data)]
   abun$Other <- NULL
+  abun$Unknown <- NULL
   groups <- data[[factor]]
 
   invalid_chars <- c(' '='__1__','-'='__2__','\\+'='__3__')

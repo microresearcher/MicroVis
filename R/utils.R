@@ -148,7 +148,7 @@ getFeatures <- function(dataset=NULL,ranks=NULL,allRanks=F) {
   features <- c()
   for(rank in ranks) features <- c(features,colnames(dataset$data$proc[[rank]]))
 
-  features <- features[!(features %in% 'Other')]
+  features <- features[!(features %in% c('Other','Unknown'))]
 
   # Un-rename any taxa that were silently renamed by R (eg R adds an 'X' in front
   #   of column names that start with a number, so we want to reverse that)

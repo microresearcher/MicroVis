@@ -20,6 +20,8 @@ makePS <- function(dataset=NULL) {
   rank <- getLowestRank(dataset)
   abd <- taxa_data$proc[[rank]]
   abd$Other <- NULL
+  abd$Unknown <- NULL
+
   colnames(abd) <- TaxatoASV(taxa_data,taxalist = colnames(abd), taxa_rank = rank)
   metadata <- data.frame(lapply(dataset$metadata,function(x) if(is.factor(x)) unfactor(x) else x))
 
@@ -69,6 +71,7 @@ makeAldex <- function(dataset=NULL, factor=NULL) {
   active_rank <- dataset$data$proc$active_rank
   abun <- dataset$data$proc[[active_rank]]
   abun$Other <- NULL
+  abun$Unknown <- NULL
 
   abun$sample <- rownames(abun)
   data <- cleanData(merge(dataset$metadata,abun), factor)
@@ -97,6 +100,7 @@ makeDeseq <- function(dataset=NULL,baseline=NULL) {
   active_rank <- dataset$data$proc$active_rank
   abd <- dataset$data$proc[[active_rank]]
   abd$Other <- NULL
+  abd$Unknown <- NULL
 
   metadata <- dataset$metadata[as.character(dataset$metadata$sample) %in% rownames(abd),]
   metadata <- metadata %>% arrange('sample')
@@ -170,6 +174,7 @@ makeTaxMap <- function(dataset=NULL,unfiltered=F,ftlist=NULL) {
       }})
     abun <- abun[ftlist]
     abun$Other <- NULL
+    abun$Unknown <- NULL
 
     # Need to convert taxa names in processed abundance tables to ASV#'s
     colnames(abun) <- TaxatoASV(taxa_data = dataset$data,

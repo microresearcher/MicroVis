@@ -76,6 +76,7 @@ plotUnivar <- function(dataset=NULL,
   }
 
   melted$Other <- NULL
+  melted$Unknown <- NULL
 
   allfts <- getFeatures(dataset,ranks=rank)
   # Make sure ftlist only has features that actually exist (case-insensitive)

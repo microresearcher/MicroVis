@@ -22,6 +22,7 @@ print.mvdata <- function(x, ...) {
 
   n_features <- ncol(x$data$proc[[rank]])
   if('Other' %in% colnames(x$data$proc[[rank]])) n_features <- n_features - 1
+  if('Unknown' %in% colnames(x$data$proc[[rank]])) n_features <- n_features - 1
   if(x$features=='taxa') totn_features <- length(unique(ASVtoTaxa(x$data,
                                                                   colnames(x$data$orig),
                                                                   taxa_rank=rank)))
@@ -167,6 +168,7 @@ print.mvmerged <- function(x, ...) {
 
   tot_nfeatures <- ncol(x$data$proc[[rank]])
   if('Other' %in% colnames(x$data$proc[[rank]])) tot_nfeatures <- tot_nfeatures - 1
+  if('Unknown' %in% colnames(x$data$proc[[rank]])) tot_nfeatures <- tot_nfeatures - 1
 
   ds1_nfts <- length(x$data$features[[1]])
   ds2_nfts <- length(x$data$features[[2]])

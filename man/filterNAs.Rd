@@ -4,7 +4,7 @@
 \alias{filterNAs}
 \title{Filter Unassigned Taxa}
 \usage{
-filterNAs(dataset = NULL, keepNAs = F, ranks = NULL, silent = F)
+filterNAs(dataset = NULL, keepNAs = F, ranks = NULL, temp = F, silent = F)
 }
 \arguments{
 \item{dataset}{MicroVis dataset (mvdata object)}
@@ -14,6 +14,9 @@ at the ranks specified}
 
 \item{ranks}{Any taxa that have an unknown assignment at this/these rank(s)
 will be filtered out.}
+
+\item{temp}{If set to TRUE, it tells processDataset() to NOT update the active
+dataset.}
 
 \item{silent}{Argument that is ultimately passed onto runSampleFilter(),
 runNormalization(), and runFeatureFilter(), telling them not to output

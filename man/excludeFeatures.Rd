@@ -5,12 +5,21 @@
 \title{Exclude specific features at a specified taxonomic rank. Only for taxonomic
     datasets with multiple taxonomic ranks.}
 \usage{
-excludeFeatures(dataset = NULL, features, rank = NULL, temp = F, silent = F)
+excludeFeatures(
+  dataset = NULL,
+  features,
+  reset = F,
+  rank = NULL,
+  temp = F,
+  silent = F
+)
 }
 \arguments{
 \item{dataset}{MicroVis dataset. Defaults to the active dataset}
 
 \item{features}{Vector of features (at any rank) to select}
+
+\item{reset}{Reset the feature remover to include all features prior to processing}
 
 \item{rank}{(Optional) Specify a rank from which to select features. Searches
 through all ranks by default}

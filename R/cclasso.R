@@ -17,6 +17,7 @@ mvCClasso <- function(dataset=NULL,r_cutoff=0,features1=NULL,features2=NULL) {
 
   melted <- mvmelt(dataset)
   melted$Other <- NULL
+  melted$Unknown <- NULL
 
   cor_list <- list()
   for(grp in factor$subset) {

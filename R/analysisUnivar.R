@@ -54,7 +54,7 @@ univar <- function(data=NULL,
     # Set the features to be compared
     features <- features[features %in% getFeatures(dataset,ranks=rank)]
     if(is.null(features)) features <- getFeatures(dataset,ranks=rank)
-    features <- features[features!='Other']
+    features <- features[!(features %in% c('Other','Unknown'))]
 
     # Get the sizes of each group/stratified group
     anysmallgrps <- checkGroups(dataset=dataset,

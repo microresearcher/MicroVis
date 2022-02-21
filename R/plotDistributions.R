@@ -25,6 +25,8 @@ plotSampleDensity <- function(dataset=NULL,bySample=T) {
 
   histocounts <- ft_data$proc[[lowest_rank]]
   histocounts$Other <- NULL
+  histocounts$Unknown <- NULL
+
   ftnames <- colnames(histocounts)
   histocounts$Sample <- rownames(histocounts)
   histocounts <- histocounts %>% pivot_longer(cols = ftnames,
@@ -85,6 +87,7 @@ plotFeatureDensity <- function(dataset=NULL,byFeature=T,
 
   histocounts <- dataset$data$proc[[rank]][ftlist]
   histocounts$Other <- NULL
+  histocounts$Unknown <- NULL
 
   samplenames <- rownames(histocounts)
   histocounts <- data.frame(t(histocounts))

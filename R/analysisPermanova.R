@@ -26,6 +26,7 @@ mvdist <- function(dataset=NULL, method='bray', weighted=F, allFactors=T, factor
   rank <- dataset$data$proc$active_rank
   abd <- dataset$data$proc[[rank]]
   abd$Other <- NULL
+  abd$Unknown <- NULL
 
   factors <- factors[factors %in% names(dataset$factors)]
   if(!length(factors)) {

@@ -37,9 +37,9 @@ processDataset <- function(dataset, temp=F, silent=F) {
   if(!temp) {
     dataset$name <- NULL
     assign('active_dataset',dataset,envir = mvEnv)
-  }
 
-  if(!silent) cat(paste0('\n\n  <|> Active Dataset: "active_dataset" <|>\n'))
+    if(!silent) cat(paste0('\n\n  <|> Active Dataset: "active_dataset" <|>\n'))
+  }
 
   return(dataset)
 }

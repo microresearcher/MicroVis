@@ -170,21 +170,42 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
     if(length(unlist(filterlist))) {
       ### Filter all Identified Features ###
       #------------------------------------#
+      # First, temporarily separate the NA list from the nested filterlist as
+      #   NAs will be dealt with separately
+      unklist <- filterlist$NAs
+      filterlist$NAs <- NULL
+
       # Replace the taxa names with all ASV numbers corresponding to them
       if(!is.null(taxa_names_tab)) {
-        filterlist.ids <- TaxatoASV(ft_data, unique(unlist(filterlist)), filter_rank)
-      } else filterlist.ids <- unique(unlist(filterlist))
+        filterlist.ids <- TaxatoASV(ft_data,
+                                    unique(unlist(filterlist)),
+                                    filter_rank)
+        unk.ids <- TaxatoASV(ft_data,
+                             unique(unklist),
+                             filter_rank)
+      } else {
+        filterlist.ids <- unique(unlist(filterlist))
+        unk.ids <- unique(unklist)
+      }
 
-      # Remove any ASVs that were excluded prior to processing as they are
-      #   unnecessary to have in filterlist.ids and will cause issues
-      excluded <- unname(unlist(ft_data$proc$excluded_features))
-      filterlist.ids <- filterlist.ids[!(filterlist.ids %in% excluded)]
+      # Put the NA list back in filterlist since we won't be using filterlist
+      #   for the rest of this
+      filterlist$NAs <- unklist
+
+      # Remove any ASVs that are not in the current unranked abundance table either
+      #   because they were excluded prior to processing or during normalization.
+      #   They are unnecessary to have in filterlist.ids or unk.ids and they will
+      #   cause issues
+      filterlist.ids <- filterlist.ids[filterlist.ids %in% colnames(abd_temp)]
+      unk.ids <- unk.ids[unk.ids %in% colnames(abd_temp)]
 
       # Make a new abundance table of just the features that made it through
       #   the filter
-      abd_filtered <- abd_temp[!(colnames(abd_temp) %in% filterlist.ids)]
+      abd_filtered <- abd_temp[!(colnames(abd_temp) %in% c(filterlist.ids,unk.ids))]
+
       # Now, pool all the filter list features into 'Other' and add it to the table
       abd_filtered$Other <- rowSums(abd_temp[filterlist.ids])
+      abd_filtered$Unknown <- rowSums(abd_temp[unk.ids])
     } else abd_filtered <- abd_temp
 
     ft_data$proc$unranked <- abd_filtered
@@ -192,7 +213,7 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
     # Record the filter list in the dataset's history
     ft_data$proc$filtering$filterlist <- filterlist
 
-    num_removed <- ncol(abd_temp) - ncol(abd_filtered) + any(colnames(abd_filtered) %in% 'Other')
+    num_removed <- ncol(abd_temp) - ncol(abd_filtered) + any(colnames(abd_filtered) %in% c('Other','Unknown'))
 
     if(!silent) cat('\n\n>>> Removed',num_removed,'features based on filtering parameters <<<\n')
   } else if(length(dataset$data$proc$selected)) {
@@ -597,6 +618,8 @@ filterLowAbun <- function(dataset=NULL, min_abun=NULL, min_proportion=NULL, sile
 #'     at the ranks specified
 #' @param ranks Any taxa that have an unknown assignment at this/these rank(s)
 #'     will be filtered out.
+#' @param temp If set to TRUE, it tells processDataset() to NOT update the active
+#'     dataset.
 #' @param silent Argument that is ultimately passed onto runSampleFilter(),
 #'     runNormalization(), and runFeatureFilter(), telling them not to output
 #'     any messages.
@@ -605,7 +628,7 @@ filterLowAbun <- function(dataset=NULL, min_abun=NULL, min_proportion=NULL, sile
 #'     removed because they were unassigned at specified ranks
 #' @export
 #'
-filterNAs <- function(dataset=NULL, keepNAs=F, ranks=NULL, silent=F) {
+filterNAs <- function(dataset=NULL, keepNAs=F, ranks=NULL, temp=F, silent=F) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   if(length(dataset$data$proc$selected)) {
@@ -627,7 +650,7 @@ filterNAs <- function(dataset=NULL, keepNAs=F, ranks=NULL, silent=F) {
     else dataset$data$proc$filtering$NAfilter$ranks <- ranks
   }
 
-  if(!get('.loading',envir = mvEnv)) dataset <- processDataset(dataset, silent=silent)
+  if(!get('.loading',envir = mvEnv)) dataset <- processDataset(dataset, temp=temp, silent=silent)
 
   return(dataset)
 }

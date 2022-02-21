@@ -11,6 +11,7 @@ plotStackedBars(
   stratify = F,
   bySample = F,
   unfiltered = T,
+  label_unknown = T,
   rank = NA,
   top = 15,
   top_by = "max",
@@ -35,6 +36,8 @@ each sample. Defaults to FALSE}
 
 \item{unfiltered}{Whether to use data before or after filtering out features.
 Defaults to TRUE (uses data before filtering)}
+
+\item{label_unknown}{Whether to group unknown taxa separate. Defaults to TRUE}
 
 \item{rank}{Rank at which to use features}
 

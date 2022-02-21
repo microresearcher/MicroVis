@@ -46,9 +46,11 @@ mvmerge <- function(dataset1,dataset2,
 
   if(!keepFiltered) {
     abun1$Other <- NULL
+    abun1$Unknown <- NULL
     abun2$Other <- NULL
-    fts1 <- fts1[fts1!='Other']
-    fts2 <- fts2[fts2!='Other']
+    abun2$Unknown <- NULL
+    fts1 <- fts1[!(fts1 %in% c('Other','Unknown'))]
+    fts2 <- fts2[!(fts2 %in% c('Other','Unknown'))]
   }
 
   # Select features if any are specified

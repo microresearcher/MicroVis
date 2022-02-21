@@ -33,7 +33,7 @@ ftcor <- function(dataset1=NULL,dataset2=NULL,
     rank <- dataset1$data$proc$active_rank
     abun_data <- mvmelt(dataset1)
     fts <- colnames(dataset1$data$proc[[rank]])
-    fts <- fts[fts!='Other']
+    fts <- fts[!(fts %in% c('Other','Unknown'))]
 
     if(length(features1 %in% fts)) fts1 <- fts[fts %in% features1]
     else fts1 <- fts
@@ -49,8 +49,8 @@ ftcor <- function(dataset1=NULL,dataset2=NULL,
     # In case any specified features weren't found during merging
     fts1 <- merged_dataset$data$features[[1]]
     fts2 <- merged_dataset$data$features[[2]]
-    fts1 <- fts1[fts1!='Other']
-    fts2 <- fts2[fts2!='Other']
+    fts1 <- fts1[!(fts1 %in% c('Other','Unknown'))]
+    fts2 <- fts2[!(fts2 %in% c('Other','Unknown'))]
     clrs <- merged_dataset$colors
     factor <- merged_dataset$factors[[merged_dataset$active_factor]]
 
