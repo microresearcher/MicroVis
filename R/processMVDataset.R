@@ -55,8 +55,8 @@ processDataset <- function(dataset, temp=F, silent=F) {
 #' @export
 #'
 clearProcessing <- function(dataset, clearSampleFilter=F, temp=F, silent=F) {
-  dataset <- clearNormalization(dataset, silent=silent, temp = T)
-  dataset <- clearFeatureFilt(dataset, silent=silent, temp = T)
+  dataset <- clearNormalization(dataset, temp=T, silent=silent)
+  dataset <- clearFeatureFilt(dataset, temp=T, silent=silent)
 
   dataset$stats <- list()
   dataset$data$proc$filtering$ftstats <- NULL
