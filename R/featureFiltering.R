@@ -31,7 +31,7 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
 
     filter_rank <- dataset$data$proc$filter_rank
 
-    ft_data <- getFtStats(dataset)
+    ft_data <- getFtStats(dataset,justStats = F)
     abd_temp <- ft_data$proc$unranked
     if(dataset$features=='taxa') abd_temp <- agglomTaxa(ft_data, abd_temp,
                                                         from_rank='asv',
@@ -65,7 +65,7 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
     ### Identify Low Relative Abundance ###
     #-------------------------------------#
     if(!is.null(filtering$top_relabun)) {
-      low_relabun <- (ftstats %>% slice_min(Relative_Abundance,
+      low_relabun <- (ftstats %>% slice_min(Mean_Relative_Abundance,
                                             n=(nfts-filtering$top_relabun)))[['Feature']]
 
       if(!silent) cat(paste0('\n  Identified top ',
@@ -74,7 +74,7 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
       filterlist$low_relabun <- low_relabun
 
     } else if(!is.null(filtering$min_relabun)) {
-      low_relabun <- ftstats[ftstats$Relative_Abundance<filtering$min_relabun,]$Feature
+      low_relabun <- ftstats[ftstats$Mean_Relative_Abundance<filtering$min_relabun,]$Feature
 
       if(!silent) cat(paste0('\n  Identified ',
                              length(low_relabun),' features with < ',
@@ -775,17 +775,24 @@ findSigFisher <- function(dataset, fts, lowabun_thresh=0, silent=F) {
 #'
 #' @param dataset MicroVis dataset (mvdata object)
 #' @param rank Rank at which to get feature summary stats
+#' @param raw Use raw counts to calculate feature statistics. Defaults to TRUE
+#' @param justStats Whether to just output the a table of feature statistics
+#'     instead of all data processing information
 #'
 #' @return List containing original abundance table, feature names table, and
 #'     a dataframe of feature statistics used for filtering
 #'
 #' @export
 #'
-getFtStats <- function(dataset=NULL, rank=NULL) {
+getFtStats <- function(dataset=NULL, rank=NULL, raw=T, justStats=T) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
-  # If a pre-filtered, unranked abundance table is not available, run normalization to get one
-  if(is.null(dataset$data$proc$unranked)) dataset <- runNormalization(dataset,temp = T,silent = T)
+  # If a pre-filtered, unranked abundance table is not available, run sample
+  #   filtering or normalization to get one
+  if(is.null(dataset$data$proc$unranked)) {
+    if(raw) dataset <- runSampleFilter(dataset,temp = T,silent = T)
+    else dataset <- runNormalization(dataset,temp = T,silent = T)
+  }
 
   if(is.null(rank)) rank <- dataset$data$proc$filter_rank
 
@@ -814,5 +821,6 @@ getFtStats <- function(dataset=NULL, rank=NULL) {
 
   ft_data$proc$filtering$ftstats <- ftstats
 
-  return(ft_data)
+  if(justStats) return(ftstats)
+  else return(ft_data)
 }

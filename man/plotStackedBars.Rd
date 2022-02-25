@@ -6,10 +6,11 @@
 \usage{
 plotStackedBars(
   dataset = NULL,
-  proportional = T,
+  relative = T,
   factor = NULL,
   stratify = F,
   bySample = F,
+  allSamples = F,
   unfiltered = T,
   label_unknown = T,
   rank = NA,
@@ -24,15 +25,17 @@ plotStackedBars(
 \arguments{
 \item{dataset}{MicroVis dataset. Defaults to the active dataset}
 
-\item{proportional}{Whether to plot relative/proportional abundance. Defaults
-to TRUE}
+\item{relative}{Whether to plot relative abundance. Defaults to TRUE}
 
 \item{factor}{Factor to group samples by}
 
 \item{stratify}{Whether to stratify the groups. Defaults to FALSE}
 
-\item{bySample}{Do not aggregate samples by groups and instead show a bar for
-each sample. Defaults to FALSE}
+\item{bySample}{Whether to show a bar for each sample instead of aggregating
+samples by groups. Defaults to FALSE}
+
+\item{allSamples}{Whether to plot a single bar for all the samples in the
+dataset. Defaults to FALSE}
 
 \item{unfiltered}{Whether to use data before or after filtering out features.
 Defaults to TRUE (uses data before filtering)}

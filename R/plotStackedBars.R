@@ -1,12 +1,13 @@
 #' Plot stacked abundace barplots
 #'
 #' @param dataset MicroVis dataset. Defaults to the active dataset
-#' @param proportional Whether to plot relative/proportional abundance. Defaults
-#'     to TRUE
+#' @param relative Whether to plot relative abundance. Defaults to TRUE
 #' @param factor Factor to group samples by
 #' @param stratify Whether to stratify the groups. Defaults to FALSE
-#' @param bySample Do not aggregate samples by groups and instead show a bar for
-#'     each sample. Defaults to FALSE
+#' @param bySample Whether to show a bar for each sample instead of aggregating
+#'     samples by groups. Defaults to FALSE
+#' @param allSamples Whether to plot a single bar for all the samples in the
+#'     dataset. Defaults to FALSE
 #' @param unfiltered Whether to use data before or after filtering out features.
 #'     Defaults to TRUE (uses data before filtering)
 #' @param label_unknown Whether to group unknown taxa separate. Defaults to TRUE
@@ -30,9 +31,9 @@
 #'     other features lumped into an "Other" category
 #' @export
 #'
-plotStackedBars <- function(dataset=NULL, proportional=T,
+plotStackedBars <- function(dataset=NULL, relative=T,
                             factor=NULL, stratify=F,
-                            bySample=F,
+                            bySample=F, allSamples=F,
                             unfiltered=T,label_unknown=T,rank=NA,
                             top=15, top_by='max',
                             ftlist=c(),plotSigs=F,alpha=0.05,
@@ -87,9 +88,19 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
     }
   } else if(label_unknown) fts <- c(fts,'Unknown')
 
+  if(relative) {
+    data[fts] <- data.frame(t(apply(data[fts], 1, function(x) x/sum(x))))
+    abundance_type <- 'Relative Abundance'
+  } else {
+    abundance_type <- 'Absolute Abundance'
+  }
+
   if(bySample) {
     data$sample <- as.character(data$sample)
     suffix <- paste0(suffix,'_bySample')
+  } else if(allSamples) {
+    data <- data.frame(t(colMeans(data[fts])))
+    abundance_type <- paste0('Mean ',abundance_type)
   } else {
     if(stratify) {
       facet <- select.list(names(dataset$factors)[!(names(dataset$factors) %in% factor)],
@@ -109,27 +120,29 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
     for(ft in fts) agglist[[ft]] <- aggregate(aggformula,data[c(factor,ft)],
                                               function(x) mean(x,na.rm=T))
     data <- purrr::reduce(agglist,merge)
-  }
-
-  if(proportional) {
-    data[fts] <- data.frame(t(apply(data[fts], 1, function(x) x/sum(x))))
-    abundance_type <- 'Proportional Abundance'
-  } else {
-    abundance_type <- 'Absolute Abundance'
+    abundance_type <- paste0('Mean ',abundance_type)
   }
 
   if(top<length(fts)) {
-    if(!(top_by %in% c('max','min','mean','sum'))) top_by <- 'max'
+    if(allSamples | !(top_by %in% c('max','min','mean','sum'))) top_by <- 'max'
     ftstats <- data.frame(max=apply(data[fts],2,function(x) max(x)),
                           min=apply(data[fts],2,function(x) min(x)),
                           mean=apply(data[fts],2,function(x) mean(x)),
                           sum=apply(data[fts],2,function(x) sum(x)))
     ftstats <- ftstats[!(rownames(ftstats) %in% c('Other','Unknown')),]
 
+    # If unknowns are to be included separately, make sure they don't count
+    #   towards the number of named features shown
+    fts <- fts[!(fts %in% 'Unknown')]
+
     if(top_by=='max') low_abun <- rownames(slice_min(ftstats, order_by=max, n=(length(fts)-top)))
     if(top_by=='min') low_abun <- rownames(slice_min(ftstats, order_by=min, n=(length(fts)-top)))
     if(top_by=='mean') low_abun <- rownames(slice_min(ftstats, order_by=mean, n=(length(fts)-top)))
     if(top_by=='sum') low_abun <- rownames(slice_min(ftstats, order_by=sum, n=(length(fts)-top)))
+
+    # Add the unknown feature back to the feature list (fts) if it is to be labeled
+    #   separately
+    if(label_unknown) fts <- c(fts,'Unknown')
 
     if(is.null(data$Other)) data$Other <- rep(0,nrow(data))
     data$Other <- data$Other + rowSums(data[low_abun])
@@ -162,6 +175,17 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
             legend.text = element_text(size=15),
             legend.key.size = unit(1,'cm'),
             strip.text = element_text(size = 18))
+  } else if(allSamples) {
+    p <- ggbarplot(data_pivoted,y=abundance_type,
+                   fill=tempds$data$proc$active_rank,color='white')+
+      labs(fill=capitalize(rank),
+           x=dataset$factors[[factor]]$name_text)+
+      theme(axis.title = element_text(size=25),
+            axis.text = element_text(size=22),
+            legend.position = 'right',
+            legend.title = element_text(size = 22),
+            legend.text = element_text(size=15),
+            legend.key.size = unit(1,'cm'))
   } else {
     p <- ggbarplot(data_pivoted,x=factor,y=abundance_type,
                    fill=tempds$data$proc$active_rank,color='white')+
@@ -195,6 +219,7 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
                                 factors = dataset$factors,
                                 active_factor = dataset$active_factor,
                                 width = 12, height = 8,
+                                stat_results = list('stats'=data_pivoted),
                                 suffix = paste0(suffix,'_',abundance_type),
                                 verbose = F)
 
@@ -213,7 +238,7 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
 
   activate(dataset)
 
-  total_props <- aggregate(data_pivoted$`Proportional Abundance`[data_pivoted[[rank]] %in% namedfts],by=list(data_pivoted[[factor]][data_pivoted[[rank]] %in% namedfts]), sum)
+  total_props <- aggregate(data_pivoted$`Relative Abundance`[data_pivoted[[rank]] %in% namedfts],by=list(data_pivoted[[factor]][data_pivoted[[rank]] %in% namedfts]), sum)
 
   cat('Top',top,'features make up:\n')
   cat('',paste0(signif(100*mean(total_props$x),3),'%'),
@@ -222,7 +247,7 @@ plotStackedBars <- function(dataset=NULL, proportional=T,
   if('Unknown' %in% data_pivoted[[rank]]) {
     cat('\n\n',
         paste0(signif((100*mean(mean(data_pivoted[data_pivoted[[rank]]=='Unknown',
-                                                  ]$`Proportional Abundance`))),3),'%'),
+                                                  ]$`Relative Abundance`))),3),'%'),
         'of',rank,'are unknown')
   }
   cat('\n\n')

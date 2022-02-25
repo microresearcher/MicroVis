@@ -4,12 +4,17 @@
 \alias{getFtStats}
 \title{Get Feature Statistics for Filtering}
 \usage{
-getFtStats(dataset = NULL, rank = NULL)
+getFtStats(dataset = NULL, rank = NULL, raw = T, justStats = T)
 }
 \arguments{
 \item{dataset}{MicroVis dataset (mvdata object)}
 
 \item{rank}{Rank at which to get feature summary stats}
+
+\item{raw}{Use raw counts to calculate feature statistics. Defaults to TRUE}
+
+\item{justStats}{Whether to just output the a table of feature statistics
+instead of all data processing information}
 }
 \value{
 List containing original abundance table, feature names table, and

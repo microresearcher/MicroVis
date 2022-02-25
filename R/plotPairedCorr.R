@@ -25,6 +25,8 @@ plotPairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
                           showstats=T) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
+  mdcols <- colnames(dataset$metadata)
+
   # If no valid rank was specified, default to the second highest rank
   rank <- rank[rank %in% getRanks(dataset)]
   if(!length(rank)) rank <- getRanks(dataset)[2]
@@ -38,8 +40,8 @@ plotPairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
   cat('\n',nrow(data.paired),'out of',nrow(data),'samples form complete pairs\n')
 
   fts <- fts[fts %in% colnames(data.paired)]
-  if(!length(fts)) fts <- colnames(data.paired)[!(colnames(data.paired) %in% c(ids, compare))
-                                         & unlist(lapply(data.paired, is.numeric))]
+  if(!length(fts)) fts <- colnames(data.paired)[!(colnames(data.paired) %in% c(ids, compare, mdcols))
+                                                & unlist(lapply(data.paired, is.numeric))]
 
   compare <- compare[compare %in% colnames(data.paired)]
   groups <- levels(data.paired[[compare]])
@@ -51,20 +53,29 @@ plotPairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
   data.paired <- data.paired[data.paired[[compare]] %in% groups,]
   ids <- ids[ids %in% colnames(data.paired)]
 
-  cor_rvals <- c()
-  cor_pvals <- c()
-  for(ft in fts) {
-    pivoted <- data.paired[c(ids,compare,ft)] %>% pivot_wider(id_cols=ids,
-                                                              names_from=compare,
-                                                              values_from=ft)
-    corvals <- rcorr(as.matrix(pivoted[groups]))
-    cor_rvals[[ft]] <- corvals$r[1,2]
-    cor_pvals[[ft]] <- corvals$P[1,2]
-  }
-  if(padj) cor_pvals <- p.adjust(cor_pvals, method = 'BH')
+  stats <- pairedCor(ids=ids, compare=compare, fts=fts, rank=rank,
+                     rthresh=rthresh, alpha=alpha, padj=padj,
+                     data.paired=data.paired, groups=groups)
 
-  cor_rvals[is.na(cor_rvals)] <- 0
-  cor_pvals[is.na(cor_pvals)] <- 1.1
+  # cor_rvals <- c()
+  # cor_pvals <- c()
+  # for(ft in fts) {
+  #   pivoted <- data.paired[c(ids,compare,ft)] %>% pivot_wider(id_cols=ids,
+  #                                                             names_from=compare,
+  #                                                             values_from=ft)
+  #   corvals <- rcorr(as.matrix(pivoted[groups]))
+  #   cor_rvals[[ft]] <- corvals$r[1,2]
+  #   cor_pvals[[ft]] <- corvals$P[1,2]
+  # }
+  # if(padj) cor_pvals <- p.adjust(cor_pvals, method = 'BH')
+  #
+  # cor_rvals[is.na(cor_rvals)] <- 0
+  # cor_pvals[is.na(cor_pvals)] <- 1.1
+  #
+  # stats <- merge(data.frame(unlist(cor_rvals)),data.frame(unlist(cor_pvals)),by = 0)
+  # colnames(stats) <- c(rank, 'R', 'p (adj)')
+  #
+  # dataset$stats$paired_cor[[paste0(groups,collapse = '_')]][[rank]] <- stats
 
   p <- list()
   for(ft in fts[cor_pvals<=1]) {
@@ -109,12 +120,18 @@ plotPairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
     }
   }
 
+  assign('active_dataset',dataset,envir = mvEnv)
+  if(!is.null(dataset$name)) assign(dataset$name,dataset,1)
+
   if(exists('save_directory')) {
     dir.create(file.path(save_directory,'Statistics'),showWarnings = FALSE)
 
-    write.csv(cor_pvals,
-              file=file.path(save_directory,'Statistics','Statistics.csv'))
+    write.csv(stats,
+              file=file.path(save_directory,'Statistics','Statistics.csv'),
+              row.names = F)
 
     cat('Figures and any associated statistics saved to:\n ',save_directory)
   }
+
+  cat('\n')
 }
