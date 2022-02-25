@@ -78,11 +78,12 @@ plotPairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
   # dataset$stats$paired_cor[[paste0(groups,collapse = '_')]][[rank]] <- stats
 
   p <- list()
-  for(ft in fts[cor_pvals<=1]) {
+  for(ft in fts[stats$`p(adj)`<=1]) {
     pivoted <- data.paired[c(ids,compare,ft)] %>% pivot_wider(id_cols=ids,
                                                               names_from=compare,
                                                               values_from=ft)
-    if(cor_rvals[match(ft,fts)] >= rthresh & cor_pvals[match(ft,fts)] <= alpha) {
+    if(stats$R[stats[[rank]]==ft] >= rthresh &
+       stats$`p(adj)`[stats[[rank]]==ft] <= alpha) {
       ptemp <- ggscatter(pivoted, groups[1], groups[2], color='#00c700', size=4,
                          add='reg.line', add.params=list(size=1.2), conf.int=T,
                          title=ft)
@@ -123,7 +124,8 @@ plotPairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
   assign('active_dataset',dataset,envir = mvEnv)
   if(!is.null(dataset$name)) assign(dataset$name,dataset,1)
 
-  if(exists('save_directory')) {
+  if(!is.null('save_directory')) {
+    print(save_directory)
     dir.create(file.path(save_directory,'Statistics'),showWarnings = FALSE)
 
     write.csv(stats,
