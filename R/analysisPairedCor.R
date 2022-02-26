@@ -37,7 +37,7 @@ pairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
     paired_samples <- getSamples(dataset, id_cols = ids, complete = compare)$sample
 
     data.paired <- data[data$sample %in% paired_samples,]
-    cat('\n',nrow(data.paired),'out of',nrow(data),'samples form complete pairs\n')
+    cat('\n',nrow(data.paired),'out of',nrow(data),'samples form complete pairs\n\n')
 
     compare <- compare[compare %in% colnames(data.paired)]
     groups <- levels(data.paired[[compare]])

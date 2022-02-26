@@ -4,7 +4,13 @@
 \alias{filterLowPrev}
 \title{Filter Low Prevalence Features}
 \usage{
-filterLowPrev(dataset = NULL, top = NULL, min_prevalence = NULL, silent = F)
+filterLowPrev(
+  dataset = NULL,
+  top = NULL,
+  min_prevalence = NULL,
+  prev_prop = NULL,
+  silent = F
+)
 }
 \arguments{
 \item{dataset}{MicroVis dataset (mvdata object)}
@@ -14,6 +20,9 @@ Specifying a value for this will override the min_prevalence value.}
 
 \item{min_prevalence}{(Optional) (Default) Prevalence threshold. Features with
 prevalence lower than this threshold will be filtered out.}
+
+\item{prev_prop}{(Optional) Minimum percent of samples that a feature must be
+be present in for it to be kept. Overrides top and min_prevalence values}
 
 \item{silent}{Argument that is ultimately passed onto runSampleFilter(),
 runNormalization(), and runFeatureFilter(), telling them not to output

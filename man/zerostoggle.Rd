@@ -4,12 +4,19 @@
 \alias{zerostoggle}
 \title{Switch Method for Replacing Zeros}
 \usage{
-zerostoggle(method = c("replace", "impute"), div = NULL)
+zerostoggle(
+  method = c("replace", "impute"),
+  div = NULL,
+  rdist = c("runif", "point")
+)
 }
 \arguments{
 \item{method}{(Optional) The method of zero-replacement to switch to}
 
-\item{div}{(Optional) The divisor by which to divide the lowest count value by
+\item{div}{(Optional) The divisor by which to divide the lowest count value by}
+
+\item{rdist}{(Optional) How to replace zeros, either using a uniform distribution
+or a point value
 to determine the maximum value to replace zeros with for the "replace" method}
 }
 \value{

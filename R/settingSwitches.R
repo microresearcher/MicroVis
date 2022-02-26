@@ -30,16 +30,18 @@ savetoggle <- function() {
 #'
 #' @param method (Optional) The method of zero-replacement to switch to
 #' @param div (Optional) The divisor by which to divide the lowest count value by
+#' @param rdist (Optional) How to replace zeros, either using a uniform distribution
+#'     or a point value
 #'     to determine the maximum value to replace zeros with for the "replace" method
-#'
 #' @return Does not return anything
 #' @export
 #'
 zerostoggle <- function(method=c('replace','impute'),
-                        div=NULL) {
+                        div=NULL,
+                        rdist=c('runif','point')) {
   if(length(method)>1) {
     method <- get('zeroReplaceMethod',envir = mvEnv)$method
-    if(is.null(div)) {
+    if(is.null(div) & length(rdist)>1) {
       if(method=='replace') method <- 'impute'
       else if(method=='impute') method <- 'replace'
     }
@@ -49,7 +51,12 @@ zerostoggle <- function(method=c('replace','impute'),
     if(!is.numeric(div) | div<=1) stop('"div" must be a number greater than 1')
   } else div <- get('zeroReplaceMethod',envir = mvEnv)$div
 
-  assign('zeroReplaceMethod',list('method'=method, 'div'=div),envir = mvEnv)
+  if(length(rdist)==1) rdist <- match.arg(rdist)
+  else rdist <- get('zeroReplaceMethod',envir = mvEnv)$rdist
+
+  assign('zeroReplaceMethod',list(method=method,
+                                  div=div,
+                                  rdist=rdist),envir = mvEnv)
 
   cat('Zero replacement method during normalization steps:',method,'\n')
 }

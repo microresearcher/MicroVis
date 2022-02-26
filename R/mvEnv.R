@@ -5,7 +5,9 @@ assign('.loading',F,envir = mvEnv)
 assign('warning_list',list(),envir = mvEnv)
 assign('autosave',F,envir = mvEnv)
 assign('offerSave',T,envir = mvEnv)
-assign('zeroReplaceMethod',list('method'='replace', div=10),envir = mvEnv)
+assign('zeroReplaceMethod',list(method='replace',
+                                div=10,
+                                rdist='runif'),envir = mvEnv)
 assign('autoNameResults',T,envir = mvEnv)
 assign('detailed_taxa_names',F,envir = mvEnv)
 assign('taxaRanks',c('kingdom',

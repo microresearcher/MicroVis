@@ -579,13 +579,22 @@ glog <- function(x, base=10) {
 #'
 zeroReplace <- function(x) {
   if(get('zeroReplaceMethod', envir=mvEnv)$method=='replace') {
+    div <- get('zeroReplaceMethod', envir=mvEnv)$div
+    rdist <- get('zeroReplaceMethod',envir = mvEnv)$rdist
+
     r <- nrow(x)
     c <- ncol(x)
 
-    min.nonzero <- min(x[x>0])/10
+    min.nonzero <- min(x[x>0])/div
 
-    x.nozeros <- x + ((x==0)*matrix(runif(r*c, max=min.nonzero),
-                            nrow = r))
+    if(rdist=='runif') {
+      x.nozeros <- x + ((x==0)*matrix(runif(r*c, max=min.nonzero),
+                                      nrow = r))
+    } else if(rdist=='point') {
+      x.nozeros <- x + ((x==0)*matrix(rep(min.nonzero,r*c),
+                                      nrow = r))
+    }
+
   } else if(get('zeroReplaceMethod', envir=mvEnv)$method=='impute') {
     x.nozeros <- data.frame(zCompositions::cmultRepl(x,
                                                       output = 'p-counts',
