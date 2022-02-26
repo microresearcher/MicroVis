@@ -778,13 +778,14 @@ findSigFisher <- function(dataset, fts, lowabun_thresh=0, silent=F) {
 #' @param raw Use raw counts to calculate feature statistics. Defaults to TRUE
 #' @param justStats Whether to just output the a table of feature statistics
 #'     instead of all data processing information
+#' @param doCLR Calculate average CLR-transformed abundances for each feature
 #'
 #' @return List containing original abundance table, feature names table, and
 #'     a dataframe of feature statistics used for filtering
 #'
 #' @export
 #'
-getFtStats <- function(dataset=NULL, rank=NULL, raw=T, justStats=T) {
+getFtStats <- function(dataset=NULL, rank=NULL, raw=T, justStats=T, doCLR=F) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   # If a pre-filtered, unranked abundance table is not available, run sample
@@ -818,6 +819,14 @@ getFtStats <- function(dataset=NULL, rank=NULL, raw=T, justStats=T) {
   # What percentage of all samples is each feature present in
   ftstats$Prevalence_Proportion <- ftstats$Prevalence/nrow(abd)
   ftstats$Feature <- colnames(abd)
+
+  if(doCLR) {
+    # Mean CLR-transformed abundance for each feature
+    abd.nozeros <- zeroReplace(abd)
+
+    ftstats$Mean_CLR=apply(apply(abd.nozeros, 1, function(x) log(x/exp(mean(log(x))), base=10)),
+                           1, function(x) mean(x,na.rm = T))
+  }
 
   ft_data$proc$filtering$ftstats <- ftstats
 

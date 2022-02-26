@@ -22,6 +22,27 @@ savetoggle <- function() {
   }
 }
 
+#' @title Switch Method for Replacing Zeros
+#'
+#' @description Cycles between two options for dealing with zero counts:
+#'     - replace: Replacing zero counts with a value between 1/100 and 1/10 of the minimum count value
+#'     - impute: Use zCompositions package to impute a distribution of values to replace zeros
+#'
+#' @return Does not return anything
+#' @export
+#'
+zerostoggle <- function(method=c('replace','impute')) {
+  if(length(method)>1) {
+    method <- get('zeroReplaceMethod',envir = mvEnv)
+    if(method=='replace') method <- 'impute'
+    else if(method=='impute') method <- 'replace'
+  } else method <- match.arg(method)
+
+  assign('zeroReplaceMethod',method,envir = mvEnv)
+
+  cat('Zero replacement method during normalization steps:',method,'\n')
+}
+
 #' @title Automatically Name Results
 #'
 #' @description Cycles between naming results automatically or prompting user

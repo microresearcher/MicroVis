@@ -441,14 +441,21 @@ normalizer <- function(data,
 
   } else if(norm_type=='clr') {
     # Centered-log ratio
-    #   First, zeros are imputed with zcomposition package using the specified methods
+    #   First, zeros are replaced
     #   Second, centered-log ratio is performed
     #   Finally, those features with all zeros are re-attached to the data.frame
     #     These features will be forcibly removed during the filtering step
-    data.imputed <- data.frame(zCompositions::cmultRepl(data,
-                                                        output = 'p-counts',
-                                                        suppress.print = T))
-    normalized <- data.frame(t(apply(data.imputed, 1,
+
+    data.nozeros <- zeroReplace(data)
+    # if(get('zeroReplaceMethod', envir=mvEnv)=='replace') {
+    #   data.nozeros <- data.frame(zeroReplace(data))
+    # } else if(get('zeroReplaceMethod', envir=mvEnv)=='impute') {
+    #   data.nozeros <- data.frame(zCompositions::cmultRepl(data,
+    #                                                       output = 'p-counts',
+    #                                                       suppress.print = T))
+    # }
+
+    normalized <- data.frame(t(apply(data.nozeros, 1,
                                      function(x) log(x/exp(mean(log(x))), base=log_base) )))
 
     normalized <- cbind(normalized)
@@ -562,4 +569,29 @@ normalizeTable <- function(abundance_table,
 #'
 glog <- function(x, base=10) {
   return(log((x+sqrt(x^2+4))/2, base=base))
+}
+
+#' Replace Zeros with Non-Zero Value
+#'
+#' @param x Numerical matrix
+#'
+#' @return Matrix with no zeroes
+#'
+zeroReplace <- function(x) {
+  if(get('zeroReplaceMethod', envir=mvEnv)=='replace') {
+    r <- nrow(x)
+    c <- ncol(x)
+
+    min.nonzero <- min(x[x>0])/10
+
+    x.nozeros <- x + ((x==0)*matrix(runif(r*c, max=min.nonzero),
+                            nrow = r))
+  } else if(get('zeroReplaceMethod', envir=mvEnv)=='impute') {
+    x.nozeros <- data.frame(zCompositions::cmultRepl(x,
+                                                      output = 'p-counts',
+                                                      suppress.print = T))
+  }
+
+
+  return(x.nozeros)
 }

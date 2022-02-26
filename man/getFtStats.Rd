@@ -4,7 +4,7 @@
 \alias{getFtStats}
 \title{Get Feature Statistics for Filtering}
 \usage{
-getFtStats(dataset = NULL, rank = NULL, raw = T, justStats = T)
+getFtStats(dataset = NULL, rank = NULL, raw = T, justStats = T, doCLR = F)
 }
 \arguments{
 \item{dataset}{MicroVis dataset (mvdata object)}
@@ -15,6 +15,8 @@ getFtStats(dataset = NULL, rank = NULL, raw = T, justStats = T)
 
 \item{justStats}{Whether to just output the a table of feature statistics
 instead of all data processing information}
+
+\item{doCLR}{Calculate average CLR-transformed abundances for each feature}
 }
 \value{
 List containing original abundance table, feature names table, and
