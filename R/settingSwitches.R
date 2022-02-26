@@ -37,15 +37,17 @@ savetoggle <- function() {
 #'
 zerostoggle <- function(method=c('replace','impute'),
                         div=NULL) {
+  if(length(method)>1) {
+    method <- get('zeroReplaceMethod',envir = mvEnv)$method
+    if(is.null(div)) {
+      if(method=='replace') method <- 'impute'
+      else if(method=='impute') method <- 'replace'
+    }
+  } else method <- match.arg(method)
+
   if(!is.null(div)) {
     if(!is.numeric(div) | div<=1) stop('"div" must be a number greater than 1')
   } else div <- get('zeroReplaceMethod',envir = mvEnv)$div
-
-  if(length(method)>1) {
-    method <- get('zeroReplaceMethod',envir = mvEnv)$method
-    if(method=='replace') method <- 'impute'
-    else if(method=='impute') method <- 'replace'
-  } else method <- match.arg(method)
 
   assign('zeroReplaceMethod',list('method'=method, 'div'=div),envir = mvEnv)
 

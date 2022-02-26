@@ -124,8 +124,7 @@ plotPairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
   assign('active_dataset',dataset,envir = mvEnv)
   if(!is.null(dataset$name)) assign(dataset$name,dataset,1)
 
-  if(!is.null('save_directory')) {
-    print(save_directory)
+  if(exists('save_directory')) {
     dir.create(file.path(save_directory,'Statistics'),showWarnings = FALSE)
 
     write.csv(stats,
