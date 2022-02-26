@@ -44,7 +44,16 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
 
     ### Identify Low Prevalence ###
     #-----------------------------#
-    if(!is.null(filtering$top_prevalence)) {
+    if(!is.null(filtering$prevalence_proportion)) {
+      low_prevalence <- ftstats$Feature[ftstats$Prevalence<floor(filtering$prevalence_proportion*nrow(abd_temp))]
+
+      if(!silent) cat(paste0('\n  Identified ',
+                             length(low_prevalence),' features present in < ',
+                             filtering$prevalence_proportion*100,'% of samples'))
+
+      filterlist$low_prevalence <- low_prevalence
+
+    } else if(!is.null(filtering$top_prevalence)) {
       low_prevalence <- (ftstats %>% slice_min(Prevalence,
                                                n=(nfts-filtering$top_prevalence)))[['Feature']]
 
@@ -54,7 +63,7 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
       filterlist$low_prevalence <- low_prevalence
 
     } else if(!is.null(filtering$min_prevalence)) {
-      low_prevalence <- ftstats[ftstats$Prevalence<filtering$min_prevalence,]$Feature
+      low_prevalence <- ftstats$Feature[ftstats$Prevalence<filtering$min_prevalence]
 
       if(!silent) cat(paste0('\n  Identified ',
                              length(low_prevalence),' features with < ',
@@ -286,6 +295,8 @@ clearFeatureFilt <- function(dataset=NULL, temp=F, silent=F) {
 #' Filter Low Prevalence Features
 #'
 #' @param dataset MicroVis dataset (mvdata object)
+#' @param prev_prop (Optional) Minimum percent of samples that a feature must be
+#'     be present in for it to be kept. Overrides top and min_prevalence values
 #' @param top (Optional) Top n number of features to be kept based on prevalence.
 #'     Specifying a value for this will override the min_prevalence value.
 #' @param min_prevalence (Optional) (Default) Prevalence threshold. Features with
@@ -299,7 +310,9 @@ clearFeatureFilt <- function(dataset=NULL, temp=F, silent=F) {
 #'
 #' @export
 #'
-filterLowPrev <- function(dataset=NULL, top=NULL, min_prevalence=NULL, silent=F) {
+filterLowPrev <- function(dataset=NULL,
+                          top=NULL, min_prevalence=NULL, prev_prop=NULL,
+                          silent=F) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   if(length(dataset$data$proc$selected)) {
@@ -314,15 +327,24 @@ filterLowPrev <- function(dataset=NULL, top=NULL, min_prevalence=NULL, silent=F)
   nfts <- ncol(dataset$data$orig)
   ft_data <- dataset$data
 
-  if(is.null(top) & is.null(min_prevalence)){
+  if(is.null(top) & is.null(min_prevalence) & is.null(prev_prop)){
     if(!is.null(ft_data$proc$filtering$top_prevalence)) {
       top <- ft_data$proc$filtering$top_prevalence
     } else if(!is.null(ft_data$proc$filtering$min_prevalence)) {
       min_prevalence <- ft_data$proc$filtering$min_prevalence
+    } else if(!is.null(ft_data$proc$filtering$prevalence_proportion)) {
+      prev_prop <- ft_data$proc$filtering$prevalence_proportion
     } else {
       min_prevalence <- filtering.defaults$min_prevalence
     }
   } else {
+    if(!is.null(prev_prop)) {
+      if(prev_prop > 0) {
+        if(prev_prop > 1) prev_prop <- prev_prop/(10^(floor(log(prev_prop, base=10))+1))
+        min_prevalence <- NULL
+        top <- NULL
+      } else prev_prop <- NULL
+    }
     if(!is.null(top)) {
       if(top > 0 & top < nfts) min_prevalence <- NULL
       else top <- NULL
@@ -333,6 +355,7 @@ filterLowPrev <- function(dataset=NULL, top=NULL, min_prevalence=NULL, silent=F)
   }
 
   # Load these parameters to the dataset
+  ft_data$proc$filtering$prevalence_proportion <- prev_prop
   ft_data$proc$filtering$top_prevalence <- top
   ft_data$proc$filtering$min_prevalence <- min_prevalence
 

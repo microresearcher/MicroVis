@@ -97,6 +97,11 @@ print.mvdata <- function(x, ...) {
   if(length(filtering[!(names(filtering) %in% 'filterlist')])) {
     cat(paste0(' |   > Filtering (by ',filter_rank,'): \n'))
     for(filt in names(filtering)) {
+      if(filt=='prevalence_proportion') {
+        cat(paste0(' |       * Prevalence percent threshold: ',
+                   crayon::yellow(expression("\u2265"),paste0(filtering[[filt]][[1]]*100,'%')),
+                   ' of samples\n'))
+      }
       if(filt=='min_prevalence') {
         cat(paste0(' |       * Low prevalence threshold: ',
                    crayon::yellow(expression("\u2265"),filtering[[filt]][[1]]),'\n'))

@@ -28,17 +28,26 @@ savetoggle <- function() {
 #'     - replace: Replacing zero counts with a value between 1/100 and 1/10 of the minimum count value
 #'     - impute: Use zCompositions package to impute a distribution of values to replace zeros
 #'
+#' @param method (Optional) The method of zero-replacement to switch to
+#' @param div (Optional) The divisor by which to divide the lowest count value by
+#'     to determine the maximum value to replace zeros with for the "replace" method
+#'
 #' @return Does not return anything
 #' @export
 #'
-zerostoggle <- function(method=c('replace','impute')) {
+zerostoggle <- function(method=c('replace','impute'),
+                        div=NULL) {
+  if(!is.null(div)) {
+    if(!is.numeric(div) | div>=1 | div <= 0) stop('"div" must be a number between 0 and 1')
+  } else div <- get('zeroReplaceMethod',envir = mvEnv)$div
+
   if(length(method)>1) {
     method <- get('zeroReplaceMethod',envir = mvEnv)
     if(method=='replace') method <- 'impute'
     else if(method=='impute') method <- 'replace'
   } else method <- match.arg(method)
 
-  assign('zeroReplaceMethod',method,envir = mvEnv)
+  assign('zeroReplaceMethod',list('method'=method, 'div'=div),envir = mvEnv)
 
   cat('Zero replacement method during normalization steps:',method,'\n')
 }

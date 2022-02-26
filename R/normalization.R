@@ -578,7 +578,7 @@ glog <- function(x, base=10) {
 #' @return Matrix with no zeroes
 #'
 zeroReplace <- function(x) {
-  if(get('zeroReplaceMethod', envir=mvEnv)=='replace') {
+  if(get('zeroReplaceMethod', envir=mvEnv)$method=='replace') {
     r <- nrow(x)
     c <- ncol(x)
 
@@ -586,7 +586,7 @@ zeroReplace <- function(x) {
 
     x.nozeros <- x + ((x==0)*matrix(runif(r*c, max=min.nonzero),
                             nrow = r))
-  } else if(get('zeroReplaceMethod', envir=mvEnv)=='impute') {
+  } else if(get('zeroReplaceMethod', envir=mvEnv)$method=='impute') {
     x.nozeros <- data.frame(zCompositions::cmultRepl(x,
                                                       output = 'p-counts',
                                                       suppress.print = T))
