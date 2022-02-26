@@ -42,7 +42,7 @@ zerostoggle <- function(method=c('replace','impute'),
   } else div <- get('zeroReplaceMethod',envir = mvEnv)$div
 
   if(length(method)>1) {
-    method <- get('zeroReplaceMethod',envir = mvEnv)
+    method <- get('zeroReplaceMethod',envir = mvEnv)$method
     if(method=='replace') method <- 'impute'
     else if(method=='impute') method <- 'replace'
   } else method <- match.arg(method)
