@@ -136,6 +136,12 @@ plotAlphaDiv <- function(dataset=NULL,
               width = 8, height = 6,
               suffix = paste0('_adiv_',method))
 
+  cat('\nStatistics:\n')
+  if(!is.null(stats$stats)) print(stats$stats)
+  cat('\nPairwise Statistics:\n')
+  if(!is.null(stats$pw_stats)) print(stats$pw_stats)
+  cat('\n')
+
   activate(dataset)
   return(p)
 }

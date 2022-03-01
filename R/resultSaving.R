@@ -195,10 +195,12 @@ nameAnalysis <- function(factors, active_factor, facets=NULL) {
       } else next
     } else if(length(excluded_grps) < length(f$subset)) {
       # If less than half of the groups are excluded
-      temp <- paste0('No ',paste(excluded_grps, collapse = '-'),' ',f$name,'s')
+      temp <- paste0('No ',paste(excluded_grps, collapse = '-'))
+      # temp <- paste0('No ',paste(excluded_grps, collapse = '-'),' ',f$name,'s')
     } else {
       # If less than half of the groups are included
-      temp <- paste0('Only ',paste(f$subset, collapse = '-'),' ',f$name,'s')
+      temp <- paste0('Only ',paste(f$subset, collapse = '-'))
+      # temp <- paste0('Only ',paste(f$subset, collapse = '-'),' ',f$name,'s')
     }
     if(f$name==active_factor) maintxt <- temp
     else othertxt <- paste0(othertxt,paste0('_',temp))

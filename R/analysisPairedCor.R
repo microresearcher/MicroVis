@@ -78,6 +78,7 @@ pairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
 
   stats <- merge(data.frame(unlist(cor_rvals)),data.frame(unlist(cor_pvals)),by = 0)
   colnames(stats) <- c(rank, 'R', 'p(adj)')
+  stats$Significant <- ifelse(stats$R >= rthresh & stats$`p(adj)` <= 0.05,'*','')
 
   if(!is.null(dataset)) {
     dataset$stats$paired_cor[[paste0(groups,collapse = '_')]][[rank]] <- stats

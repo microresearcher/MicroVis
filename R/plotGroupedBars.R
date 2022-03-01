@@ -154,7 +154,8 @@ plotGroupedBars <- function(dataset=NULL,
 
   show(p)
 
-  stats_allranks$stats <- stats_allranks$stats[2:nrow(stats_allranks$stats),]
+  # stats_allranks$stats <- stats_allranks$stats[2:nrow(stats_allranks$stats),]
+  stats_allranks$stats <- stats_allranks$stats
   if(length(stats_allranks$pw_stats)) {
     stats_allranks$pw_stats <- stats_allranks$pw_stats[2:nrow(stats_allranks$pw_stats),]
   }

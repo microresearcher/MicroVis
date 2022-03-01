@@ -16,8 +16,8 @@
 #'     Defaults to top 15 features by relative abundance
 #' @param top_by Select the top features either by the max, min, or mean relative
 #'     abundance in the groups, or the summed relative abundance across all groups.
-#'     Defaults to max (in other words, for each feature the maximum of its
-#'     relative abundance values across the groups will be used to determine
+#'     Defaults to mean (in other words, for each feature its mean
+#'     relative abundance values across the samples will be used to determine
 #'     whether it is a top feature).
 #' @param ftlist (Optional) List of features to consider. Defaults to all features
 #'     at the rank
@@ -62,8 +62,8 @@ plotStackedBars <- function(dataset=NULL, relative=T,
   fts <- colnames(data[(mdcolnum+1):ncol(data)])
   fts <- fts[!(fts %in% c('Other','Unknown'))]
 
-  if(length(ftlist)) suffix <- paste0('_selected_',rank)
-  else suffix <- paste0('_',rank)
+  if(length(ftlist)) fig_name <- paste0('selected_',rank)
+  else fig_name <- rank
 
   if(plotSigs) {
     sigfts <- listsigs(dataset=dataset,
@@ -73,7 +73,7 @@ plotStackedBars <- function(dataset=NULL, relative=T,
                        silent=T,
                        dataset_name=dataset_name)
     if(!length(sigfts)) message('\nNo significant features were found\n')
-    else suffix <- paste0('_sig-alpha_',alpha,suffix)
+    else fig_name <- paste0('sig-alpha_',alpha,fig_name)
     ftlist <- c(ftlist,sigfts)
   }
 
@@ -97,9 +97,10 @@ plotStackedBars <- function(dataset=NULL, relative=T,
 
   if(bySample) {
     data$sample <- as.character(data$sample)
-    suffix <- paste0(suffix,'_bySample')
+    fig_name <- paste0(fig_name,'_bySample')
   } else if(allSamples) {
     data <- data.frame(t(colMeans(data[fts])))
+    colnames(data) <- fts
     abundance_type <- paste0('Mean ',abundance_type)
   } else {
     if(stratify) {
@@ -109,7 +110,7 @@ plotStackedBars <- function(dataset=NULL, relative=T,
       else {
         # compareby <- paste(factor,facet,sep = '+')
         data <- data[c(factor,facet,fts)]
-        suffix <- paste0(suffix,'_stratified')
+        fig_name <- paste0(fig_name,'_stratified')
       }
     } else {
       data <- data[c(factor,fts)]
@@ -124,7 +125,7 @@ plotStackedBars <- function(dataset=NULL, relative=T,
   }
 
   if(top<length(fts)) {
-    if(allSamples | !(top_by %in% c('max','min','mean','sum'))) top_by <- 'max'
+    if(allSamples | !(top_by %in% c('max','min','mean','sum'))) top_by <- 'mean'
     ftstats <- data.frame(max=apply(data[fts],2,function(x) max(x)),
                           min=apply(data[fts],2,function(x) min(x)),
                           mean=apply(data[fts],2,function(x) mean(x)),
@@ -148,7 +149,7 @@ plotStackedBars <- function(dataset=NULL, relative=T,
     data$Other <- data$Other + rowSums(data[low_abun])
     data[low_abun] <- NULL
     fts <- c(fts[!(fts %in% low_abun)],'Other','Unknown')
-    suffix <- paste0('_top',top,suffix)
+    fig_name <- paste0('top',top,fig_name)
   }
 
   data_pivoted <- data %>% pivot_longer(fts,
@@ -207,7 +208,7 @@ plotStackedBars <- function(dataset=NULL, relative=T,
   if(separateLegend) {
     if(!exists('p_legend',inherits = F)) p_legend <- as_ggplot(get_legend(p))
     p <- p+theme(legend.position = 'none')
-    suffix <- paste0(suffix,'_nolegend')
+    fig_name <- paste0(fig_name,'_nolegend')
     legend_output_location <- paste0(dataset$results_path,'/Results_',Sys.Date(),'/Stacked Bar Graphs/')
 
     show(p_legend)
@@ -216,11 +217,12 @@ plotStackedBars <- function(dataset=NULL, relative=T,
   show(p)
 
   save_directory <- saveResults(dataset$results_path,foldername = 'Stacked Bar Graphs',
+                                filename = fig_name,
                                 factors = dataset$factors,
                                 active_factor = dataset$active_factor,
                                 width = 12, height = 8,
-                                stat_results = list('stats'=data_pivoted),
-                                suffix = paste0(suffix,'_',abundance_type),
+                                stat_results = list(stats=data_pivoted),
+                                suffix = paste0('_',abundance_type),
                                 verbose = F)
 
   if(!is.null(save_directory)) {
@@ -238,18 +240,34 @@ plotStackedBars <- function(dataset=NULL, relative=T,
 
   activate(dataset)
 
-  total_props <- aggregate(data_pivoted$`Relative Abundance`[data_pivoted[[rank]] %in% namedfts],by=list(data_pivoted[[factor]][data_pivoted[[rank]] %in% namedfts]), sum)
-
-  cat('Top',top,'features make up:\n')
-  cat('',paste0(signif(100*mean(total_props$x),3),'%'),
-      'across all samples')
-  for(grp in total_props$Group.1) cat('\n',paste0(signif(100*mean(total_props$x[total_props$Group.1==grp]),3),'%'),'in',grp)
-  if('Unknown' %in% data_pivoted[[rank]]) {
-    cat('\n\n',
-        paste0(signif((100*mean(mean(data_pivoted[data_pivoted[[rank]]=='Unknown',
-                                                  ]$`Relative Abundance`))),3),'%'),
-        'of',rank,'are unknown')
+  if(allSamples) {
+    total_props <- data_pivoted[data_pivoted[[rank]] %in% namedfts,]
+    colnames(total_props) <- c('Group.1','x')
+  } else if(bySample) {
+    total_props <- aggregate(data_pivoted[[abundance_type]][data_pivoted[[rank]] %in% namedfts],
+                             by=list(data_pivoted[[rank]][data_pivoted[[rank]] %in% namedfts]),
+                             mean)
+  } else {
+    total_props <- aggregate(data_pivoted[[abundance_type]][data_pivoted[[rank]] %in% namedfts],
+                             by=list(data_pivoted[[factor]][data_pivoted[[rank]] %in% namedfts]),
+                             sum)
   }
+
+  cat('\nTop',top,'features make up:\n')
+  if(allSamples | bySample) cat('',paste0(signif(100*sum(total_props$x),3),'%'),
+                                'across all samples\n')
+
+  if(!bySample & !allSamples) for(grp in total_props$Group.1) {
+    cat('',paste0(signif(100*mean(total_props$x[total_props$Group.1==grp]),
+                           3),'%'),'in',grp,'\n')
+  }
+
+  if('Unknown' %in% data_pivoted[[rank]]) {
+    cat('\n',
+        paste0(signif((100*mean(data_pivoted[[abundance_type]][data_pivoted[[rank]]=='Unknown'])),
+                      3),'%'),'of',rank,'are unknown')
+  }
+
   cat('\n\n')
 
   return(p)

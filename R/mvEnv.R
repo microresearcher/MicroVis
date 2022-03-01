@@ -28,26 +28,26 @@ assign('adjust_value',0.001,envir = mvEnv)
 
 #### DEFAULT COLORS ####
 assign('defCols',c('#6700b5', # Purple
-                 '#00a6cf', # Baby blue
-                 '#d12121', # Red
-                 '#00a60c', # Green
-                 '#b500a9', # Pink
-                 '#d1a400', # Yellow
-                 '#4432e3', # Blue
-                 '#db8e00', # Orange
-                 '#00d18f', # Mint
-                 '#ed594c', # Coral
-                 '#310057', # Dark purple
-                 '#006a85', # Teal
-                 '#6e1212', # Maroon
-                 '#005c07', # Dark green
-                 '#6e0066', # Dark pink?
-                 '#8c6e00', # Golden
-                 '#0a0063', # Navy
-                 '#6b4500', # Brown
-                 '#006948', # Dark... mint?
-                 '#8a423b' # Burnt... coral?
-                 ),envir = mvDefaults)
+                   '#00a6cf', # Baby blue
+                   '#d12121', # Red
+                   '#00a60c', # Green
+                   '#b500a9', # Pink
+                   '#d1a400', # Yellow
+                   '#4432e3', # Blue
+                   '#db8e00', # Orange
+                   '#00d18f', # Mint
+                   '#ed594c', # Coral
+                   '#310057', # Dark purple
+                   '#006a85', # Teal
+                   '#6e1212', # Maroon
+                   '#005c07', # Dark green
+                   '#6e0066', # Dark pink?
+                   '#8c6e00', # Golden
+                   '#0a0063', # Navy
+                   '#6b4500', # Brown
+                   '#006948', # Dark... mint?
+                   '#8a423b' # Burnt... coral?
+),envir = mvDefaults)
 
 ### DEFAULT SAMPLE FILTERING CUTOFF
 assign('rthresh',10000,envir = mvDefaults) # Minimum read count threshold for each sample

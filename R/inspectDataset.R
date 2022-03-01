@@ -6,7 +6,7 @@
 viewactive <- function() {
   active_dataset <- get('active_dataset',envir = mvEnv)
   print(active_dataset)
-  View(active_dataset)
+  View(as.list(active_dataset))
 }
 
 #' Get Number of Included Samples in a Dataset
@@ -75,7 +75,12 @@ countSamples <- function(dataset=NULL, factors=NULL, stratifiers=NULL, getSizes=
 #'
 #' @return Returns a nested list of the sample size for each group/stratified group
 #'
-countSamples.base <- function(metadata,factors,stratifiers=NULL,min_n=3,dataset=NULL,verbose=T) {
+countSamples.base <- function(metadata,
+                              factors,
+                              stratifiers=NULL,
+                              min_n=3,
+                              dataset=NULL,
+                              verbose=T) {
   metadata$Size <- rep(1,nrow(metadata))
   sample_names <- metadata$sample
 
@@ -163,6 +168,60 @@ countFeatures <- function(dataset=NULL) {
   rank <- dataset$data$proc$active_rank
   num_features <- ncol(dataset$data$proc[[rank]])
   return(num_features)
+}
+
+#' Get read depth summary statistics for each group or for all samples
+#'
+#' @param dataset (Optional) MicroVis dataset (mvdata object). If not specified,
+#'     defaults to active dataset.
+#' @param factor (Optional) Factor along which samples will be grouped
+#' @param individual (Optional) Whether to return read depths for each individual
+#'     sample. Defaults to FALSE
+#' @param all (Optional) Whether to calculate read depth statistics for all the
+#'     samples as one group
+#'
+#' @return Dataframe of read depth statistics including min, max, median, and mean
+#' @export
+#'
+readdepth <- function(dataset=NULL, factor=NULL, individual=F, all=F) {
+  if(is.null(dataset)) dataset <- get('active_dataset', envir=mvEnv)
+
+  if(!is.null(dataset$name)) dataset_name <- paste0('"',dataset$name,'"')
+  else dataset_name <- 'active_dataset'
+
+  taxaRanks <- get('taxaRanks', envir = mvEnv)
+  highest_rank <- taxaRanks[taxaRanks %in% getRanks(dataset)][[1]]
+  abun.unproc <- mvmelt(clearProcessing(dataset, temp = T, silent = T),
+                        rank = highest_rank)
+
+  mdcols <- colnames(dataset$metadata)
+  fts <- colnames(abun.unproc)[!(colnames(abun.unproc) %in% mdcols)]
+
+  samplereads <- data.frame(abun.unproc[mdcols],
+                            'Total_Reads'=rowSums(abun.unproc[fts]))
+
+  if(individual) {
+    return(samplereads)
+  } else if(all) {
+    readsummary <- data.frame(Min=min(samplereads$Total_Reads),
+                              Max=max(samplereads$Total_Reads),
+                              Median=median(samplereads$Total_Reads),
+                              Mean=mean(samplereads$Total_Reads),
+                              StDev=sd(samplereads$Total_Reads))
+  } else {
+    factor <- factor[factor %in% names(dataset$factors)]
+    if(is.null(factor)) factor <- dataset$active_factor
+
+    readsummary <- samplereads %>%
+      group_by(get(factor)) %>%
+      summarise(Min=min(Total_Reads),
+                Max=max(Total_Reads),
+                Median=median(Total_Reads),
+                Mean=mean(Total_Reads),
+                StDev=sd(Total_Reads))
+  }
+
+  return(readsummary)
 }
 
 
@@ -275,7 +334,7 @@ viewstats <- function(dataset=NULL, type=NULL, factor=NULL, rank=NULL) {
 #' @export
 #'
 checkColors <- function(dataset=NULL, assigned=FALSE) {
-  defCols <- get('defCols',envir = mvEnv)
+  defCols <- get('defCols',envir = mvDefaults)
   clrs <- dataset$colors
 
   if(assigned) {

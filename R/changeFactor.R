@@ -33,12 +33,8 @@ changeFactor <- function(dataset=NULL, factor_name=NULL, temp=F) {
     return(dataset)
   }
 
-  # Shouldn't need to process the dataset again since the sample subset isn't changing
-  # new_dataset <- processDataset(new_dataset,temp=temp,silent=temp)
-
-  activate(new_dataset)
-
-  return(new_dataset)
+  if(!is.null(new_dataset$name)) assign(new_dataset$name,new_dataset,1)
+  return(activate(new_dataset))
 }
 
 #' @title Factor Validation

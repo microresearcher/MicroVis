@@ -45,7 +45,7 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
     ### Identify Low Prevalence ###
     #-----------------------------#
     if(!is.null(filtering$prevalence_proportion)) {
-      low_prevalence <- ftstats$Feature[ftstats$Prevalence<floor(filtering$prevalence_proportion*nrow(abd_temp))]
+      low_prevalence <- ftstats$Feature[ftstats$Prevalence_Proportion<filtering$prevalence_proportion]
 
       if(!silent) cat(paste0('\n  Identified ',
                              length(low_prevalence),' features present in < ',
