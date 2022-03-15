@@ -163,7 +163,7 @@ plotHeatmap <- function(dataset=NULL,
     suffix <- paste0(suffix,'_sampleslabeled')
     height <- height + 2
   }
-  saveResults(dataset$results_path,foldername = 'Heatmaps',
+  saveResults(dataset,foldername = 'Heatmaps',
               factors = dataset$factors,
               active_factor = factor,
               figure = hm, width = width, height = height,

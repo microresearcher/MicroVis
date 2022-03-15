@@ -66,12 +66,24 @@ zerostoggle <- function(method=c('replace','impute'),
 #' @description Cycles between naming results automatically or prompting user
 #'     for a name
 #'
+#' @param settings (Optional) Whether to set naming of files to auto-naming by
+#'     groups in analysis, auto-naming by the name of the dataset, or manual
+#'     naming by the user. By default, this function cycles through these 3 settings
+#'
 #' @return Does not return anything
 #' @export
 #'
-autonametoggle <- function() {
-  assign('autoNameResults',!get('autoNameResults',envir = mvEnv),envir = mvEnv)
-  cat('\nAuto-naming of figures is set to',get('autoNameResults',envir = mvEnv),'\n\n')
+autonametoggle <- function(setting=c('groups','dataset','manual')) {
+  if(length(setting)>1) setting <- get('autoNameResults',envir = mvEnv)
+  else setting <- match.arg(setting)
+
+  if(setting=='groups') setting <- 'dataset'
+  else if(setting=='dataset') setting <- 'manual'
+  else if(setting=='manual') setting <- 'groups'
+
+  assign('autoNameResults',setting,envir = mvEnv)
+
+  cat('\nAuto-naming of figures is set to',setting,'\n\n')
 }
 
 #' Switch between Tukey/Games-Howell or T-test/Wilcox for post-hoc analysis

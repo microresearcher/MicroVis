@@ -216,7 +216,7 @@ plotStackedBars <- function(dataset=NULL, relative=T,
 
   show(p)
 
-  save_directory <- saveResults(dataset$results_path,foldername = 'Stacked Bar Graphs',
+  save_directory <- saveResults(dataset,foldername = 'Stacked Bar Graphs',
                                 filename = fig_name,
                                 factors = dataset$factors,
                                 active_factor = dataset$active_factor,

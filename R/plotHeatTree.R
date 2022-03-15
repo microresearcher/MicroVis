@@ -93,7 +93,7 @@ plotHeatTree <- function(dataset=NULL,
     else saveFig <- F
 
     if(saveFig) {
-      save_directory <- saveResults(dataset$results_path,
+      save_directory <- saveResults(dataset,
                                     foldername = paste0('Heattree_',test),
                                     filename = paste0('log2FC_',grp,'v',fc_tab$Reference[[1]]),
                                     width = 8, height = 6,

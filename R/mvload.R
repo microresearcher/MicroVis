@@ -176,10 +176,7 @@ mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_
     assign('taxa_raw',taxa_ds,1)
     if(autoProcess) {
       taxa_ds$name <- 'taxa_proc'
-      taxa_ds <- scaleSamples(taxa_ds, scaling = 'sum', silent = T)
-      taxa_ds <- transData(taxa_ds, trans_method = 'glog', silent = T)
-      taxa_ds <- filterLowPrev(taxa_ds, silent = T)
-      taxa_ds <- filterLowRelAbun(taxa_ds, silent = T)
+      taxa_ds <- transData(taxa_ds, trans_method = 'clr', silent = T)
       taxa_ds <- filterNAs(taxa_ds,ranks = 'domain',silent = T)
       taxa_ds <- processDataset(taxa_ds,temp = T)
 

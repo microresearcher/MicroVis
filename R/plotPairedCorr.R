@@ -112,7 +112,7 @@ plotPairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
     else saveFig <- F
 
     if(saveFig) {
-      save_directory <- saveResults(dataset$results_path,
+      save_directory <- saveResults(dataset,
                                     foldername='Paired Correlations',
                                     filename=ft,
                                     forcesave=T,

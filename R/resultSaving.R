@@ -25,7 +25,8 @@ resetResDir <- function(save_directory) {
 
 #' Save figure and statistics results
 #'
-#' @param save_directory Path to directory to save results to
+#' @param dataset Dataset to associate these results with. Directory path is pulled
+#'     from the dataset
 #' @param foldername (Optional) Name of the directory within save_directory
 #' @param filename (Optional) Name of file to save figure and statistics under
 #' @param factors (Optional) Factors of the dataset
@@ -44,12 +45,12 @@ resetResDir <- function(save_directory) {
 #' @return save_directory
 #' @export
 #'
-saveResults <- function(save_directory,
-                        foldername=NULL,
+saveResults <- function(dataset,
+                        foldername='',
                         filename=NULL,
                         factors=NULL,
-                        analysis_name=NULL,
                         active_factor=NULL,
+                        analysis_name=NULL,
                         facets=NULL,
                         figure=NULL,
                         width=18,height=12,
@@ -72,38 +73,102 @@ saveResults <- function(save_directory,
 
   if(saveFig) {
     # Create the output directories
-    save_directory <- file.path(resetResDir(save_directory),paste0('Results_',Sys.Date()),foldername)
+    save_directory <- file.path(resetResDir(dataset$results_path),
+                                paste0('Results_',Sys.Date()),
+                                foldername)
     dir.create(save_directory,recursive = T,showWarnings = F)
 
-    if(autoNameResults) {
+    subfoldername <- ''
+
+    if(autoNameResults=='groups') {
       if(!is.null(analysis_name)) filename <- analysis_name
+      # No analysis_name, but factors and active_factor is specified
       else if(!is.null(factors) & !is.null(active_factor)) {
-        if(is.null(filename)) filename <- nameAnalysis(factors, active_factor, facets)
-        else {
-          foldername <- nameAnalysis(factors, active_factor, facets)
-          save_directory <- file.path(save_directory, foldername)
-          dir.create(save_directory, showWarnings = F)
+        # No filename is specified, in which case make one and don't make a subfolder
+        if(is.null(filename)) {
+          filename <- nameAnalysis(factors, active_factor, facets)
+          # Check if path is too long
+          if(nchar(file.path(save_directory,paste0(filename,suffix,'.png'))) > 259) {
+            filename <- NULL
+            autoNameResults <- 'dataset'
+          }
         }
-      }
-    } else {
-      if(is.null(filename)) {
-        # Ask user for a custom name for the figure
-        message('\nPlease type a file name for this figure\n')
-        filename <- readline('File name: ')
-      } else {
-        message('\nPlease type a folder name for these figures\n')
-        foldername <- readline('Folder name: ')
-        save_directory <- file.path(save_directory, foldername)
-        dir.create(save_directory,recursive = T,showWarnings = F)
+        # A filename is specified, in which case make a subfolder to put that filename file in
+        else {
+          subfoldername <- nameAnalysis(factors, active_factor, facets)
+
+          # Check if path is too long
+          if(nchar(file.path(file.path(save_directory, subfoldername),
+                             paste0(filename,suffix,'.png'))) > 259) autoNameResults <- 'dataset'
+        }
       }
     }
 
-    save_path <- file.path(save_directory,paste0(filename,suffix,'.png'))
+    if(autoNameResults=='dataset') {
+      # Check if dataset has a name. If not, ask user for one
+      if(is.null(dataset$name)) {
+        charlimit <- 259 - nchar(file.path(file.path(save_directory,subfoldername),paste0(suffix,'.png')))
+
+        cat('\n')
+        dataset_name <- readline(paste0('Please type a name for this analysis (up to ',charlimit,' characters): '))
+
+        # Ask user if they would like to use this name for the dataset
+        if(select.list(title = "\nWould you like to save this as the name for the dataset?",
+                       choices = c('Yes','No'))=='Yes') mvsave(dataset_name)
+
+      } else dataset_name <- dataset$name
+
+      # No filename is specified, in which case make one and don't make a subfolder
+      if(is.null(filename)) {
+        filename <- paste0(dataset$name,'_',
+                           strsplit(nameAnalysis(factors, active_factor, facets),'_')[[1]][1])
+        if(!is.null(facets$txt)) filename <- paste0(filename, facets$txt)
+        # Check if path is too long
+        if(nchar(file.path(save_directory,paste0(filename,suffix,'.png'))) > 259) {
+          filename <- NULL
+          autoNameResults <- 'manual'
+        }
+      }
+      # A filename is specified, in which case make a subfolder to put that filename file in
+      else {
+        subfoldername <- paste0(dataset$name,'_',
+                                strsplit(nameAnalysis(factors, active_factor, facets),'_')[[1]][1])
+        if(!is.null(facets$txt)) subfoldername <- paste0(subfoldername, facets$txt)
+        # Check if path is too long
+        if(nchar(file.path(file.path(save_directory, subfoldername),
+                           paste0(filename,suffix,'.png'))) > 259) autoNameResults <- 'manual'
+      }
+    }
+
+    if(autoNameResults=='manual') {
+      # No filename is specified, in which case make one and don't make a subfolder
+      if(is.null(filename)) {
+        charlimit <- 259 - nchar(file.path(save_directory,paste0(suffix,'.png')))
+        # Ask user for a custom name for the figure
+        message('\nPlease type a file name for this figure (up to ',charlimit,' characters)\n')
+        filename <- readline('File name: ')
+      }
+      # A filename is specified, in which case make a subfolder to put that filename file in
+      else {
+        charlimit <- 258 - nchar(file.path(save_directory,paste0(filename,suffix,'.png')))
+        message('\nPlease type a folder name up to ',charlimit,' characters for these figures\n')
+        subfoldername <- readline('Folder name: ')
+        # save_directory <- file.path(save_directory, subfoldername)
+        # dir.create(save_directory,recursive = T,showWarnings = F)
+      }
+    }
+
+    save_path <- file.path(file.path(save_directory,subfoldername),paste0(filename,suffix,'.png'))
+
     if(is.null(figure)) ggsave(save_path, device='png',
                                width=width, height=height, units = 'in',
                                dpi=600)
     else {
-      png(save_path,width=width,height=height,units='in',res=600)
+      png(save_path,
+          width=width,
+          height=height,
+          units='in',
+          res=600)
       draw(figure)
       dev.off()
     }

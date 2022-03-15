@@ -43,6 +43,7 @@ Imports:
     magrittr,
     Hmisc,
     zCompositions,
-    ALDEx2
+    ALDEx2,
+    VGAM
 Suggests:
     SpiecEasi (>= 1.0.0)

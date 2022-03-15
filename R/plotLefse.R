@@ -64,7 +64,7 @@ plotLEFSE <- function(dataset=NULL,factor=NULL,alpha=0.05,lda_cutoff=2,top=20,by
 
   show(p)
 
-  saveResults(dataset$results_path,foldername = 'LEfSe Dot Chart',
+  saveResults(dataset,foldername = 'LEfSe Dot Chart',
               factors = dataset$factors,
               active_factor = factor$name,
               stat_results = lefse_results,

@@ -110,7 +110,7 @@ plotFtCormat <- function(dataset1=NULL, dataset2=NULL,
 
     show(p)
     if(saveFig) {
-      save_directory <- saveResults(dataset1$results_path,foldername = 'Correlations',
+      save_directory <- saveResults(dataset1,foldername = 'Correlations',
                                     filename = paste0(filename,paramtxt,'_',grp_txt),
                                     width = 7, height = 10,
                                     forcesave = T,
@@ -237,14 +237,12 @@ plotFtCorlines <- function(dataset1=NULL,dataset2=NULL,
     else saveFig <- F
 
     if(saveFig) {
-      save_directory <- saveResults(dataset$results_path,
+      save_directory <- saveResults(dataset,
                                     foldername = file.path('Correlations',
                                                            paste0(dataset1_name,
                                                                   '_',
                                                                   dataset2_name)),
                                     filename = paste0(ft1,'-',ft2),
-                                    factors = dataset$factors,
-                                    active_factor = factor$name,
                                     width = 8, height = 6,
                                     forcesave = T,
                                     verbose = F)

@@ -98,7 +98,7 @@ plotRFImp <- function(dataset=NULL,
 
   show(p_imp)
 
-  savedirectory <- saveResults(dataset$results_path,foldername = 'Random Forest',
+  savedirectory <- saveResults(dataset,foldername = 'Random Forest',
                                factors = dataset$factors,
                                active_factor = factor$name,
                                suffix = suffix,

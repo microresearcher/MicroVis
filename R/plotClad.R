@@ -38,7 +38,7 @@ plotClad <- function(dataset=NULL, factor=NULL) {
 
   show(clad)
 
-  save_directory <- saveResults(dataset$results_path,foldername = 'Cladogram',
+  save_directory <- saveResults(dataset,foldername = 'Cladogram',
                                 factors = dataset$factors,
                                 active_factor = dataset$active_factor,
                                 verbose = F)

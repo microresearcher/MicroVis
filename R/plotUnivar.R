@@ -233,7 +233,7 @@ plotUnivar <- function(dataset=NULL,
     else saveFig <- F
 
     if(saveFig) {
-      save_directory <- saveResults(dataset$results_path,
+      save_directory <- saveResults(dataset,
                                     foldername = paste0('Boxplots_',rank),
                                     filename = ft,
                                     factors = dataset$factors,

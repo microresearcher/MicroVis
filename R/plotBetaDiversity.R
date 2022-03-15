@@ -149,7 +149,7 @@ plotBetaDiv <- function(dataset=NULL,
 
   show(p)
 
-  saveResults(dataset$results_path,foldername = 'Beta Diversity',
+  saveResults(dataset,foldername = 'Beta Diversity',
               factors = dataset$factors,
               active_factor = factor$name,
               stat_results = stats,

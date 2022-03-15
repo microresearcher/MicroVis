@@ -49,8 +49,8 @@ Defaults to top 15 features by relative abundance}
 
 \item{top_by}{Select the top features either by the max, min, or mean relative
 abundance in the groups, or the summed relative abundance across all groups.
-Defaults to max (in other words, for each feature the maximum of its
-relative abundance values across the groups will be used to determine
+Defaults to mean (in other words, for each feature its mean
+relative abundance values across the samples will be used to determine
 whether it is a top feature).}
 
 \item{ftlist}{(Optional) List of features to consider. Defaults to all features

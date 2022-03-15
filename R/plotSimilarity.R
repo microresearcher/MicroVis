@@ -84,7 +84,7 @@ plotSimilarity <- function(dataset=NULL,
                 clustering_method_columns = clust_method)
   draw(hm)
 
-  save_directory <- saveResults(dataset$results_path, foldername = 'Similarity Matrices',
+  save_directory <- saveResults(dataset, foldername = 'Similarity Matrices',
                                 factors = dataset$factors,
                                 active_factor = dataset$active_factor,
                                 other_results = list(Clusters=metadata_clustered),

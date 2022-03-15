@@ -5,12 +5,12 @@
 \title{Save figure and statistics results}
 \usage{
 saveResults(
-  save_directory,
-  foldername = NULL,
+  dataset,
+  foldername = "",
   filename = NULL,
   factors = NULL,
-  analysis_name = NULL,
   active_factor = NULL,
+  analysis_name = NULL,
   facets = NULL,
   figure = NULL,
   width = 18,
@@ -23,7 +23,8 @@ saveResults(
 )
 }
 \arguments{
-\item{save_directory}{Path to directory to save results to}
+\item{dataset}{Dataset to associate these results with. Directory path is pulled
+from the dataset}
 
 \item{foldername}{(Optional) Name of the directory within save_directory}
 
@@ -31,9 +32,9 @@ saveResults(
 
 \item{factors}{(Optional) Factors of the dataset}
 
-\item{analysis_name}{(Optional) Name for this analysis}
-
 \item{active_factor}{(Optional) The active factor of this analysis}
+
+\item{analysis_name}{(Optional) Name for this analysis}
 
 \item{facets}{(Optional) Facets if there were any facets in this analysis}
 

@@ -128,19 +128,25 @@ plotAlphaDiv <- function(dataset=NULL,
 
   show(p)
 
-  saveResults(dataset$results_path,foldername = 'Alpha Diversity',
+  saveResults(dataset,
+              foldername = 'Alpha Diversity',
               factors = dataset$factors,
               active_factor = factor$name,
               facets = facets,
               stat_results = stats,
               width = 8, height = 6,
-              suffix = paste0('_adiv_',method))
+              suffix = paste0('_',tolower(method)))
 
-  cat('\nStatistics:\n')
-  if(!is.null(stats$stats)) print(stats$stats)
-  cat('\nPairwise Statistics:\n')
-  if(!is.null(stats$pw_stats)) print(stats$pw_stats)
-  cat('\n')
+
+  if(!is.null(stats$stats)) {
+    cat('\nStatistics:\n')
+    print(stats$stats)
+  }
+
+  if(!is.null(stats$pw_stats)) {
+    cat('\nPairwise Statistics:\n')
+    print(stats$pw_stats)
+  }
 
   activate(dataset)
   return(p)

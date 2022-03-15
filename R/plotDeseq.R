@@ -114,7 +114,7 @@ plotDeseq <- function(dataset=NULL,
       labs(y=paste0('Log2FC'))
 
     show(p_unique)
-    savedirectory <- saveResults(dataset$results_path,foldername = 'DESeq2',
+    savedirectory <- saveResults(dataset,foldername = 'DESeq2',
                                  factors = dataset$factors,
                                  active_factor = factor$name,
                                  suffix = '_uniquesigs',
@@ -147,7 +147,7 @@ plotDeseq <- function(dataset=NULL,
       theme(strip.text=element_text(size=20))
 
     show(p_others)
-    savedirectory <- saveResults(dataset$results_path,foldername = 'DESeq2',
+    savedirectory <- saveResults(dataset,foldername = 'DESeq2',
                                  factors = dataset$factors,
                                  active_factor = factor$name,
                                  suffix = '_othersigs',

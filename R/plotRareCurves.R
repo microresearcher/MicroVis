@@ -67,7 +67,7 @@ plotRareCurves <- function(dataset=NULL,
 
   if(!getPlot) {
     show(p)
-    saveResults(dataset$results_path,foldername = 'Rarefaction Curves',
+    saveResults(dataset,foldername = 'Rarefaction Curves',
                 factors = dataset$factors,
                 active_factor = factor$name,
                 suffix = '_rc')

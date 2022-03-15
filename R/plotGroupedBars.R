@@ -160,7 +160,7 @@ plotGroupedBars <- function(dataset=NULL,
     stats_allranks$pw_stats <- stats_allranks$pw_stats[2:nrow(stats_allranks$pw_stats),]
   }
 
-  save_directory <- saveResults(dataset$results_path,foldername = 'Grouped Bar Graphs',
+  save_directory <- saveResults(dataset,foldername = 'Grouped Bar Graphs',
                                 factors = dataset$factors,
                                 active_factor = factor,
                                 stat_results = stats_allranks,
