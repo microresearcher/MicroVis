@@ -23,6 +23,8 @@ matter for data transformation.}
 \item{sum_scale}{Number to scale samples/features to.}
 
 \item{log_base}{Base for log transformations.}
+
+\item{impute_method}{Method to impute zeros by if using zCompositions approach}
 }
 \value{
 Normalized abundance table.

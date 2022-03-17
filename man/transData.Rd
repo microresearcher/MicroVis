@@ -24,6 +24,8 @@ dataset.}
 
 \item{log_base}{Base of log transformation.}
 
+\item{impute_method}{Method to impute zeros by if using zCompositions approach}
+
 \item{silent}{Argument that is ultimately passed onto runSampleFilter(),
 runNormalization(), and runFeatureFilter(), telling them not to output
 any messages.}

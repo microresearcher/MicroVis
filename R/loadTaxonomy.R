@@ -17,7 +17,8 @@ loadTaxaFile <- function(path_to_taxa=NA,metadata=NULL,combineDupes=T) {
   taxafile <- NULL
 
   if(!is.null(path_to_taxa)) if(!file.exists(as.character(path_to_taxa))) {
-    # If path_to_taxa is set to "NA" or a file that doesn't exist, user will be asked to choose a file in the project directory
+    # If path_to_taxa is set to "NA" or a file that doesn't exist,
+    #    user will be asked to choose a file in the project directory
     message('\nSelect taxonomy abundance table (csv format). Press "Cancel" or hit "Esc" to skip')
     Sys.sleep(0.1) # To make sure it displays the above message before opening the dialogue box
     taxafile <- selectFile(caption='Select taxonomy abundance table (csv format)',
@@ -31,11 +32,6 @@ loadTaxaFile <- function(path_to_taxa=NA,metadata=NULL,combineDupes=T) {
     return(NULL)
   } else cat('\nTaxonomy abundance data loading from:\n',taxafile)
 
-  # List of invalid characters in taxonomy names to replace with an underscore
-  invalid_chars <- c('-'='_',' '='_',':'='_','/'='_',
-                     '\\['='','\\]'='','\\('='_','\\)'='','\''='','"'='','/'='_',
-                     '\\$'='','@'='','#'='','%'='','\\^'='','&'='','\\*'='')
-
   taxa_data <- read.csv(file.path(taxafile),header=FALSE)
 
   rank_cols <- c()
@@ -47,8 +43,11 @@ loadTaxaFile <- function(path_to_taxa=NA,metadata=NULL,combineDupes=T) {
     colnames(taxa_names_tab) <- taxa_ranks
     rownames(taxa_names_tab) <- paste(1:nrow(taxa_names_tab))
 
+    # List of invalid characters in taxonomy names to replace with an underscore
+    invalid_chars <- c('-'='_',' '='_',':'='_','/'='_',
+                       '\\['='','\\]'='','\\('='_','\\)'='','\''='','"'='','/'='_',
+                       '\\$'='','@'='','#'='','%'='','\\^'='','&'='','\\*'='')
     taxa_names_tab <- data.frame(apply(taxa_names_tab,2,function(x) str_replace_all(x,invalid_chars)))
-    # for(c in invalid_chars) taxa_names_tab <- data.frame(apply(taxa_names_tab, 2, function(x) str_replace_all(x,c,'_')))
 
     taxa_names_tab <- cleanASVs(taxa_names_tab)
 

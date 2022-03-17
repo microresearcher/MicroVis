@@ -11,11 +11,6 @@
 #'
 makeASVtab <- function(taxa_names_tab) {
   taxaranks <- c('domain','phylum','class','order','family','genus','species')
-  # List of invalid characters in taxonomy names to replace with an underscore
-  invalid_chars <- c('-'='_',' '='_',':'='_','/'='_',
-                     '\\['='','\\]'='','\\('='_','\\)'='')
-  taxa_names_tab <- sapply(taxa_names_tab, function(x) str_replace_all(x,invalid_chars))
-  # for(c in invalid_chars) taxa_names_tab <- sapply(taxa_names_tab, function(x) str_replace_all(x,c,'_'))
 
   names(taxa_names_tab) <- taxa_names_tab
   if(!identical(names(taxa_names_tab),unname(taxa_names_tab))) {
@@ -39,9 +34,9 @@ makeASVtab <- function(taxa_names_tab) {
     # Store original taxa names in a vector
     prepended_names <- as.vector(taxa_names_tab)
 
-    # Select the names of all the ranks based on how many sections each
-    #   prepended name has
-    #   (e.g. 4 delimiters -> 5 sections -> kingdom to family)
+    # Select the names of all the ranks based on how many sections are in the
+    #   prepended name with the most sections
+    #   (e.g. 4 delimiters -> 5 sections -> domain/kingdom to family)
     ranks <- taxaranks[1:(max(str_count(prepended_names,delim))+1)]
 
     # Make sure each prepended name has the same number of delimiters
@@ -60,7 +55,7 @@ makeASVtab <- function(taxa_names_tab) {
       # Silva adds tags to the end of taxonomy names when a genus has the same
       #   name at multiple taxonomic ranks (e.g. "_o" for order)
       prepended_names <- sapply(prepended_names,
-                                function(x) gsub(paste0('_',substr(rank,1,2)),'',x))
+                                function(x) gsub(paste0('_',substr(rank,1,1)),'',x))
       # GreenGenes adds a prefix in front of each taxonomy name to denote the
       #   taxonomic rank (e.g. "p__" for phylum)
       prepended_names <- sapply(prepended_names,
@@ -76,8 +71,20 @@ makeASVtab <- function(taxa_names_tab) {
       prepended_names[[i]] <- paste0(prepended_names[[i]],'NA')
     }
 
+    # List of invalid characters in taxonomy names to replace with an underscore
+    invalid_chars <- c('-'='_',
+                       ' '='_',
+                       ':'='_',
+                       '/'='_',
+                       '\\['='',
+                       '\\]'='',
+                       '\\('='_',
+                       '\\)'='')
+    prepended_names <- str_replace_all(prepended_names,invalid_chars)
+
     taxa_names_tab <- data.frame(t(sapply(prepended_names,
                                           function(x) strsplit(x,delim)[[1]])))
+
     colnames(taxa_names_tab) <- ranks
 
     taxa_names_tab <- cleanASVs(taxa_names_tab)
