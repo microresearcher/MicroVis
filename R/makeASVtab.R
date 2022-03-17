@@ -39,18 +39,19 @@ makeASVtab <- function(taxa_names_tab) {
     # Store original taxa names in a vector
     prepended_names <- as.vector(taxa_names_tab)
 
-    # Make sure each prepended name has the same number of delimiters
-    if(length(unique(str_count(prepended_names,';')))>1) {
-      stop('Taxonomy names have different number of rank levels: ',
-                                                              paste(unique(str_count(prepended_names,
-                                                                                     ';')),
-                                                                    collapse = ', '))
-    }
-
     # Select the names of all the ranks based on how many sections each
     #   prepended name has
     #   (e.g. 4 delimiters -> 5 sections -> kingdom to family)
     ranks <- taxaranks[1:(max(str_count(prepended_names,delim))+1)]
+
+    # Make sure each prepended name has the same number of delimiters
+    if(length(unique(str_count(prepended_names,';')))>1) {
+      prepended_names <- unlist(lapply(prepended_names, function(x) {
+        paste0(x,paste(rep(paste0(delim,'NA'),
+                           length(ranks) - str_count(x,delim) - 1),
+                       collapse = ''))
+        }))
+    }
 
     # Clean up these names. Silva and GreenGenes refer to the top taxa rank as
     #   "kingdom", so switch to that temporarily

@@ -66,7 +66,7 @@ zerostoggle <- function(method=c('replace','impute'),
 #' @description Cycles between naming results automatically or prompting user
 #'     for a name
 #'
-#' @param settings (Optional) Whether to set naming of files to auto-naming by
+#' @param setting (Optional) Whether to set naming of files to auto-naming by
 #'     groups in analysis, auto-naming by the name of the dataset, or manual
 #'     naming by the user. By default, this function cycles through these 3 settings
 #'

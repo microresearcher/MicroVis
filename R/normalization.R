@@ -313,6 +313,7 @@ scaleFeatures <- function(dataset=NULL, temp=F,
 #' @param silent Argument that is ultimately passed onto runSampleFilter(),
 #'     runNormalization(), and runFeatureFilter(), telling them not to output
 #'     any messages.
+#' @param impute_method Method to impute zeros by if using zCompositions approach
 #'
 #' @return Microvis dataset (mvdata object) with samples scaled.
 #' @export
@@ -395,6 +396,7 @@ transData <- function(dataset=NULL, temp=F,
 #'     "centered", "median", "range", "glog" (generalized log), "pseudolog", "log",
 #' @param sum_scale Number to scale samples/features to.
 #' @param log_base Base for log transformations.
+#' @param impute_method Method to impute zeros by if using zCompositions approach
 #'
 #' @return Normalized abundance table.
 #'

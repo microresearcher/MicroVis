@@ -10,6 +10,8 @@
 #' @param alpha Significance threshold. Defaults to 0.05
 #' @param layout Type of tree layout
 #' @param initial_layout Initial layout for the tree
+#' @param sigsOnly Whether to only plot the significant features. Deafults to
+#'     TRUE.
 #'
 #' @return MicroVis dataset
 #' @export
