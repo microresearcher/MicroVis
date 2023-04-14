@@ -35,7 +35,7 @@ plotStackedBars <- function(dataset=NULL, relative=T,
                             factor=NULL, stratify=F,
                             bySample=F, allSamples=F,
                             unfiltered=T,label_unknown=T,rank=NA,
-                            top=15, top_by='max',
+                            top=15, top_by='mean',
                             ftlist=c(),plotSigs=F,alpha=0.05,
                             separateLegend=F) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
@@ -152,7 +152,7 @@ plotStackedBars <- function(dataset=NULL, relative=T,
     fig_name <- paste0('top',top,fig_name)
   }
 
-  data_pivoted <- data %>% pivot_longer(fts,
+  data_pivoted <- data %>% pivot_longer(all_of(fts),
                                         names_to=rank,
                                         values_to=abundance_type)
 

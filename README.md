@@ -4,7 +4,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-MicroVis is a package for flexible analysis of metagenomic data and generation of customizable, publication-ready figures
+MicroVis is a package for flexible analysis of metagenomic data and generation of customizable, publication-ready figures. This version was built under R 4.0.1
 
 ## Examples
 The following analysis and figures are examples of what MicroVis can do. These results have been generated using a 2012 study by Kostic et al (linked in the walk-through below) examining the gut microbiome of human colorectal cancer versus healthy controls. The walk-through below (not yet complete) will guide you through the steps to do this analysis and make these figures with the same data.

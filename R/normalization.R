@@ -449,13 +449,6 @@ normalizer <- function(data,
     #     These features will be forcibly removed during the filtering step
 
     data.nozeros <- zeroReplace(data)
-    # if(get('zeroReplaceMethod', envir=mvEnv)=='replace') {
-    #   data.nozeros <- data.frame(zeroReplace(data))
-    # } else if(get('zeroReplaceMethod', envir=mvEnv)=='impute') {
-    #   data.nozeros <- data.frame(zCompositions::cmultRepl(data,
-    #                                                       output = 'p-counts',
-    #                                                       suppress.print = T))
-    # }
 
     normalized <- data.frame(t(apply(data.nozeros, 1,
                                      function(x) log(x/exp(mean(log(x))), base=log_base) )))
