@@ -47,6 +47,7 @@ plotBetaDiv <- function(dataset=NULL,
     cat('\nPlease select a factor to stratify by')
     stratifier <- select.list(names(dataset$factors)[!(names(dataset$factors) %in% factor$name)],
                               title = 'Stratifier',graphics = T)
+    cat('\n')
   }
   if(!exists('stratifier',inherits = F)) stratifier <- NULL
 
@@ -57,7 +58,7 @@ plotBetaDiv <- function(dataset=NULL,
   stats$stats <- bdiv_results$pnova
   if(length(stats)) {
     show(stats$stats)
-    cat('\n')
+    # cat('\n')
   }
 
   # Merge coordinate data with metadata
@@ -157,6 +158,7 @@ plotBetaDiv <- function(dataset=NULL,
               suffix = suffix)
 
   activate(dataset)
+  cat('\n')
 
   return(p)
 }

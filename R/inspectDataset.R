@@ -55,7 +55,7 @@ countSamples <- function(dataset=NULL, factors=NULL, stratifiers=NULL, getSizes=
       cat('\n  Ignored samples:\n')
       cat(paste(dataset$data$proc$ignored_samples,collapse = '\t'))
     }
-    cat('\n\n')
+    cat('\n')
   }
 
   if(getSizes) return(size_report)

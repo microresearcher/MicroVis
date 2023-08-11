@@ -6,7 +6,7 @@
 #' @param stratify Whether to stratify the groups. Defaults to FALSE
 #' @param bySample Whether to show a bar for each sample instead of aggregating
 #'     samples by groups. Defaults to FALSE
-#' @param allSamples Whether to plot a single bar for all the samples in the
+#' @param allSamples Whether to plot a single graph for all the samples in the
 #'     dataset. Defaults to FALSE
 #' @param unfiltered Whether to use data before or after filtering out features.
 #'     Defaults to TRUE (uses data before filtering)
@@ -26,6 +26,8 @@
 #'     to 0.05
 #' @param separateLegend Whether to separate the legend from the plot. Defaults
 #'     to FALSE
+#' @param paired_ids Plot samples paired by "factor", with each pair having
+#'     a unique combination of IDs determined by this variable (as a vector)
 #'
 #' @return Stacked bar plot of feature abundances of selected features with the
 #'     other features lumped into an "Other" category
@@ -33,7 +35,7 @@
 #'
 plotStackedBars <- function(dataset=NULL, relative=T,
                             factor=NULL, stratify=F,
-                            bySample=F, allSamples=F,
+                            bySample=F, allSamples=F, paired_ids = c(),
                             unfiltered=T,label_unknown=T,rank=NA,
                             top=15, top_by='mean',
                             ftlist=c(),plotSigs=F,alpha=0.05,
@@ -61,6 +63,7 @@ plotStackedBars <- function(dataset=NULL, relative=T,
   mdcolnum <- ncol(tempds$metadata)
   fts <- colnames(data[(mdcolnum+1):ncol(data)])
   fts <- fts[!(fts %in% c('Other','Unknown'))]
+  paired_ids <- paired_ids[paired_ids %in% colnames(tempds$metadata)]
 
   if(length(ftlist)) fig_name <- paste0('selected_',rank)
   else fig_name <- rank
@@ -76,6 +79,22 @@ plotStackedBars <- function(dataset=NULL, relative=T,
     else fig_name <- paste0('sig-alpha_',alpha,fig_name)
     ftlist <- c(ftlist,sigfts)
   }
+
+  # If pairing samples, this step should occur after getting a list of
+  #   significant features, but before manipulating the data for representation
+  #   (ie aggregating less common features into the "Other" group and
+  #   determining relative abundance).
+  if(length(paired_ids)) {
+    pairedSamples <- T
+    paired_samples <- getSamples(dataset, id_cols = paired_ids, complete = factor)$sample
+
+    data.paired <- data[data$sample %in% paired_samples,]
+    cat('\n',nrow(data.paired),'out of',nrow(data),'samples form complete pairs\n')
+    data <- data.paired
+
+    id <- paste0(paired_ids,collapse = '_')
+    data[[id]] <- apply(data[paired_ids], 1, paste, collapse = '_')
+  } else pairedSamples <- F
 
   ftlist <- ftlist[ftlist %in% fts]
   if(length(ftlist)) {
@@ -97,6 +116,7 @@ plotStackedBars <- function(dataset=NULL, relative=T,
 
   if(bySample) {
     data$sample <- as.character(data$sample)
+    if(!pairedSamples) id <- 'sample'
     fig_name <- paste0(fig_name,'_bySample')
   } else if(allSamples) {
     data <- data.frame(t(colMeans(data[fts])))
@@ -161,8 +181,10 @@ plotStackedBars <- function(dataset=NULL, relative=T,
                                  levels=c('Unknown','Other',namedfts))
 
   if(bySample) {
-    p <- ggplot(data_pivoted, aes(x=as.numeric(factor(.data$sample)), y=.data[[abundance_type]]))+
+    p <- ggplot(data_pivoted, aes(x=as.numeric(factor(.data[[id]])), y=.data[[abundance_type]]))+
       geom_area(aes(fill=.data[[rank]]))+
+      scale_x_continuous(id, labels = unique(data_pivoted[[id]]),
+                         breaks = unique(as.numeric(factor(data_pivoted[[id]]))))+
       theme_pubr()+
       labs(fill=capitalize(rank))+
       facet_wrap(facets = factor, scales = 'free_x',ncol = 1)+
@@ -176,6 +198,12 @@ plotStackedBars <- function(dataset=NULL, relative=T,
             legend.text = element_text(size=15),
             legend.key.size = unit(1,'cm'),
             strip.text = element_text(size = 18))
+    if(pairedSamples) {
+      p <- p+theme(axis.title.x = element_blank(),
+                   axis.text.x = element_text(angle = 60, vjust = 0.5, size=15),
+                   axis.ticks.x = element_line())
+      separateLegend <- T
+    }
   } else if(allSamples) {
     p <- ggbarplot(data_pivoted,y=abundance_type,
                    fill=tempds$data$proc$active_rank,color='white')+

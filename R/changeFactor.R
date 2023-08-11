@@ -18,7 +18,7 @@ changeFactor <- function(dataset=NULL, factor_name=NULL, temp=F) {
   factors <- names(dataset$factors)
   active_factor <- dataset$active_factor
 
-  if(!length(factors)) {return(message('\nERROR: No factors to choose from'))}
+  if(!length(factors)) return(message('\nERROR: No factors to choose from'))
 
   if(is.null(factor_name)) {
     factor_name <- select.list(factors,'Which factor would you like to analyze by?',graphics=TRUE)
@@ -29,9 +29,7 @@ changeFactor <- function(dataset=NULL, factor_name=NULL, temp=F) {
   new_dataset <- dataset
   new_dataset$active_factor <- factor_name
 
-  if(!validFactor(new_dataset)) {
-    return(dataset)
-  }
+  if(!validFactor(new_dataset)) return(dataset)
 
   if(!is.null(new_dataset$name)) assign(new_dataset$name,new_dataset,1)
   return(activate(new_dataset))
