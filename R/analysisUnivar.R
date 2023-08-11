@@ -96,8 +96,8 @@ univar <- function(data=NULL,
     }
     if(!is.null(stratifiers)) {
       for(stratum in stratifiers) {
-        data <- data %>% group_by(get(stratum),.add=TRUE)
-        data <- data %>% select(-stratum)
+        data <- data %>% dplyr::group_by(get(stratum),.add=TRUE)
+        data <- data %>% dplyr::select(-stratum)
         colnames(data)[ncol(data)] <- stratum
       }
     }
