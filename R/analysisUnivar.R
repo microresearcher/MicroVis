@@ -220,19 +220,19 @@ calcUniVar <- function(data,factor,stratifiers=NULL,features,
         tot_stats[[ft]] <- ftTab %>% anova_test(formula)
         if(!(ft %in% stats_skipped)) {
           if(is.null(pairwise_comparisons)) {
-            pw_stats[[ft]] <- ftTab %>% pairwise_t_test(formula, p.adjust.method='BH') %>%
-              add_xy_position(x=factor)
+            pw_stats[[ft]] <- ftTab %>% rstatix::pairwise_t_test(formula, p.adjust.method='BH') %>%
+              rstatix::add_xy_position(x=factor)
             if(get('tukey_games',envir = mvEnv)){
               pvals <- pw_stats[[ft]][, !(names(pw_stats[[ft]]) %in% c('p.adj','p.adj.signif'))]
-              padj <- ftTab %>% tukey_hsd(formula)
+              padj <- ftTab %>% rstatix::tukey_hsd(formula)
               padj <- padj[c(stratifiers,'group1','group2','p.adj','p.adj.signif')]
-              pw_stats[[ft]] <- inner_join(pvals, padj, c(stratifiers,'group1','group2')) %>%
-                add_xy_position(x=factor)
+              pw_stats[[ft]] <- dplyr::inner_join(pvals, padj, c(stratifiers,'group1','group2')) %>%
+                rstatix::add_xy_position(x=factor)
             }
           } else {
-            pw_stats[[ft]] <- ftTab %>% pairwise_t_test(formula, p.adjust.method='BH',
-                                                        comparisons = pairwise_comparisons) %>%
-              add_xy_position(x=factor)
+            pw_stats[[ft]] <- ftTab %>% rstatix::pairwise_t_test(formula, p.adjust.method='BH',
+                                                                 comparisons = pairwise_comparisons) %>%
+              rstatix::add_xy_position(x=factor)
           }
         }
 
@@ -240,28 +240,28 @@ calcUniVar <- function(data,factor,stratifiers=NULL,features,
         tot_stats[[ft]] <- ftTab %>% kruskal_test(formula)
         if(!(ft %in% stats_skipped)) {
           if(is.null(pairwise_comparisons)) {
-            pw_stats[[ft]] <- ftTab %>% pairwise_wilcox_test(formula, p.adjust.method='BH') %>%
-              add_xy_position(x=factor)
+            pw_stats[[ft]] <- ftTab %>% rstatix::pairwise_wilcox_test(formula, p.adjust.method='BH') %>%
+              rstatix::add_xy_position(x=factor)
             if(get('tukey_games',envir = mvEnv)){
               pvals <- pw_stats[[ft]][, !(names(pw_stats[[ft]]) %in% c('p.adj','p.adj.signif'))]
-              padj <- ftTab %>% games_howell_test(formula)
+              padj <- ftTab %>% rstatix::games_howell_test(formula)
               padj <- padj[c(stratifiers,'group1','group2','p.adj','p.adj.signif')]
-              pw_stats[[ft]] <- inner_join(pvals, padj, c(stratifiers,'group1','group2')) %>%
-                add_xy_position(x=factor)
+              pw_stats[[ft]] <- dplyr::inner_join(pvals, padj, c(stratifiers,'group1','group2')) %>%
+                rstatix::add_xy_position(x=factor)
             }
           } else {
-            pw_stats[[ft]] <- ftTab %>% pairwise_wilcox_test(formula, p.adjust.method='BH',
-                                                             comparisons = pairwise_comparisons) %>%
-              add_xy_position(x=factor)
+            pw_stats[[ft]] <- ftTab %>% rstatix::pairwise_wilcox_test(formula, p.adjust.method='BH',
+                                                                      comparisons = pairwise_comparisons) %>%
+              rstatix::add_xy_position(x=factor)
           }
         }
 
       }
     } else {
       if(param) {#### Parametric analysis of 2 groups ####
-        tot_stats[[ft]] <- ftTab %>% t_test(formula) %>% add_xy_position(x=factor)
+        tot_stats[[ft]] <- ftTab %>% rstatix::t_test(formula) %>% rstatix::add_xy_position(x=factor)
       } else {#### Non-parametric analysis of 2 groups ####
-        tot_stats[[ft]] <- ftTab %>% wilcox_test(formula) %>% add_xy_position(x=factor)
+        tot_stats[[ft]] <- ftTab %>% rstatix::wilcox_test(formula) %>% rstatix::add_xy_position(x=factor)
       }
     }
   }
@@ -280,15 +280,15 @@ calcUniVar <- function(data,factor,stratifiers=NULL,features,
   if(length(stratifiers)) {
     tot_stats$p.adj <- rep(0,nrow(tot_stats))
     for(stratum in unique(interaction(tot_stats[stratifiers]))) {
-      stratum1 <- str_split(stratum,pattern = '\\.')[[1]][1]
-      stratum2 <- str_split(stratum,pattern = '\\.')[[1]][2]
+      stratum1 <- stringr::str_split(stratum,pattern = '\\.')[[1]][1]
+      stratum2 <- stringr::str_split(stratum,pattern = '\\.')[[1]][2]
       tot_stats$p.adj[interaction(tot_stats[stratifiers])==stratum] <-
         p.adjust(tot_stats$p[interaction(tot_stats[stratifiers])==stratum],method = 'BH')
     }
   } else tot_stats$p.adj <- p.adjust(tot_stats$p,method = 'BH')
   # Add significance labels
-  tot_stats <- tot_stats %>% add_significance(p.col = 'p.adj')
-  if(!is.null(pw_stats)) pw_stats <- pw_stats %>% add_significance(p.col = 'p.adj')
+  tot_stats <- tot_stats %>% rstatix::add_significance(p.col = 'p.adj')
+  if(!is.null(pw_stats)) pw_stats <- pw_stats %>% rstatix::add_significance(p.col = 'p.adj')
 
   return(list(stats=tot_stats,
               pw_stats=pw_stats,

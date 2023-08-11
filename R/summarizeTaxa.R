@@ -49,14 +49,14 @@ summarizeTaxa <- function(dataset=NULL, factor=NULL,
 
   if(meansOnly) {
     summary_tab$SE <- NULL
-    summary_tab <- pivot_wider(summary_tab,
-                               names_from = 'Group',
-                               values_from = 'Mean')
+    summary_tab <- tidyr::pivot_wider(summary_tab,
+                                      names_from = 'Group',
+                                      values_from = 'Mean')
   } else if(pivoted) {
-    summary_tab <- pivot_wider(summary_tab,
-                               names_from = 'Group',
-                               values_from = c('Mean','SE'),
-                               names_glue='{Group} {.value}')
+    summary_tab <- tidyr::pivot_wider(summary_tab,
+                                      names_from = 'Group',
+                                      values_from = c('Mean','SE'),
+                                      names_glue='{Group} {.value}')
   }
 
   return(summary_tab)

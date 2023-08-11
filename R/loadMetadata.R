@@ -14,9 +14,9 @@ loadMDFile <- function(path_to_metadata=NA) {
     message('\nSelect metadata table (csv format)')
     Sys.sleep(0.1) # To make sure it displays the above message before opening the dialogue box
 
-    mdfile <- selectFile(caption='Select metadata table (csv format)',
-                         path=get('project_dir',envir = mvEnv),
-                         filter="Comma-Separated Value (*.csv)")
+    mdfile <- rstudioapi::selectFile(caption='Select metadata table (csv format)',
+                                     path=get('project_dir',envir = mvEnv),
+                                     filter="Comma-Separated Value (*.csv)")
 
   } else mdfile <- path_to_metadata
 

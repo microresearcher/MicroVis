@@ -213,7 +213,7 @@ readdepth <- function(dataset=NULL, factor=NULL, individual=F, all=F) {
     if(is.null(factor)) factor <- dataset$active_factor
 
     readsummary <- samplereads %>%
-      group_by(get(factor)) %>%
+      dplyr::group_by(get(factor)) %>%
       summarise(Min=min(Total_Reads),
                 Max=max(Total_Reads),
                 Median=median(Total_Reads),

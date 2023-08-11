@@ -67,8 +67,8 @@ mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_
   if(!dir.exists(as.character(path_to_folder))) {
     message('\nSelect directory with abundance data and metadata. Results will also be saved to this directory\n')
     Sys.sleep(0.1) # To make sure it displays the above message before opening the dialogue box
-    assign('project_dir',selectDirectory('Select directory with abundance data and metadata',
-                                       path=dirname(getwd())),
+    assign('project_dir',rstudioapi::selectDirectory('Select directory with abundance data and metadata',
+                                                     path=dirname(getwd())),
            envir = mvEnv)
   } else {
     assign('project_dir',path_to_folder,envir = mvEnv)
@@ -117,11 +117,11 @@ mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_
 
     if(!is.null(fxnldata)) {
       cat('\n')
-      data_name <- str_replace_all(readline(prompt='What kind of data is this? Give a one-word name: '),
-                                   '[- +=!@#$%^&*()]','_')
+      data_name <- stringr::str_replace_all(readline(prompt='What kind of data is this? Give a one-word name: '),
+                                            '[- +=!@#$%^&*()]','_')
       while(data_name %in% names(add_ds_list)) {
-        data_name <- str_replace_all(readline(prompt='Please choose a name that has not been used: '),
-                                     '[- +=!@#$%^&*()]','_')
+        data_name <- stringr::str_replace_all(readline(prompt='Please choose a name that has not been used: '),
+                                              '[- +=!@#$%^&*()]','_')
       }
       assign(paste0(data_name,'_ds'),list(metadata=metadata,
                                           data=fxnldata,
@@ -242,7 +242,7 @@ mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_
 #' @export
 #'
 theme_mv <- function() {
-  theme_pubr()+
+  ggpubr::theme_pubr()+
     theme(plot.title = element_text(hjust = 0.5, size=25),
           axis.title = element_text(size=25),
           axis.text = element_text(size=22),

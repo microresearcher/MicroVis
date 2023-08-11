@@ -106,11 +106,11 @@ getNetwork <- function(dataset=NULL,
   if(format=='network' & requireNamespace('network')) {
     library('network')
 
-    net <- as.network(as.matrix(dataset$networks[[rank]]),
-                      matrix.type='adjacency',
-                      directed=T,
-                      ignore.eval=F,
-                      names.eval='value')
+    net <- network::as.network(as.matrix(dataset$networks[[rank]]),
+                               matrix.type='adjacency',
+                               directed=T,
+                               ignore.eval=F,
+                               names.eval='value')
 
     deg <- sna::degree(net)
 
@@ -119,11 +119,11 @@ getNetwork <- function(dataset=NULL,
 
   } else if(format=='igraph' & requireNamespace('igraph')) {
     library(igraph)
-    net <- graph_from_adjacency_matrix(dataset$networks[[rank]],
-                                       weighted = T)
+    net <- igraph::graph_from_adjacency_matrix(dataset$networks[[rank]],
+                                               weighted = T)
 
-    E(net)$polarity <- E(net)$weight/abs(E(net)$weight)
-    E(net)$weight <- abs(E(net)$weight)
+    igraph::E(net)$polarity <- igraph::E(net)$weight/abs(igraph::E(net)$weight)
+    igraph::E(net)$weight <- abs(igraph::E(net)$weight)
 
   } else net <- dataset$networks[[rank]]
 
@@ -163,7 +163,7 @@ networkClusters <- function(dataset=NULL,
                     method=method,
                     format='igraph')
 
-  clusters <- split(names(V(net)), components(net)$membership)
+  clusters <- split(names(igraph::V(net)), igraph::components(net)$membership)
 
   return(clusters)
 }

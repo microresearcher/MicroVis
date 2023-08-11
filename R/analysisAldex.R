@@ -12,10 +12,10 @@ mvaldex <- function(dataset=NULL) {
 
   numgrps <- nrow(countSamples(dataset, getSizes = T, verbose = F)[[dataset$active_factor]])
   if(numgrps==2) {
-    res <- aldex.ttest(aldex_obj)
-    res <- cbind(res,aldex.effect(aldex_obj))
+    res <- ALDEx2::aldex.ttest(aldex_obj)
+    res <- cbind(res, ALDEx2::aldex.effect(aldex_obj))
   } else if(numgrps>2) {
-    res <- aldex.kw(aldex_obj)
+    res <- ALDEx2::aldex.kw(aldex_obj)
   } else stop(dataset$active_factor,' currently has only 1 group')
 
   dataset$stats[[dataset$active_factor]]$aldex[[dataset$data$proc$active_rank]] <- res

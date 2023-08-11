@@ -37,10 +37,10 @@ makeASVtab <- function(taxa_names_tab) {
     # Select the names of all the ranks based on how many sections are in the
     #   prepended name with the most sections
     #   (e.g. 4 delimiters -> 5 sections -> domain/kingdom to family)
-    ranks <- taxaranks[1:(max(str_count(prepended_names,delim))+1)]
+    ranks <- taxaranks[1:(max(stringr::str_count(prepended_names,delim))+1)]
 
     # Make sure each prepended name has the same number of delimiters
-    if(length(unique(str_count(prepended_names,';')))>1) {
+    if(length(unique(stringr::str_count(prepended_names,';')))>1) {
       prepended_names <- unlist(lapply(prepended_names, function(x) {
         paste0(x,paste(rep(paste0(delim,'NA'),
                            length(ranks) - str_count(x,delim) - 1),
@@ -80,7 +80,7 @@ makeASVtab <- function(taxa_names_tab) {
                        '\\]'='',
                        '\\('='_',
                        '\\)'='')
-    prepended_names <- str_replace_all(prepended_names,invalid_chars)
+    prepended_names <- stringr::str_replace_all(prepended_names,invalid_chars)
 
     taxa_names_tab <- data.frame(t(sapply(prepended_names,
                                           function(x) strsplit(x,delim)[[1]])))

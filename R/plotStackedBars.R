@@ -156,10 +156,10 @@ plotStackedBars <- function(dataset=NULL, relative=T,
     #   towards the number of named features shown
     fts <- fts[!(fts %in% 'Unknown')]
 
-    if(top_by=='max') low_abun <- rownames(slice_min(ftstats, order_by=max, n=(length(fts)-top)))
-    if(top_by=='min') low_abun <- rownames(slice_min(ftstats, order_by=min, n=(length(fts)-top)))
-    if(top_by=='mean') low_abun <- rownames(slice_min(ftstats, order_by=mean, n=(length(fts)-top)))
-    if(top_by=='sum') low_abun <- rownames(slice_min(ftstats, order_by=sum, n=(length(fts)-top)))
+    if(top_by=='max') low_abun <- rownames(dplyr::slice_min(ftstats, order_by=max, n=(length(fts)-top)))
+    if(top_by=='min') low_abun <- rownames(dplyr::slice_min(ftstats, order_by=min, n=(length(fts)-top)))
+    if(top_by=='mean') low_abun <- rownames(dplyr::slice_min(ftstats, order_by=mean, n=(length(fts)-top)))
+    if(top_by=='sum') low_abun <- rownames(dplyr::slice_min(ftstats, order_by=sum, n=(length(fts)-top)))
 
     # Add the unknown feature back to the feature list (fts) if it is to be labeled
     #   separately
@@ -172,9 +172,9 @@ plotStackedBars <- function(dataset=NULL, relative=T,
     fig_name <- paste0('top',top,fig_name)
   }
 
-  data_pivoted <- data %>% pivot_longer(all_of(fts),
-                                        names_to=rank,
-                                        values_to=abundance_type)
+  data_pivoted <- data %>% tidyr::pivot_longer(all_of(fts),
+                                               names_to=rank,
+                                               values_to=abundance_type)
 
   namedfts <- unique(data_pivoted[[rank]][!(data_pivoted[[rank]] %in% c('Other','Unknown'))])
   data_pivoted[[rank]] <- factor(data_pivoted[[rank]],
@@ -185,7 +185,7 @@ plotStackedBars <- function(dataset=NULL, relative=T,
       geom_area(aes(fill=.data[[rank]]))+
       scale_x_continuous(id, labels = unique(data_pivoted[[id]]),
                          breaks = unique(as.numeric(factor(data_pivoted[[id]]))))+
-      theme_pubr()+
+      ggpubr::theme_pubr()+
       labs(fill=capitalize(rank))+
       facet_wrap(facets = factor, scales = 'free_x',ncol = 1)+
       theme(axis.title = element_text(size=25),
@@ -205,8 +205,8 @@ plotStackedBars <- function(dataset=NULL, relative=T,
       separateLegend <- T
     }
   } else if(allSamples) {
-    p <- ggbarplot(data_pivoted,y=abundance_type,
-                   fill=tempds$data$proc$active_rank,color='white')+
+    p <- ggpubr::ggbarplot(data_pivoted,y=abundance_type,
+                           fill=tempds$data$proc$active_rank,color='white')+
       labs(fill=capitalize(rank),
            x=dataset$factors[[factor]]$name_text)+
       theme(axis.title = element_text(size=25),
@@ -216,8 +216,8 @@ plotStackedBars <- function(dataset=NULL, relative=T,
             legend.text = element_text(size=15),
             legend.key.size = unit(1,'cm'))
   } else {
-    p <- ggbarplot(data_pivoted,x=factor,y=abundance_type,
-                   fill=tempds$data$proc$active_rank,color='white')+
+    p <- ggpubr::ggbarplot(data_pivoted,x=factor,y=abundance_type,
+                           fill=tempds$data$proc$active_rank,color='white')+
       labs(fill=capitalize(rank),
            x=dataset$factors[[factor]]$name_text)+
       theme(axis.title = element_text(size=25),

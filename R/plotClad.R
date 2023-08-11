@@ -25,15 +25,15 @@ plotClad <- function(dataset=NULL, factor=NULL) {
 
   mm <- dataset$stats[[factor$name]]$lefse
 
-  clad <- plot_cladogram(mm, color = colors,
-                         clade_label_level = 5,
-                         annotation_shape = 22,
-                         annotation_shape_size = 3,
-                         node_size_offset = 2)
+  clad <- microbiomeMarker::plot_cladogram(mm, color = colors,
+                                           clade_label_level = 5,
+                                           annotation_shape = 22,
+                                           annotation_shape_size = 3,
+                                           node_size_offset = 2)
 
   on.exit()
 
-  clad_legend <- as_ggplot(get_legend(clad))
+  clad_legend <- ggpubr::as_ggplot(get_legend(clad))
   clad <- clad+theme(legend.position = 'none')
 
   show(clad)

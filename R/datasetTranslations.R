@@ -39,15 +39,15 @@ makePS <- function(dataset=NULL) {
   abun_mat <- as.matrix(abd)
   taxa_mat <- as.matrix(taxa_df)
 
-  abd <- otu_table(abun_mat, taxa_are_rows = FALSE)
-  tax <- tax_table(taxa_mat)
-  samples <- sample_data(samples_df)
+  abd <- phyloseq::otu_table(abun_mat, taxa_are_rows = FALSE)
+  tax <- phyloseq::tax_table(taxa_mat)
+  samples <- phyloseq::sample_data(samples_df)
 
-  phylodata <- phyloseq(abd,tax,samples)
+  phylodata <- phyloseq::phyloseq(abd,tax,samples)
 
   # Make tree and add to phyloseq object
-  tree <- rtree(ntaxa(phylodata), rooted=TRUE, tip.label=taxa_names(phylodata))
-  phylodata <- merge_phyloseq(phylodata,tree)
+  tree <- ape::rtree(ntaxa(phylodata), rooted=TRUE, tip.label=taxa_names(phylodata))
+  phylodata <- phyloseq::merge_phyloseq(phylodata,tree)
   if(exists('tree')) {cat('\nPhylogenetic tree created successfully!\n')}
 
   return(phylodata)
@@ -78,7 +78,7 @@ makeAldex <- function(dataset=NULL, factor=NULL) {
   metadata <- data[1:ncol(dataset$metadata)]
   abun <- data[(ncol(metadata)+1):ncol(data)]
 
-  aldex_obj <- aldex.clr(data.frame(t(abun)), metadata[[factor$name]])
+  aldex_obj <- ALDEx2::aldex.clr(data.frame(t(abun)), metadata[[factor$name]])
 
   return(aldex_obj)
 }
@@ -110,7 +110,7 @@ makeDeseq <- function(dataset=NULL,baseline=NULL) {
   abd <- data.frame(t(abd))
   rownames(abd) <- fts
   colnames(abd) <- samples
-  abd <- abd %>% select(as.character(metadata$sample))
+  abd <- abd %>% dplyr::select(as.character(metadata$sample))
 
   factor <- dataset$active_factor
   baseline <- baseline[baseline %in% dataset$factors[[factor]]$subset]
@@ -130,9 +130,9 @@ makeDeseq <- function(dataset=NULL,baseline=NULL) {
   }
   coldata[[factor]] <- relevel(coldata[[factor]],baseline)
 
-  dds <- DESeqDataSetFromMatrix(countData = cts,
-                                colData = coldata,
-                                design = as.formula(paste('~',factor)))
+  dds <- DESeq2::DESeqDataSetFromMatrix(countData = cts,
+                                        colData = coldata,
+                                        design = as.formula(paste('~',factor)))
   return(dds)
 }
 
@@ -192,9 +192,9 @@ makeTaxMap <- function(dataset=NULL,unfiltered=F,ftlist=NULL) {
   abun <- cbind(ASV=colnames(abun),data.frame(t(abun)))
   colnames(abun)[2:ncol(abun)] <- sample_names
 
-  mvtaxmap <- parse_tax_data(taxa_data,class_cols = 1:(ncol(taxa_data)-1),named_by_rank = T,
-                             datasets = list(abundance=abun),mappings = c('ASV'='ASV'))
-  mvtaxmap$data$abundance <- calc_taxon_abund(mvtaxmap,'abundance',cols=sample_names)
+  mvtaxmap <- metacoder::parse_tax_data(taxa_data,class_cols = 1:(ncol(taxa_data)-1),named_by_rank = T,
+                                        datasets = list(abundance=abun),mappings = c('ASV'='ASV'))
+  mvtaxmap$data$abundance <- metacoder::calc_taxon_abund(mvtaxmap,'abundance',cols=sample_names)
   mvtaxmap$data$metadata <- md
 
   return(mvtaxmap)

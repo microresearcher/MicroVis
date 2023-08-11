@@ -43,9 +43,9 @@ plotRFImp <- function(dataset=NULL,
   errs <- rf$Errors
 
   errs$Trees <- as.numeric(rownames(errs))
-  errs <- errs %>% pivot_longer(cols=c('OOB',factor$subset),names_to='Class',values_to='Error')
+  errs <- errs %>% tidyr::pivot_longer(cols=c('OOB',factor$subset),names_to='Class',values_to='Error')
 
-  p_err <- ggline(errs,x='Trees',y='Error',color='Class',plot_type = 'l',size = 1,numeric.x.axis=T)+
+  p_err <- ggpubr::ggline(errs,x='Trees',y='Error',color='Class',plot_type = 'l',size = 1,numeric.x.axis=T)+
     scale_color_manual(values=colors)+
     theme(plot.title = element_text(size=25,hjust = 0.5),
           axis.text = element_text(size=20),
@@ -81,7 +81,7 @@ plotRFImp <- function(dataset=NULL,
   outlines <- outlines[names(outlines) %in% as.character(unique(boruta$Decision))]
   fills <- fills[names(fills) %in% as.character(unique(boruta$Decision))]
 
-  p_imp <- ggboxplot(boruta,x='Feature',y='Importance',fill='Decision',color='Decision',size=1)+
+  p_imp <- ggpubr::ggboxplot(boruta,x='Feature',y='Importance',fill='Decision',color='Decision',size=1)+
     labs(title = titletxt)+
     scale_fill_manual(values = fills)+
     scale_color_manual(values = outlines)+

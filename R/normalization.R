@@ -575,7 +575,7 @@ glog <- function(x, base=10) {
 zeroReplace <- function(x) {
   if(get('zeroReplaceMethod', envir=mvEnv)$method=='replace') {
     div <- get('zeroReplaceMethod', envir=mvEnv)$div
-    rdist <- get('zeroReplaceMethod',envir = mvEnv)$rdist
+    rdist <- get('zeroReplaceMethod', envir = mvEnv)$rdist
 
     r <- nrow(x)
     c <- ncol(x)

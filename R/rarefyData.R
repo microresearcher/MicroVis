@@ -35,7 +35,7 @@ runRarefaction <- function(dataset=NULL, temp=F, silent=F) {
   if(minrich==0) {return(message('\nERROR: At least one sample in this dataset has 0 reads\n'))}
 
   # Rarefy the abundance table
-  abd.rarefied <- rrarefy(abd, minrich)
+  abd.rarefied <- vegan::rrarefy(abd, minrich)
   # Now make ranked abundance tables with this abundance table
   ft_data$proc$unranked <- abd.rarefied
   ft_data <- makeRankTabs(ft_data)

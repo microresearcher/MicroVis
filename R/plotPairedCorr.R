@@ -79,21 +79,21 @@ plotPairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
 
   p <- list()
   for(ft in fts[stats$`p(adj)`<=1]) {
-    pivoted <- data.paired[c(ids,compare,ft)] %>% pivot_wider(id_cols=ids,
-                                                              names_from=compare,
-                                                              values_from=ft)
+    pivoted <- data.paired[c(ids,compare,ft)] %>% tidyr::pivot_wider(id_cols=ids,
+                                                                     names_from=compare,
+                                                                     values_from=ft)
     if(stats$R[stats[[rank]]==ft] >= rthresh &
        stats$`p(adj)`[stats[[rank]]==ft] <= alpha) {
-      ptemp <- ggscatter(pivoted, groups[1], groups[2], color='#00c700', size=4,
-                         add='reg.line', add.params=list(size=1.2), conf.int=T,
-                         title=ft)
+      ptemp <- ggpubr::ggscatter(pivoted, groups[1], groups[2], color='#00c700', size=4,
+                                 add='reg.line', add.params=list(size=1.2), conf.int=T,
+                                 title=ft)
     } else {
-      ptemp <- ggscatter(pivoted, groups[1], groups[2], color='red', size=4, shape=18,
-                         add='reg.line', add.params=list(size=1.2), conf.int=T,
-                         title=ft)
+      ptemp <- ggpubr::ggscatter(pivoted, groups[1], groups[2], color='red', size=4, shape=18,
+                                 add='reg.line', add.params=list(size=1.2), conf.int=T,
+                                 title=ft)
     }
 
-    if(showstats) ptemp <- ptemp + stat_cor(size=7,show.legend=F)
+    if(showstats) ptemp <- ptemp + ggpubr::stat_cor(size=7,show.legend=F)
 
     p[[ft]] <- ptemp+
         theme(plot.title = element_text(size=25, hjust=0.5),

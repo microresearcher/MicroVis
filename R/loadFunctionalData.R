@@ -15,9 +15,9 @@ loadFxnlFile <- function(path_to_fxnl=NA,metadata=NULL) {
     #   be asked to choose a file in the project directory
     message('\nSelect an additional abundance table (csv format) associated with the same metadata. Press "Cancel" or hit "Esc" to skip')
     Sys.sleep(0.1) # To make sure it displays the above message before opening the dialogue box
-    fxnlfile <- selectFile(caption='Select additional abundance table (csv format)',
-                           path=get('project_dir',envir = mvEnv),
-                           filter='Comma-separated Value (*.csv)')
+    fxnlfile <- rstudioapi::selectFile(caption='Select additional abundance table (csv format)',
+                                       path=get('project_dir',envir = mvEnv),
+                                       filter='Comma-separated Value (*.csv)')
   } else fxnlfile <- path_to_fxnl
 
   # If a valid functional abundace table was chosen, load it
@@ -32,7 +32,7 @@ loadFxnlFile <- function(path_to_fxnl=NA,metadata=NULL) {
   # List of invalid characters in taxonomy names to replace with an underscore
   invalid_chars <- c('-'='_',' '='_',':'='_','/'='_',
                      '\\['='','\\]'='','\\('='_','\\)'='')
-  fxnl_names <- lapply(fxnl_names, function(x) str_replace_all(x,invalid_chars))
+  fxnl_names <- lapply(fxnl_names, function(x) stringr::str_replace_all(x,invalid_chars))
   # for(c in invalid_chars) fxnl_names <- lapply(fxnl_names, function(x) str_replace_all(x,c,'_'))
 
   colnames(fxnl_data)[1] <- c('sample')
@@ -45,7 +45,7 @@ loadFxnlFile <- function(path_to_fxnl=NA,metadata=NULL) {
   }
 
   # Reorder the rows by the sample number (since our pipeline yields numerical sample names)
-  fxnl_data <- fxnl_data %>% arrange(sample)
+  fxnl_data <- fxnl_data %>% dplyr::arrange(sample)
 
   sample_names <- fxnl_data$sample
 

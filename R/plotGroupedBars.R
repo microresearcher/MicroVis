@@ -116,7 +116,7 @@ plotGroupedBars <- function(dataset=NULL,
   pivoted_tab <- plottab
   pivoted_tab$Mean <- sapply(pivoted_tab$Mean,function(x) formatC(x,digits=2,format='e'))
   pivoted_tab$SE <- sapply(pivoted_tab$SE,function(x) formatC(x,digits=2,format='e'))
-  pivoted_tab <- pivot_wider(pivoted_tab,names_from = 'Group',values_from = c('Mean','SE'))
+  pivoted_tab <- tidyr::pivot_wider(pivoted_tab,names_from = 'Group',values_from = c('Mean','SE'))
   # Identify fts with very low abundance counts for any group and remove them
   lowab <- unique(as.character(plottab[plottab$Mean<abun_thresh,]$Feature))
 

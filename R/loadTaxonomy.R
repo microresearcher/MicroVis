@@ -21,9 +21,9 @@ loadTaxaFile <- function(path_to_taxa=NA,metadata=NULL,combineDupes=T) {
     #    user will be asked to choose a file in the project directory
     message('\nSelect taxonomy abundance table (csv format). Press "Cancel" or hit "Esc" to skip')
     Sys.sleep(0.1) # To make sure it displays the above message before opening the dialogue box
-    taxafile <- selectFile(caption='Select taxonomy abundance table (csv format)',
-                           path=get('project_dir',envir = mvEnv),
-                           filter='Comma-Separated Value (*.csv)')
+    taxafile <- rstudioapi::selectFile(caption='Select taxonomy abundance table (csv format)',
+                                       path=get('project_dir',envir = mvEnv),
+                                       filter='Comma-Separated Value (*.csv)')
   } else taxafile <- path_to_taxa
 
   # If a valid taxonomy abundace table was chosen, load it
@@ -94,7 +94,7 @@ loadTaxaFile <- function(path_to_taxa=NA,metadata=NULL,combineDupes=T) {
     taxa_data$sample <- as.numeric(taxa_data$sample)
   }
   # Reorder the rows by the sample number (since our pipeline yields numerical sample names)
-  taxa_data <- taxa_data %>% arrange(sample)
+  taxa_data <- taxa_data %>% dplyr::arrange(sample)
 
   # If there is a metadata, check to make sure sample names in abundance table
   #   are the same

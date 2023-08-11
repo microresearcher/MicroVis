@@ -54,8 +54,8 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
       filterlist$low_prevalence <- low_prevalence
 
     } else if(!is.null(filtering$top_prevalence)) {
-      low_prevalence <- (ftstats %>% slice_min(Prevalence,
-                                               n=(nfts-filtering$top_prevalence)))[['Feature']]
+      low_prevalence <- (ftstats %>% dplyr::slice_min(Prevalence,
+                                                      n=(nfts-filtering$top_prevalence)))[['Feature']]
 
       if(!silent) cat(paste0('\n  Identified top ',
                              filtering$top_prevalence,' features by prevalence'))
@@ -74,8 +74,8 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
     ### Identify Low Relative Abundance ###
     #-------------------------------------#
     if(!is.null(filtering$top_relabun)) {
-      low_relabun <- (ftstats %>% slice_min(Mean_Relative_Abundance,
-                                            n=(nfts-filtering$top_relabun)))[['Feature']]
+      low_relabun <- (ftstats %>% dplyr::slice_min(Mean_Relative_Abundance,
+                                                   n=(nfts-filtering$top_relabun)))[['Feature']]
 
       if(!silent) cat(paste0('\n  Identified top ',
                              filtering$top_relabun,' features by relative abundance'))
@@ -94,8 +94,8 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
     ### Identify Low Total Abundance ###
     #----------------------------------#
     if(!is.null(filtering$top_totabun)) {
-      low_totabun <- (ftstats %>% slice_min(Total_Abundance,
-                                            n=(nfts-filtering$top_totabun)))[['Feature']]
+      low_totabun <- (ftstats %>% dplyr::slice_min(Total_Abundance,
+                                                   n=(nfts-filtering$top_totabun)))[['Feature']]
 
       if(!silent) cat(paste0('\n  Identified top ',
                              filtering$top_totabun,' features by total abundance'))
@@ -114,7 +114,7 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
     ### Identify Low Variance ###
     #---------------------------#
     if(!is.null(filtering$top_var)) {
-      low_var <- (ftstats %>% slice_min(StDev, n=(nfts-filtering$top_var)))[['Feature']]
+      low_var <- (ftstats %>% dplyr::slice_min(StDev, n=(nfts-filtering$top_var)))[['Feature']]
 
       if(!silent) cat(paste0('\n  Identified the top ',
                              filtering$top_var,' features by standard deviation'))
@@ -122,8 +122,8 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
       filterlist$low_var <- low_var
 
     } else if(!is.null(filtering$low_var_percentile)) {
-      low_sd <- slice_min(data.frame(sd=unique(ftstats$StDev)),
-                          sd, n=floor(filtering$low_var_percentile*nrow(ftstats)/100))$sd
+      low_sd <- dplyr::slice_min(data.frame(sd=unique(ftstats$StDev)),
+                                 sd, n=floor(filtering$low_var_percentile*nrow(ftstats)/100))$sd
 
       low_var <- ftstats[ftstats$StDev %in% low_sd,]$Feature
 
@@ -789,7 +789,7 @@ findSigFisher <- function(dataset, fts, lowabun_thresh=0, silent=F) {
     form <- formula(paste('. ~',active_factor))
     xtab <- aggregate(form, df[c(active_factor,'present','absent')], function(x) sum(x))
 
-    if(fisher_test(xtab[2:3])$p<0.05) sig_fisher <- c(sig_fisher,ft)
+    if(rstatix::fisher_test(xtab[2:3])$p<0.05) sig_fisher <- c(sig_fisher,ft)
   }
   return(sig_fisher)
 }

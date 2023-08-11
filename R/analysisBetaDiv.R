@@ -44,7 +44,7 @@ mvunifrac <- function(dataset=NULL,weighted=F,normalized=T) {
 
   ps <- makePS(dataset)
 
-  unifrac_dist <- UniFrac(ps,weighted=weighted,normalized=normalized)
+  unifrac_dist <- phyloseq::UniFrac(ps,weighted=weighted,normalized=normalized)
 
   return(unifrac_dist)
 }

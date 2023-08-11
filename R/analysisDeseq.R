@@ -31,15 +31,15 @@ mvdeseq <- function(dataset=NULL,
   if(is.null(factor)) factor <- dataset$active_factor
   factor <- setFVar(dataset,factor_name = factor)
 
-  if(!compareAll) dds <- DESeq(makeDeseq(dataset))
-  else dds <- DESeq(makeDeseq(dataset,factor$subset[1]))
+  if(!compareAll) dds <- DESeq2::DESeq(makeDeseq(dataset))
+  else dds <- DESeq2::DESeq(makeDeseq(dataset,factor$subset[1]))
 
-  result_names <- resultsNames(dds)
+  result_names <- DESeq2::resultsNames(dds)
   result_names <- result_names[2:length(result_names)]
 
   # First, extract the comparisons between contrast groups and the reference group
   for(contrast in result_names) {
-    res <- results(dds,name=contrast)
+    res <- DESeq2::results(dds,name=contrast)
     comparison <- strsplit(gsub(paste0('.*',factor$name_text,' '),'',res@elementMetadata$description[2]),
                            split = ' vs ')[[1]]
 
@@ -70,7 +70,7 @@ mvdeseq <- function(dataset=NULL,
 
         cat('\nAnalyzing ',comp_grp,' vs ',base_grp)
 
-        res <- results(dds,contrast = c(factor$name,comp_grp,base_grp))
+        res <- DESeq2::results(dds,contrast = c(factor$name,comp_grp,base_grp))
 
         temp <- cbind(Reference=rep(base_grp,nrow(res)),
                       Contrast=rep(comp_grp,nrow(res)),

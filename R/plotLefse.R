@@ -31,7 +31,7 @@ plotLEFSE <- function(dataset=NULL,factor=NULL,alpha=0.05,lda_cutoff=2,top=20,by
 
   lefse_results$Feature <- gsub('.*\\|','',lefse_results$Feature)
   plottab <- subset(lefse_results,p<=alpha & LDA_Score>=lda_cutoff)
-  if(top>0) plottab <- plottab %>% slice_max(LDA_Score,n = top)
+  if(top>0) plottab <- plottab %>% dplyr::slice_max(LDA_Score,n = top)
 
   ranknames <- c('Kingdom','Phylum','Class','Order','Family','Genus','Species')
   names(ranknames) <- c('k','p','c','o','f','g','s')
@@ -42,12 +42,12 @@ plotLEFSE <- function(dataset=NULL,factor=NULL,alpha=0.05,lda_cutoff=2,top=20,by
     plottab$Feature <- gsub('.*__','',as.character(plottab$Feature))
   }
 
-  p <- ggdotchart(plottab,x='Feature',y='LDA_Score',color='Enriched',size=6,
-                  group='Enriched',
-                  add = 'segment',
-                  add.params = list(size=2),
-                  sorting = 'descending',
-                  rotate = T)+
+  p <- ggpubr::ggdotchart(plottab,x='Feature',y='LDA_Score',color='Enriched',size=6,
+                          group='Enriched',
+                          add = 'segment',
+                          add.params = list(size=2),
+                          sorting = 'descending',
+                          rotate = T)+
     scale_color_manual(values=colors)+
     labs(y='LDA Score')+
     theme(axis.title = element_text(size=20),

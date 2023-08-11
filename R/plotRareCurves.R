@@ -34,7 +34,7 @@ plotRareCurves <- function(dataset=NULL,
   maxrich <- max(rowSums(abd))
   minrich <- min(rowSums(abd))
 
-  p <- rarecurve(abd, step = step_size)
+  p <- vegan::rarecurve(abd, step = step_size)
   names(p) <- rownames(abd)
 
   alldata <- c()
@@ -61,8 +61,8 @@ plotRareCurves <- function(dataset=NULL,
     p <- facet(p,factor$name)
   }
   if(labelSamples) {
-    p<-p+geom_label_repel(data=maxtab,
-                          aes(label=sample))
+    p<-p+ggrepel::geom_label_repel(data=maxtab,
+                                   aes(label=sample))
   }
 
   if(!getPlot) {

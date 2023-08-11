@@ -12,7 +12,7 @@ mvsave <- function(name) {
   print(dataset)
 
   dataset$name <- name
-  name <- str_replace_all(name, '[- +=!@#$%^&*()]', '_')
+  name <- stringr::str_replace_all(name, '[- +=!@#$%^&*()]', '_')
 
   assign(name, dataset, pos=1)
   activate(dataset)

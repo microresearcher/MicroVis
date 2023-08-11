@@ -58,12 +58,12 @@ ftRatiostab <- function(melted_data, feature1list, feature2list,
   if(is.na(factor)) {
     ratios <- list(ratios=ratiocols,data=melted_data[c('sample',ratiocols)])
   } else {
-    means <- melted_data %>% pivot_longer(cols=ratiocols,
-                                          names_to='ratio',
-                                          values_to='Mean')
-    SEs <- se %>% pivot_longer(cols=ratiocols,
-                               names_to='ratio',
-                               values_to='SE')
+    means <- melted_data %>% tidyr::pivot_longer(cols=ratiocols,
+                                                 names_to='ratio',
+                                                 values_to='Mean')
+    SEs <- se %>% tidyr::pivot_longer(cols=ratiocols,
+                                      names_to='ratio',
+                                      values_to='SE')
     mean.se <- merge(means,SEs)
 
     ratios <- list(ratios=ratiocols,mean.se=mean.se)

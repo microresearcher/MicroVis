@@ -29,16 +29,16 @@ plotSampleDensity <- function(dataset=NULL,bySample=T) {
 
   ftnames <- colnames(histocounts)
   histocounts$Sample <- rownames(histocounts)
-  histocounts <- histocounts %>% pivot_longer(cols = ftnames,
-                                              names_to = 'Feature',
-                                              values_to = 'Normalized Abundance Values')
+  histocounts <- histocounts %>% tidyr::pivot_longer(cols = ftnames,
+                                                     names_to = 'Feature',
+                                                     values_to = 'Normalized Abundance Values')
 
   # Determine x-axis limits for truncating graph, if needed
   xmax <- mean(histocounts$`Normalized Abundance Values`)*(diff(range(histocounts$`Normalized Abundance Values`))/sd(histocounts$`Normalized Abundance Values`))
 
-  p_histocounts <- ggdensity(histocounts,x='Normalized Abundance Values',y='..count..',
-                             color=colorby,size=1,
-                             fill = 'lightblue',alpha=opaqueness)+
+  p_histocounts <- ggpubr::ggdensity(histocounts,x='Normalized Abundance Values',y='..count..',
+                                     color=colorby,size=1,
+                                     fill = 'lightblue',alpha=opaqueness)+
     labs(title='Sample Abundance Distributions',y='Percent of Features')+
     theme(plot.title = element_text(hjust=0.5,size=25),legend.position = 'none',
           axis.title = element_text(size=22), axis.text = element_text(size=18),
@@ -94,16 +94,16 @@ plotFeatureDensity <- function(dataset=NULL,byFeature=T,
   colnames(histocounts) <- samplenames
 
   histocounts$Feature <- rownames(histocounts)
-  histocounts <- histocounts %>% pivot_longer(cols = samplenames,
-                                              names_to = 'Sample',
-                                              values_to = 'Normalized Abundance Values')
+  histocounts <- histocounts %>% tidyr::pivot_longer(cols = samplenames,
+                                                     names_to = 'Sample',
+                                                     values_to = 'Normalized Abundance Values')
 
   # Determine x-axis limits for truncating graph, if needed
   xmax <- mean(histocounts$`Normalized Abundance Values`)*(diff(range(histocounts$`Normalized Abundance Values`))/sd(histocounts$`Normalized Abundance Values`))
 
-  p_histocounts <- ggdensity(histocounts,x='Normalized Abundance Values',y='..count..',
-                             color='#03fcbe33',size=1,
-                             fill = colorby,alpha=opaqueness)+
+  p_histocounts <- ggpubr::ggdensity(histocounts,x='Normalized Abundance Values',y='..count..',
+                                     color='#03fcbe33',size=1,
+                                     fill = colorby,alpha=opaqueness)+
     labs(title='Feature Abundance Distributions',y='Percent of Samples')+
     theme(plot.title = element_text(hjust=0.5,size=25),legend.position = 'none',
           axis.title = element_text(size=22), axis.text = element_text(size=18),

@@ -51,7 +51,7 @@ clusterSamples <- function(dataset=NULL,
   if(dist_method %in% c('pearson','spearman')) {
     dst <- as.data.frame(cor(t(abun_data), method = dist_method))
   } else {
-    dst <- 1-as.data.frame(as.matrix(vegdist(abun_data, method = dist_method)))
+    dst <- 1-as.data.frame(as.matrix(vegan::vegdist(abun_data, method = dist_method)))
   }
 
   clust <- hclust(as.dist(1-dst), method = clust_method)

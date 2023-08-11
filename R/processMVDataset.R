@@ -26,7 +26,7 @@ processDataset <- function(dataset, temp=F, silent=F) {
 
   if(!silent) {
     p_afterproc <- plotSampleDensity(dataset)
-    show(ggarrange(p_beforeproc,p_afterproc,ncol=1))
+    show(ggpubr::ggarrange(p_beforeproc,p_afterproc,ncol=1))
   }
 
   dataset$stats <- list()

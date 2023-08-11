@@ -50,17 +50,17 @@ mvdist <- function(dataset=NULL, method='bray', weighted=F, allFactors=T, factor
   if(tolower(method)=='unifrac') {
     dst_results$dst <- mvunifrac(dataset, weighted = weighted, normalized=F)
   } else {
-    dst_results$dst <- vegdist(abd, method=tolower(method))
+    dst_results$dst <- vegan::vegdist(abd, method=tolower(method))
   }
 
   attributes(dst_results$dst)$Labels <- sample_names
-  PCoA <- pcoa(dst_results$dst)
+  PCoA <- ape::pcoa(dst_results$dst)
   coord_tab <- data.frame(sample=sample_names,
                           PCoA$vectors)
 
   dst_results$coord_tab <- coord_tab
   dst_results$eigbars <- barplot(PCoA$values$Relative_eig[1:10])
-  dst_results$biplot <- biplot.pcoa(PCoA,abd)
+  dst_results$biplot <- ape::biplot.pcoa(PCoA,abd)
 
   return(dst_results)
 }
@@ -109,7 +109,7 @@ pnova <- function(dataset=NULL, dist='bray', weighted=F, allFactors=T, factors=N
   formula <- as.formula(paste('dst ~ ',paste0('f$',names(f),collapse = '+')))
 
   dst_stats <- list(dist=dst_results)
-  dst_stats$pnova <- adonis2(formula, by='margin')
+  dst_stats$pnova <- vegan::adonis2(formula, by='margin')
   rownames(dst_stats$pnova) <- sub('f\\$','',rownames(dst_stats$pnova))
 
   dst_stats$permdisp <- list()
@@ -118,7 +118,7 @@ pnova <- function(dataset=NULL, dist='bray', weighted=F, allFactors=T, factors=N
                                   Dispersion=alpha,
                                   Significant='')[0,]
   for(grping in names(f)) {
-    dst_stats$permdisp[[sub('f\\$','',grping)]] <- anova(betadisper(dst, f[[grping]]))
+    dst_stats$permdisp[[sub('f\\$','',grping)]] <- anova(vegan::betadisper(dst, f[[grping]]))
 
     pnova_res <- dst_stats$pnova[paste0(grping),'Pr(>F)']
     disp_res <- dst_stats$permdisp[[grping]]$`Pr(>F)`[[1]]

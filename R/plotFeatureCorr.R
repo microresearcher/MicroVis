@@ -175,12 +175,12 @@ plotFtCorlines <- function(dataset1=NULL,dataset2=NULL,
     if(r_cutoff!=0) cortab[abs(cortab)<r_cutoff] <- 0
 
     cortab$Feature1 <- rownames(cortab)
-    cortab <- cortab %>% pivot_longer(cols=colnames(cortab[1:(ncol(cortab)-1)]),
-                                      names_to='Feature2',values_to='r2')
+    cortab <- cortab %>% tidyr::pivot_longer(cols=colnames(cortab[1:(ncol(cortab)-1)]),
+                                             names_to='Feature2',values_to='r2')
 
     ptab$Feature1 <- rownames(ptab)
-    ptab <- ptab %>% pivot_longer(cols=colnames(ptab[1:(ncol(ptab)-1)]),
-                                  names_to='Feature2',values_to='p')
+    ptab <- ptab %>% tidyr::pivot_longer(cols=colnames(ptab[1:(ncol(ptab)-1)]),
+                                         names_to='Feature2',values_to='p')
 
     cortab <- merge(cortab,ptab,by=c('Feature1','Feature2'))
     plottab.tmp <- cortab[cortab$p<=alpha & abs(cortab$r2)>=r_cutoff,][c('Feature1','Feature2')]
@@ -214,8 +214,8 @@ plotFtCorlines <- function(dataset1=NULL,dataset2=NULL,
     labelypos <- rep(1.1*max(abun[c(ft1,ft2)]),length(factor$subset))
     labelypos <- sapply(1:length(labelypos),function(x) labelypos[x]*(1+0.07*(x-1)))
 
-    p <- ggscatter(abun,x=ft1,y=ft2,color=factor$name,shape=factor$name,size=4,
-                   add='reg.line',conf.int=T,add.params=list(size=1.2))+
+    p <- ggpubr::ggscatter(abun,x=ft1,y=ft2,color=factor$name,shape=factor$name,size=4,
+                           add='reg.line',conf.int=T,add.params=list(size=1.2))+
       stat_cor(aes(color=get(factor$name)),size=7,
                label.x.npc=c('left'),label.y=labelypos,
                show.legend=F)+

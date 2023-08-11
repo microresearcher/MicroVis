@@ -21,7 +21,7 @@ adiv <- function(dataset=NULL, method='chao1', rooted=F) {
 
   if(method=='chao1') divs <- apply(abd, 1, function(x) sum(x>0))
   else if(method=='pd') divs <- phyloDiversity(dataset,rooted)
-  else divs <- diversity(abd,method)
+  else divs <- vegan::diversity(abd,method)
 
   div_tab <- data.frame(sample_names,
                         divs)
@@ -50,9 +50,9 @@ phyloDiversity <- function(dataset=NULL, rooted=F) {
 
   tree <- makePS(dataset)@phy_tree
 
-  if(rooted) tree <- prune.sample(abun,tree)
+  if(rooted) tree <- picante::prune.sample(abun,tree)
 
-  div <- pd(abun,tree,include.root = rooted)
+  div <- picante::pd(abun,tree,include.root = rooted)
 
   return(div['PD'])
 }

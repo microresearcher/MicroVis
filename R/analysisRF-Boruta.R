@@ -28,14 +28,14 @@ rfboruta <- function(dataset=NULL,
   groups <- data[[factor]]
 
   invalid_chars <- c(' '='__1__','-'='__2__','\\+'='__3__')
-  groups <- factor(str_replace_all(groups,invalid_chars))
+  groups <- factor(stringr::str_replace_all(groups,invalid_chars))
 
-  rferrs <- randomForest(abun, groups)
+  rferrs <- randomForest::randomForest(abun, groups)
   errs <- data.frame(rferrs$err.rate)
   class_err <- data.frame(rferrs$confusion)
 
-  res <- Boruta(abun, groups, maxRuns=max_runs, pValue=alpha)
-  if(roughfix) res <- TentativeRoughFix(res)
+  res <- Boruta::Boruta(abun, groups, maxRuns=max_runs, pValue=alpha)
+  if(roughfix) res <- Boruta::TentativeRoughFix(res)
 
   decisions <- data.frame(Feature=names(res$finalDecision),
                           Decision=res$finalDecision)
@@ -46,12 +46,12 @@ rfboruta <- function(dataset=NULL,
   imptab <- imptab[order(sapply(imptab,function(x) median(x)))]
   imptab <- stack(imptab)
   colnames(imptab) <- c('Importance','Feature')
-  boruta <- full_join(imptab,decisions)
+  boruta <- dplyr::full_join(imptab,decisions)
 
   replace_chars <- c('__1__'=' ','__2__'='-','__3__'='\\+')
-  colnames(errs) <- str_replace_all(colnames(errs),replace_chars)
-  rownames(class_err) <- str_replace_all(rownames(class_err),replace_chars)
-  colnames(class_err) <- str_replace_all(colnames(class_err),replace_chars)
+  colnames(errs) <- stringr::str_replace_all(colnames(errs),replace_chars)
+  rownames(class_err) <- stringr::str_replace_all(rownames(class_err),replace_chars)
+  colnames(class_err) <- stringr::str_replace_all(colnames(class_err),replace_chars)
   for(i in 1:length(levels(groups))) {
     if(is.numeric(type.convert(substr(levels(groups)[i],1,1)))) {
       colnames(errs)[i+1] <- sub('X','',colnames(errs)[i+1])

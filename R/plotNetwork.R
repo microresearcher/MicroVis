@@ -89,7 +89,7 @@ plotNetwork <- function(dataset=NULL,
     net %v% 'degree' <- deg
 
     net.clean <- net
-    delete.vertices(net.clean, which(net.clean %v% 'degree'==0))
+    igraph::delete.vertices(net.clean, which(net.clean %v% 'degree'==0))
 
     p <- ggplot(net.clean, aes(x = x, y = y, xend = xend, yend = yend))+
       geom_edges()+
@@ -105,57 +105,57 @@ plotNetwork <- function(dataset=NULL,
     show(p)
 
   } else if(format=='igraph' & requireNamespace('igraph')) {
-    net <- graph_from_adjacency_matrix(net, weighted = T)
+    net <- igraph::graph_from_adjacency_matrix(net, weighted = T)
 
-    E(net)$width <- abs(E(net)$weight)
-    E(net)$arrow.size <- 0
+    igraph::E(net)$width <- abs(igraph::E(net)$weight)
+    igraph::E(net)$arrow.size <- 0
 
-    if(!labelAll) V(net)$label <- rep(NA, length(V(net)$name))
-    if(length(labelfts)) V(net)$label[which(V(net)$name %in% labelfts)] <- labelfts
+    if(!labelAll) igraph::V(net)$label <- rep(NA, length(igraph::V(net)$name))
+    if(length(labelfts)) igraph::V(net)$label[which(igraph::V(net)$name %in% labelfts)] <- labelfts
 
     V(net)$size <- vsize*20
     V(net)$fill <- filllist
 
     if(r_cutoff>0 & r_cutoff<1) {
       cutoff <- r_cutoff
-      net.filt <- delete_edges(net, E(net)[weight<cutoff])
-      cat('  Filtered out',length(E(net)[weight<cutoff]),
+      net.filt <- delete_edges(net, igraph::E(net)[weight<cutoff])
+      cat('  Filtered out',length(igraph::E(net)[weight<cutoff]),
           'correlations less than', r_cutoff,'\n')
 
-      emptyvs.filt <- V(net.filt)[degree(net.filt)<=deg_cutoff]
+      emptyvs.filt <- igraph::V(net.filt)[degree(net.filt)<=deg_cutoff]
       cat('  Removed nodes with',deg_cutoff,'or fewer correlations\n')
 
       net.clean <- delete_vertices(net.filt, emptyvs.filt)
     } else if(top_r_prop>0 & top_r_prop<100) {
-      cutoff <- min(E(net)$weight[order(E(net)$weight,decreasing = T)]
-                    [floor((top_r_prop/100)*length(E(net)$weight))+1])
-      net.filt <- delete_edges(net, E(net)[weight<cutoff])
-      cat('  Filtered out',length(E(net)[weight<cutoff]),
+      cutoff <- min(igraph::E(net)$weight[order(igraph::E(net)$weight,decreasing = T)]
+                    [floor((top_r_prop/100)*length(igraph::E(net)$weight))+1])
+      net.filt <- delete_edges(net, igraph::E(net)[weight<cutoff])
+      cat('  Filtered out',length(igraph::E(net)[weight<cutoff]),
           'correlations in the bottom',100-top_r_prop,'percentile\n')
 
-      emptyvs.filt <- V(net.filt)[degree(net.filt)<=deg_cutoff]
+      emptyvs.filt <- igraph::V(net.filt)[igraph::degree(net.filt)<=deg_cutoff]
       cat('  Removed nodes with',deg_cutoff,'or fewer correlations\n')
 
-      net.clean <- delete_vertices(net.filt, emptyvs.filt)
+      net.clean <- igraph::delete_vertices(net.filt, emptyvs.filt)
     } else {
-      emptyvs <- V(net)[degree(net)<=deg_cutoff]
-      net.clean <- delete_vertices(net, emptyvs)
+      emptyvs <- igraph::V(net)[igraph::degree(net)<=deg_cutoff]
+      net.clean <- igraph::delete_vertices(net, emptyvs)
     }
 
-    colors <- rainbow(length(unique(V(net.clean)$fill)), alpha = 0.5)
-    names(colors) <- unique(V(net.clean)$fill)
+    colors <- rainbow(length(unique(igraph::V(net.clean)$fill)), alpha = 0.5)
+    names(colors) <- unique(igraph::V(net.clean)$fill)
 
-    V(net.clean)$color <- colors[V(net.clean)$fill]
-    V(net.clean)$frame.color <- NA
+    igraph::V(net.clean)$color <- colors[igraph::V(net.clean)$fill]
+    igraph::V(net.clean)$frame.color <- NA
 
-    if(layout=='fr') lay <- layout_with_fr(net.clean)
-    else if(layout=='circle') lay <- layout_in_circle(net.clean)
-    else if(layout=='sphere') lay <- layout_on_sphere(net.clean)
-    else if(layout=='dh') lay <- layout_with_dh(net.clean)
-    else if(layout=='nicely') lay <- layout_nicely(net.clean)
+    if(layout=='fr') lay <- igraph::layout_with_fr(net.clean)
+    else if(layout=='circle') lay <- igraph::layout_in_circle(net.clean)
+    else if(layout=='sphere') lay <- igraph::layout_on_sphere(net.clean)
+    else if(layout=='dh') lay <- igraph::layout_with_dh(net.clean)
+    else if(layout=='nicely') lay <- igraph::layout_nicely(net.clean)
 
     plot(net.clean, layout=lay)
-    legend(x=-1.5, y=-0.6, unique(V(net.clean)$fill), pch=21,
+    legend(x=-1.5, y=-0.6, unique(igraph::V(net.clean)$fill), pch=21,
            col="#ffffff", pt.bg=colors, pt.cex=2, cex=.8, bty="n", ncol=1)
   }
 

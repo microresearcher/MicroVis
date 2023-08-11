@@ -148,8 +148,8 @@ plotUnivar <- function(dataset=NULL,
 
     # Graph the abundance data for each significant feature
     if(violin) {
-      p <- ggviolin(ftTab,x=factor$name,y='Abundance',color=factor$name,size=1,
-                    add = c('mean_sd'))+
+      p <- ggpubr::ggviolin(ftTab,x=factor$name,y='Abundance',color=factor$name,size=1,
+                            add = c('mean_sd'))+
         scale_color_manual(values=colors)+
         labs(y=paste0(isnrml,'Abundance'),title=paste0(gsub('\\.',' ',ft),israw),colour=factor$name_text)+
         theme(plot.title = element_text(hjust = 0.5,size = 24),
@@ -160,8 +160,8 @@ plotUnivar <- function(dataset=NULL,
               axis.text.x = element_text(size=20))+
         expand_limits(y=0)
     } else {
-      p <- ggboxplot(ftTab,x=factor$name,y='Abundance',color=factor$name,size=1,
-                     add = addlist, add.params = addlistparam)+
+      p <- ggpubr::ggboxplot(ftTab,x=factor$name,y='Abundance',color=factor$name,size=1,
+                             add = addlist, add.params = addlistparam)+
         scale_color_manual(values=colors)+
         labs(y=paste0(isnrml,'Abundance'),title=paste0(gsub('\\.',' ',ft),israw),colour=factor$name_text)+
         theme(plot.title = element_text(hjust = 0.5,size = 30),
@@ -203,23 +203,23 @@ plotUnivar <- function(dataset=NULL,
       if(!is.null(stats$pw_stats)) {
         pw_stats <- stats$pw_stats[stats$pw_stats$.y.==ft,]
         pw_stats$y.position <- 1.1*pw_stats$y.position
-        p <- p+stat_pvalue_manual(pw_stats,
-                                  label='p.adj.signif',
-                                  label.size = 9,
-                                  bracket.size = 1,
-                                  tip.length = 0,
-                                  step.increase = 0.1,
-                                  hide.ns = T)
+        p <- p+ggpubr::stat_pvalue_manual(pw_stats,
+                                          label='p.adj.signif',
+                                          label.size = 9,
+                                          bracket.size = 1,
+                                          tip.length = 0,
+                                          step.increase = 0.1,
+                                          hide.ns = T)
       } else {
         tot_stats <- stats$stats[stats$stats$.y.==ft,]
         tot_stats$y.position <- 1.1*tot_stats$y.position
-        p <- p+stat_pvalue_manual(tot_stats,
-                                  label='p.adj.signif',
-                                  label.size = 9,
-                                  bracket.size = 1,
-                                  tip.length = 0,
-                                  step.increase = 0.1,
-                                  hide.ns = T)
+        p <- p+ggpubr::stat_pvalue_manual(tot_stats,
+                                          label='p.adj.signif',
+                                          label.size = 9,
+                                          bracket.size = 1,
+                                          tip.length = 0,
+                                          step.increase = 0.1,
+                                          hide.ns = T)
       }
     }
     show(p)

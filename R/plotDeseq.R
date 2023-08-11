@@ -62,9 +62,9 @@ plotDeseq <- function(dataset=NULL,
 
   temp <- plottab.all
   temp$count <- 1
-  temp <- temp %>% pivot_wider(id_cols=c('Reference','Feature'),
-                               names_from='Contrast',
-                               values_from='count')
+  temp <- temp %>% tidyr::pivot_wider(id_cols=c('Reference','Feature'),
+                                      names_from='Contrast',
+                                      values_from='count')
   unique_fts <- temp$Feature[complete.cases(temp)]
   other_fts <- temp$Feature[!complete.cases(temp)]
 
@@ -80,9 +80,9 @@ plotDeseq <- function(dataset=NULL,
       })
     }
 
-    p_unique <- ggbarplot(plottab.unique, x='Feature', y='log2FoldChange',
-                          fill='Contrast', color='white',
-                          position = position_dodge(), order=ftorder$Feature)+
+    p_unique <- ggpubr::ggbarplot(plottab.unique, x='Feature', y='log2FoldChange',
+                                  fill='Contrast', color='white',
+                                  position = position_dodge(), order=ftorder$Feature)+
       geom_hline(yintercept=0, linetype='solid', color='darkgray', size=1)+
       scale_fill_manual(values=colors[names(colors) %in% as.character(unique(plottab.unique$Contrast))])+
       labs(y=paste0('Log2FC vs ', plottab.unique$Reference))+
@@ -124,9 +124,9 @@ plotDeseq <- function(dataset=NULL,
   if(length(other_fts)) {
     plottab.other <- plottab.all[plottab.all$Feature %in% other_fts,]
 
-    p_others <- ggbarplot(plottab.other, x='Feature', y='log2FoldChange',
-                         fill='Contrast', color='white',
-                         position = position_dodge(), order=ftorder$Feature)+
+    p_others <- ggpubr::ggbarplot(plottab.other, x='Feature', y='log2FoldChange',
+                                  fill='Contrast', color='white',
+                                  position = position_dodge(), order=ftorder$Feature)+
       geom_hline(yintercept=0, linetype='solid', color='darkgray', size=1)+
       scale_fill_manual(values=colors[names(colors) %in% as.character(unique(plottab.other$Contrast))])+
       labs(y=paste0('Log2FC vs ', plottab.other$Reference))+

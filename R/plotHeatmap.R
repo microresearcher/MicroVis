@@ -127,10 +127,10 @@ plotHeatmap <- function(dataset=NULL,
     }
   }
 
-  ha <- HeatmapAnnotation(df = factor_anno,
-                          col = ha_coloring,
-                          show_annotation_name = stratify,
-                          show_legend = stratify)
+  ha <- ComplexHeatmap::HeatmapAnnotation(df = factor_anno,
+                                          col = ha_coloring,
+                                          show_annotation_name = stratify,
+                                          show_legend = stratify)
 
   maxval <- max(hm_data)
   minval <- min(hm_data)
@@ -142,18 +142,18 @@ plotHeatmap <- function(dataset=NULL,
 
   if(clustNum>2) suffix <- paste0(suffix,'_',clustNum,'clusters')
 
-  hm <- Heatmap(hm_data,
-                top_annotation = ha, column_gap = unit(3,'mm'),
-                show_column_names = labelSamples,
-                column_split = splitby, column_order = column_order,
-                row_km = clustNum, row_km_repeats = 100, cluster_row_slices = T,
-                show_row_names = labelFeatures,
-                col = colscale,
-                heatmap_legend_param = list(title=value_legend_title,
-                                            legend_direction='horizontal',
-                                            title_position='topcenter'))
+  hm <- ComplexHeatmap::Heatmap(hm_data,
+                                top_annotation = ha, column_gap = unit(3,'mm'),
+                                show_column_names = labelSamples,
+                                column_split = splitby, column_order = column_order,
+                                row_km = clustNum, row_km_repeats = 100, cluster_row_slices = T,
+                                show_row_names = labelFeatures,
+                                col = colscale,
+                                heatmap_legend_param = list(title=value_legend_title,
+                                                            legend_direction='horizontal',
+                                                            title_position='topcenter'))
 
-  hm <- draw(hm,heatmap_legend_side='bottom')
+  hm <- ComplexHeatmap::draw(hm,heatmap_legend_side='bottom')
 
   if(labelFeatures) {
     suffix <- paste0(suffix,'_ftslabeled')

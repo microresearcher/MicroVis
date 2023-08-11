@@ -91,8 +91,8 @@ mvstratify <- function(dataset=NULL, factor=NULL, stratifiers=NULL, rank=NULL, m
   melted <- mvmelt(dataset,rank=rank)
 
   for(stratum in stratifiers) {
-    melted <- melted %>% group_by(get(stratum),.add=TRUE)
-    melted <- melted %>% select(-stratum)
+    melted <- melted %>% dplyr::group_by(get(stratum),.add=TRUE)
+    melted <- melted %>% dplyr::select(-stratum)
     colnames(melted)[ncol(melted)] <- stratum
   }
 

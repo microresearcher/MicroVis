@@ -63,18 +63,18 @@ plotHeatTree <- function(dataset=NULL,
 
     sizes_list <- fc_tab$Log2FC[fc_tab$Comparison==grp]
 
-    ht <- heat_tree(mvtaxmap,
-                    node_label = mvtaxmap$taxon_names(),
-                    # node_label_size = (sizes_list-min(sizes_list))*2,
-                    node_size = mvtaxmap$n_obs()*20,
-                    node_size_axis_label = 'Prevalence',
-                    node_color = fc_tab$Log2FC[fc_tab$Comparison==grp],
-                    node_color_interval = c(-1*color_limit,color_limit),
-                    node_color_axis_label = paste0('Log2FC ',grp,'/',
-                                                   fc_tab$Reference[[1]]),
-                    node_color_range = c('cyan', 'gray', 'red'),
-                    edge_size = 0.01,
-                    layout = layout)
+    ht <- metacoder::heat_tree(mvtaxmap,
+                               node_label = mvtaxmap$taxon_names(),
+                               # node_label_size = (sizes_list-min(sizes_list))*2,
+                               node_size = mvtaxmap$n_obs()*20,
+                               node_size_axis_label = 'Prevalence',
+                               node_color = fc_tab$Log2FC[fc_tab$Comparison==grp],
+                               node_color_interval = c(-1*color_limit,color_limit),
+                               node_color_axis_label = paste0('Log2FC ',grp,'/',
+                                                              fc_tab$Reference[[1]]),
+                               node_color_range = c('cyan', 'gray', 'red'),
+                               edge_size = 0.01,
+                               layout = layout)
 
     # ht <- heat_tree(mvtaxmap,
     #                 node_label = mvtaxmap$taxon_names(),

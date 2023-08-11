@@ -56,8 +56,9 @@ foldChange <- function(dataset=NULL, factor=NULL,
     for(grp in comparison_groups) {
       fc_tab[[grp]] <- summary_tab[[paste0(grp,' Mean')]]/summary_tab[[paste0(ref_group,' Mean')]]
     }
-    fc_tab <- pivot_longer(fc_tab, cols=comparison_groups,
-                           names_to='Comparison', values_to='FC')
+    fc_tab <- tidyr::pivot_longer(fc_tab, cols=comparison_groups,
+                                  names_to='Comparison',
+                                  values_to='FC')
     fc_tab$Log2FC <- log(fc_tab$FC, base=2)
   }
 

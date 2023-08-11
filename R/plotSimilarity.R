@@ -55,11 +55,11 @@ plotSimilarity <- function(dataset=NULL,
   abun_data <- cluster_res$data
 
   if(min(dst)>=0) {
-    corr_clrs <- colorRamp2(c(0,r_cutoff,1),c('white','white','red'))
+    corr_clrs <- circlize::colorRamp2(c(0,r_cutoff,1),c('white','white','red'))
   } else if(max(dst<=0)) {
-    corr_clrs <- colorRamp2(c(-1,-r_cutoff,0),c('white','white','red'))
+    corr_clrs <- circlize::colorRamp2(c(-1,-r_cutoff,0),c('white','white','red'))
   } else {
-    corr_clrs <- colorRamp2(c(-1,-r_cutoff,0,r_cutoff,1),c('white','white','red'))
+    corr_clrs <- circlize::colorRamp2(c(-1,-r_cutoff,0,r_cutoff,1),c('white','white','red'))
   }
 
   # Make a colors list from "clrs" that HeatmapAnnotation() will accept
@@ -71,17 +71,17 @@ plotSimilarity <- function(dataset=NULL,
     }
   }
 
-  ha <- HeatmapAnnotation(df = abun_data[names(ha_coloring)],
-                          col = ha_coloring)
+  ha <- ComplexHeatmap::HeatmapAnnotation(df = abun_data[names(ha_coloring)],
+                                          col = ha_coloring)
 
   # The Heatmap function from ComplexHeatmap is expansive and can also do the
   #   distance calculation for us, but we want the option to modify values
   #   afterwards and also record the clusters, so the function does the calculation
   #   on its own
-  hm <- Heatmap(as.matrix(dst),
-                col = corr_clrs,
-                top_annotation = ha,
-                clustering_method_columns = clust_method)
+  hm <- ComplexHeatmap::Heatmap(as.matrix(dst),
+                                col = corr_clrs,
+                                top_annotation = ha,
+                                clustering_method_columns = clust_method)
   draw(hm)
 
   save_directory <- saveResults(dataset, foldername = 'Similarity Matrices',

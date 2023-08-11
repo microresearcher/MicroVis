@@ -69,11 +69,11 @@ plotBetaDiv <- function(dataset=NULL,
   suffix <- paste0('_bdiv_',method)
 
   if(is.null(stratifier)) {
-    p <- ggscatter(coord_data,x='Axis.1',y='Axis.2',
-                   color=factor$name,size = 3,
-                   ellipse = ellipse,ellipse.level = ci,ellipse.alpha = 0,
-                   star.plot = spokes,
-                   add.params = list(lwd=1))+
+    p <- ggpubr::ggscatter(coord_data,x='Axis.1',y='Axis.2',
+                           color=factor$name,size = 3,
+                           ellipse = ellipse,ellipse.level = ci,ellipse.alpha = 0,
+                           star.plot = spokes,
+                           add.params = list(lwd=1))+
       scale_color_manual(values=colors)+
       labs(colour=factor$name_text)
   }
@@ -87,10 +87,10 @@ plotBetaDiv <- function(dataset=NULL,
     coord_data[[stratified_factor]] <- factor(coord_data[[stratified_factor]],
                                               levels = reordered)
 
-    p <- ggscatter(coord_data, x='Axis.1',y='Axis.2',
-                   color=stratified_factor,shape=stratified_factor,size = 3,
-                   ellipse = ellipse,ellipse.level = ci,ellipse.alpha = 0,
-                   star.plot = spokes, star.plot.lwd = 1)+
+    p <- ggpubr::ggscatter(coord_data, x='Axis.1',y='Axis.2',
+                           color=stratified_factor,shape=stratified_factor,size = 3,
+                           ellipse = ellipse,ellipse.level = ci,ellipse.alpha = 0,
+                           star.plot = spokes, star.plot.lwd = 1)+
       labs(colour=gsub('_',' and ',stratified_factor))+
       guides(shape='none')
 
@@ -131,12 +131,12 @@ plotBetaDiv <- function(dataset=NULL,
     guides(fill='none')
 
   if(labelSamples) {
-    p<-p+geom_label_repel(aes(label=sample))
+    p<-p+ggrepel::geom_label_repel(aes(label=sample))
     suffix <- paste0(suffix,'_labeled')
   }
 
   if(separateLegend) {
-    if(!exists('p_legend',inherits = F)) p_legend <- as_ggplot(get_legend(p))
+    if(!exists('p_legend',inherits = F)) p_legend <- ggpubr::as_ggplot(get_legend(p))
     p <- p+theme(legend.position = 'none')
     suffix <- paste0(suffix,'_nolegend')
     legend_output_location <- paste0(dataset$results_path,'/Results_',Sys.Date(),'/Beta Diversity/')

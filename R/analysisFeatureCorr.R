@@ -60,7 +60,7 @@ ftcor <- function(dataset1=NULL,dataset2=NULL,
 
   cormats_bygrp <- list()
 
-  cormat <- rcorr(as.matrix(abun_data[allfts]),type=method)
+  cormat <- Hmisc::rcorr(as.matrix(abun_data[allfts]),type=method)
   cormat$n <- NULL
   if(is.null(dataset2)) diag(cormat$r) <- 0
   for(mat in names(cormat)) {
@@ -72,7 +72,7 @@ ftcor <- function(dataset1=NULL,dataset2=NULL,
 
   for(grp in factor$subset) {
     abun.temp <- abun_data[abun_data[[factor$name]]==grp,][allfts]
-    cormat <- rcorr(as.matrix(abun.temp[allfts],type=method))
+    cormat <- Hmisc::rcorr(as.matrix(abun.temp[allfts],type=method))
     cormat$n <- NULL
     if(is.null(dataset2)) diag(cormat$r) <- 0
     for(mat in names(cormat)) {
@@ -138,7 +138,9 @@ sliceCormats <- function(cormats,
       if(adjustp) pvals <- cormat$q
       else pvals <- cormat$P
       pvals$Feature1 <- rownames(pvals)
-      pvals <- pvals %>% pivot_longer(cols=colnames(cormat$q),names_to='Feature2',values_to='q')
+      pvals <- pvals %>% tidyr::pivot_longer(cols=colnames(cormat$q),
+                                             names_to='Feature2',
+                                             values_to='q')
       sigs1 <- pvals[pvals$q<=alpha,]$Feature1
       sigs2 <- pvals[pvals$q<=alpha,]$Feature2
 
@@ -157,7 +159,7 @@ sliceCormats <- function(cormats,
       # Get the correlations above an r cutoff
       rvals <- cormat$r
       rvals$Feature1 <- rownames(rvals)
-      rvals <- rvals %>% pivot_longer(cols=colnames(cormat$r),names_to='Feature2',values_to='r')
+      rvals <- rvals %>% tidyr::pivot_longer(cols=colnames(cormat$r),names_to='Feature2',values_to='r')
       highrs1 <- rvals[abs(rvals$r)>=r_cutoff,]$Feature1
       highrs2 <- rvals[abs(rvals$r)>=r_cutoff,]$Feature2
 

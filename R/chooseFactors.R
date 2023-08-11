@@ -35,7 +35,7 @@ chooseFactors <- function(dataset) {
           minval <- min(metadata[[f]],na.rm = T)
           maxval <- max(metadata[[f]],na.rm = T)
           prompt <- paste('Space-separated list of numbers between',minval,'and',maxval,'for cutoffs: ')
-          while(!all(between(cutoffs, minval, maxval))) {
+          while(!all(dplyr::between(cutoffs, minval, maxval))) {
             cutoffs <- as.numeric(unlist(strsplit(readline(prompt),' ')))
           }
           prompt <- 'Are these cutoffs the lower or upper limit?'

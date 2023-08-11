@@ -46,7 +46,7 @@ plotAlphaDiv <- function(dataset=NULL,
 
   # Make the initial plot. Significant difference markers will be added later
   #   if "showStats" is true
-  p <- ggboxplot(div_data,x=factor$name,y=tolower(method),color=factor$name,size=1)+
+  p <- ggpubr::ggboxplot(div_data,x=factor$name,y=tolower(method),color=factor$name,size=1)+
     scale_color_manual(values=colors)+
     scale_y_continuous(expand=expansion(mult=c(.1,.1)))+
     labs(y=paste(capitalize(method),'Index'),
@@ -107,22 +107,22 @@ plotAlphaDiv <- function(dataset=NULL,
     if(!is.null(stats$pw_stats)) {
       pw_stats <- stats$pw_stats
       pw_stats$y.position <- 1.1*pw_stats$y.position
-      p <- p+stat_pvalue_manual(pw_stats,
-                                label='p.adj.signif',
-                                label.size = 9,
-                                step.increase=0.03,
-                                bracket.size=1,
-                                tip.length=0,
-                                hide.ns=T)
+      p <- p+ggpubr::stat_pvalue_manual(pw_stats,
+                                        label='p.adj.signif',
+                                        label.size = 9,
+                                        step.increase=0.03,
+                                        bracket.size=1,
+                                        tip.length=0,
+                                        hide.ns=T)
     } else if(!is.null(stats$stats)) {
       tot_stats <- stats$stats
       tot_stats$y.position <- 1.1*tot_stats$y.position
-      p <- p+stat_pvalue_manual(tot_stats,
-                                label='p.adj.signif',
-                                label.size = 9,
-                                bracket.size = 1,
-                                tip.length = 0,
-                                hide.ns = T)
+      p <- p+ggpubr::stat_pvalue_manual(tot_stats,
+                                        label='p.adj.signif',
+                                        label.size = 9,
+                                        bracket.size = 1,
+                                        tip.length = 0,
+                                        hide.ns = T)
     }
   }
 

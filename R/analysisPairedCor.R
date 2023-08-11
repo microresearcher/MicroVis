@@ -51,9 +51,9 @@ pairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
   } else if(length(groups)!=2) {
     stop('Must specify 2 groups within ',compare,' to correlate')
   }
-  else if(any(is.na(data.paired %>% pivot_wider(id_cols = ids,
-                                                  names_from = compare,
-                                                  values_from = 'sample')))) {
+  else if(any(is.na(data.paired %>% tidyr::pivot_wider(id_cols = ids,
+                                                       names_from = compare,
+                                                       values_from = 'sample')))) {
     stop('Data for each ',paste0(ids,collapse = '-'),' must have exactly 2 values for ',compare)
   }
 
@@ -64,10 +64,10 @@ pairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
   cor_rvals <- c()
   cor_pvals <- c()
   for(ft in fts) {
-    pivoted <- data.paired[c(ids,compare,ft)] %>% pivot_wider(id_cols=ids,
-                                                              names_from=compare,
-                                                              values_from=ft)
-    corvals <- rcorr(as.matrix(pivoted[groups]))
+    pivoted <- data.paired[c(ids,compare,ft)] %>% tidyr::pivot_wider(id_cols=ids,
+                                                                     names_from=compare,
+                                                                     values_from=ft)
+    corvals <- Hmisc::rcorr(as.matrix(pivoted[groups]))
     cor_rvals[[ft]] <- corvals$r[1,2]
     cor_pvals[[ft]] <- corvals$P[1,2]
   }

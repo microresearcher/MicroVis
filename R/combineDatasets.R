@@ -32,7 +32,7 @@ mvcombine <- function(path_to_folder=NA) {
   # Then load taxonomy tables
   message('\nSelect taxonomy file for first dataset')
   Sys.sleep(0.1)
-  taxa.a_path <- selectFile(path = file.path(project_dir))
+  taxa.a_path <- rstudioapi::selectFile(path = file.path(project_dir))
   if(!is.null(taxa.a_path)) {
     taxa$a <- read.csv(taxa.a_path,header=F)
     rank_cols$a <- c()
@@ -43,7 +43,7 @@ mvcombine <- function(path_to_folder=NA) {
   # Then load pathways table
   message('\nSelect pathways file for first dataset')
   Sys.sleep(0.1)
-  pwys.a_path <- selectFile(path = file.path(project_dir))
+  pwys.a_path <- rstudioapi::selectFile(path = file.path(project_dir))
   if(!is.null(pwys.a_path)) {
     pwys$a <- read.csv(pwys.a_path,header=F)
   }
@@ -63,7 +63,7 @@ mvcombine <- function(path_to_folder=NA) {
   if(!is.null(taxa.a_path)) {
     message('\nSelect taxonomy file for second dataset')
     Sys.sleep(0.1)
-    taxa.b_path <- selectFile(path = file.path(project_dir))
+    taxa.b_path <- rstudioapi::selectFile(path = file.path(project_dir))
     taxa$b <- read.csv(taxa.b_path,header=FALSE)
     rank_cols$b <- c()
     for(rank in get('taxaranks',envir = mvEnv)) {
@@ -75,7 +75,7 @@ mvcombine <- function(path_to_folder=NA) {
   if(!is.null(pwys.a_path)) {
     message('\nSelect pathways file for second dataset')
     Sys.sleep(0.1)
-    pwys.b_path <- selectFile(path = file.path(project_dir))
+    pwys.b_path <- rstudioapi::selectFile(path = file.path(project_dir))
     pwys$b <- read.csv(pwys.b_path,header=F)
   }
 
@@ -121,13 +121,13 @@ mvcombine <- function(path_to_folder=NA) {
   }
 
   if(length(taxa)) {
-    taxa_data <- full_join(taxa$a,taxa$b)
+    taxa_data <- dplyr::full_join(taxa$a,taxa$b)
     taxa_data[is.na(taxa_data)] <- 0
     combined_paths$taxa <- file.path(project_dir,paste0(ds_names$a,'_',ds_names$b,'_combined-taxa.csv'))
     write.csv(taxa_data,file = combined_paths$taxa,row.names = F)
   }
   if(length(pwys)) {
-    pwys_data <- full_join(pwys$a,pwys$b)
+    pwys_data <- dplyr::full_join(pwys$a,pwys$b)
     pwys_data[is.na(pwys_data)] <- 0
     combined_paths$pwys <- file.path(project_dir,paste0(ds_names$a,'_',ds_names$b,'_combined-pwys.csv'))
     write.csv(taxa_data,file = combined_paths$pwys,row.names = F)
