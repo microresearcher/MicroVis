@@ -11,11 +11,12 @@ plotStackedBars(
   stratify = F,
   bySample = F,
   allSamples = F,
+  paired_ids = c(),
   unfiltered = T,
   label_unknown = T,
   rank = NA,
   top = 15,
-  top_by = "max",
+  top_by = "mean",
   ftlist = c(),
   plotSigs = F,
   alpha = 0.05,
@@ -34,8 +35,11 @@ plotStackedBars(
 \item{bySample}{Whether to show a bar for each sample instead of aggregating
 samples by groups. Defaults to FALSE}
 
-\item{allSamples}{Whether to plot a single bar for all the samples in the
+\item{allSamples}{Whether to plot a single graph for all the samples in the
 dataset. Defaults to FALSE}
+
+\item{paired_ids}{Plot samples paired by "factor", with each pair having
+a unique combination of IDs determined by this variable (as a vector)}
 
 \item{unfiltered}{Whether to use data before or after filtering out features.
 Defaults to TRUE (uses data before filtering)}
