@@ -186,7 +186,6 @@ av <- function(data) {
 }
 
 
-#' @importFrom VGAM rdiric
 #' @noRd
 norm_diric   <- function(x, rep=1) {
   dmat <- VGAM::rdiric(rep, x+1)

@@ -33,7 +33,6 @@ mvNetwork <- function(dataset=NULL,
 
   method <- match.arg(method)
   if(length(grep('se\\.',method)) & requireNamespace('SpiecEasi',quietly = T)) {
-    library(SpiecEasi)
     method <- gsub('se\\.','',method)
     cat('\nBuilding network with SpiecEasi\n')
     ### Using spiec-easi ###
@@ -104,8 +103,6 @@ getNetwork <- function(dataset=NULL,
   format <- match.arg(format)
 
   if(format=='network' & requireNamespace('network')) {
-    library('network')
-
     net <- network::as.network(as.matrix(dataset$networks[[rank]]),
                                matrix.type='adjacency',
                                directed=T,
@@ -118,7 +115,6 @@ getNetwork <- function(dataset=NULL,
     net %e% 'weight' <- abs(net %e% 'value')
 
   } else if(format=='igraph' & requireNamespace('igraph')) {
-    library(igraph)
     net <- igraph::graph_from_adjacency_matrix(dataset$networks[[rank]],
                                                weighted = T)
 

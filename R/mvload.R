@@ -18,17 +18,12 @@
 #' @return List of successfully loaded datasets with/without processing.
 #' @export
 #'
-#' @importFrom graphics barplot
+#' @importFrom graphics legend barplot
 #' @importFrom grid textGrob gpar
-#' @importFrom picante pd prune.sample
-#' @importFrom metacoder calc_taxon_abund heat_tree parse_tax_data
 #' @importFrom circlize colorRamp2
-#' @importFrom ComplexHeatmap HeatmapAnnotation Heatmap draw
-#' @importFrom microbiomeMarker run_lefse plot_cladogram
 #' @importFrom phyloseq phyloseq otu_table tax_table sample_data merge_phyloseq ntaxa taxa_names UniFrac
-#' @importFrom DESeq2 DESeqDataSetFromMatrix DESeq resultsNames results
 #' @import rstudioapi
-#' @importFrom stats IQR aggregate formula sd as.formula median na.exclude relevel p.adjust prcomp cor as.dist cutree hclust complete.cases
+#' @importFrom stats anova cov cov2cor runif IQR aggregate formula sd as.formula median na.exclude relevel p.adjust prcomp cor as.dist cutree hclust complete.cases
 #' @importFrom utils head read.csv select.list type.convert
 #' @importFrom methods show
 #' @import stringr
@@ -40,19 +35,13 @@
 #' @import rstatix
 #' @importFrom vegan rrarefy rarecurve diversity vegdist adonis adonis2 betadisper
 #' @importFrom ape rtree pcoa biplot.pcoa
-#' @importFrom randomForest randomForest
-#' @importFrom Boruta Boruta TentativeRoughFix
-#' @importFrom grDevices dev.off png
+#' @importFrom grDevices dev.off png rainbow
 #' @importFrom utils View write.csv stack
 #' @importFrom S4Vectors unfactor
 #' @rawNamespace import(crayon,except=c('%+%'))
 #' @importFrom purrr reduce
 #' @importFrom scales pretty_breaks
-#' @importFrom limma lmFit eBayes
-#' @importFrom matrixStats colQuantiles
 #' @importFrom Hmisc rcorr
-#' @importFrom zCompositions cmultRepl
-#' @importFrom ALDEx2 aldex.clr aldex.ttest aldex.kw aldex.effect
 #'
 mvload <- function(path_to_folder=NULL,path_to_metadata=NA,path_to_taxa=NA,path_to_fxnl=NA,
                    autoProcess=T,combineDupes=T,combineDataSets=F) {

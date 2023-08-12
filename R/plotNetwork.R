@@ -28,8 +28,7 @@ plotNetwork <- function(dataset=NULL,
                         fill=NULL, outline=NULL, labelfts=NULL, labelAll=F,
                         deg_cutoff=0, r_cutoff=0, top_r_prop=100,
                         layout=c('fr','circle','sphere','dh','nicely')) {
-  if(requireNamespace('igraph',quietly = T)) library(igraph)
-  else stop('Must install igraph to plot networks')
+  if(!requireNamespace('igraph',quietly = T)) stop('Must install igraph to plot networks\n')
 
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 

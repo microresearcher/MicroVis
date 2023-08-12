@@ -592,8 +592,8 @@ zeroReplace <- function(x) {
 
   } else if(get('zeroReplaceMethod', envir=mvEnv)$method=='impute') {
     x.nozeros <- data.frame(zCompositions::cmultRepl(x,
-                                                      output = 'p-counts',
-                                                      suppress.print = T))
+                                                     output = 'p-counts',
+                                                     suppress.print = T))
   }
 
 
