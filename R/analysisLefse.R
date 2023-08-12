@@ -29,7 +29,6 @@ mvlefse <- function(dataset=NULL, dataset_name=NULL) {
 
   assign('active_dataset',dataset,envir = mvEnv)
   if(!is.null(dataset$name)) assign(dataset$name,dataset,1)
-  # if(dataset_name!='active_dataset') assign(dataset_name,dataset,1)
 
   return(dataset)
 }
