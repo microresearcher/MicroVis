@@ -21,8 +21,8 @@ mvdeseq <- function(dataset=NULL,
                     dataset_name=NULL) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
-  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
-  else dataset_name <- dataset$name
+  # if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  # else dataset_name <- dataset$name
 
   rank <- rank[rank %in% getRanks(dataset)]
   if(is.null(rank)) rank <- dataset$data$proc$active_rank
@@ -87,7 +87,8 @@ mvdeseq <- function(dataset=NULL,
   dataset$stats[[factor$name]]$deseq[[rank]] <- deseq_res
 
   assign('active_dataset',dataset,envir = mvEnv)
-  if(dataset_name!='active_dataset') assign(dataset_name,dataset,1)
+  if(!is.null(dataset$name)) assign(dataset$name,dataset,1)
+  # if(dataset_name!='active_dataset') assign(dataset_name,dataset,1)
 
   return(dataset)
 }

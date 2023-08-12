@@ -12,8 +12,8 @@
 mvlefse <- function(dataset=NULL, dataset_name=NULL) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
-  if(is.null(dataset$name)) dataset_name <- 'active_dataset'
-  else dataset_name <- dataset$name
+  # if(is.null(dataset$name)) dataset_name <- 'active_dataset'
+  # else dataset_name <- dataset$name
 
   factor <- setFVar(dataset)
 
@@ -27,8 +27,9 @@ mvlefse <- function(dataset=NULL, dataset_name=NULL) {
 
   dataset$stats[[factor$name]]$lefse <- mm
 
-  assign('active_dataset', dataset,envir = mvEnv)
-  if(dataset_name!='active_dataset') assign(dataset_name,dataset,1)
+  assign('active_dataset',dataset,envir = mvEnv)
+  if(!is.null(dataset$name)) assign(dataset$name,dataset,1)
+  # if(dataset_name!='active_dataset') assign(dataset_name,dataset,1)
 
   return(dataset)
 }
