@@ -57,7 +57,7 @@ plotLMEM <- function(dataset=NULL,
                                               shape=Contrast, color=Diff, size=-log10(padj), label=FeatureLabel))+
       geom_point(alpha = 0.5)+
       ggpubr::theme_pubr()+
-      geom_text_repel(alpha=1, show.legend=F)+
+      ggrepel::geom_text_repel(alpha=1, show.legend=F)+
       scale_color_manual(values=colors)+
       geom_vline(xintercept=c(-log2(fc), log2(fc)), col="black", alpha=0.5)+
       geom_hline(yintercept=-log10(alpha), col="black", alpha=0.5)+
