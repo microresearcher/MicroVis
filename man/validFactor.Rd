@@ -4,10 +4,12 @@
 \alias{validFactor}
 \title{Factor Validation}
 \usage{
-validFactor(dataset)
+validFactor(dataset, factor_name = NULL)
 }
 \arguments{
 \item{dataset}{MicroVis dataset (mvdata object)}
+
+\item{factor}{Candidate factor to switch to.}
 }
 \value{
 Dataset with a new active factor.

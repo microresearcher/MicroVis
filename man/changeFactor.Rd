@@ -7,9 +7,9 @@
 changeFactor(dataset = NULL, factor_name = NULL, temp = F)
 }
 \arguments{
-\item{dataset}{Microvis dataset (mvdata)}
+\item{dataset}{Microvis dataset (mvdata).}
 
-\item{factor_name}{(Optional) Name of factor to switch to}
+\item{factor_name}{(Optional) Name of factor to switch to.}
 
 \item{temp}{If set to TRUE, this will not update the active dataset.}
 }

@@ -4,13 +4,15 @@
 \alias{makeDeseq}
 \title{Make a DESeq object from a MicroVis dataset}
 \usage{
-makeDeseq(dataset = NULL, baseline = NULL)
+makeDeseq(dataset = NULL, baseline = NULL, rank = NULL)
 }
 \arguments{
 \item{dataset}{MicroVis dataset. Default is the active dataset}
 
 \item{baseline}{A reference group for building the DESeq dataset. If
 none is selected the user will be asked to select one during function run.}
+
+\item{rank}{Rank at which to create DESeq object}
 }
 \value{
 DESeq object

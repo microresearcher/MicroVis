@@ -4,12 +4,14 @@
 \alias{makeAldex}
 \title{Make an ALDEx2 CLR Object}
 \usage{
-makeAldex(dataset = NULL, factor = NULL)
+makeAldex(dataset = NULL, factor = NULL, rank = NULL)
 }
 \arguments{
 \item{dataset}{MicroVis dataset. Default is the active dataset}
 
 \item{factor}{Factor to use as condition in making the ALDEx2 object}
+
+\item{rank}{Rank at which to create ALDEx2 object}
 }
 \value{
 An aldex.clr object

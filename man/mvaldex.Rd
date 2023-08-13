@@ -4,7 +4,7 @@
 \alias{mvaldex}
 \title{ALDEx2 Differential Abundance Analysis}
 \usage{
-mvaldex(dataset = NULL)
+mvaldex(dataset = NULL, rank = NULL)
 }
 \arguments{
 \item{dataset}{MicroVis dataset. Default is the active dataset}
