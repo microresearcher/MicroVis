@@ -5,10 +5,13 @@
 #' @return Results of ALDEx2 differential abundance analysis
 #' @export
 #'
-mvaldex <- function(dataset=NULL) {
+mvaldex <- function(dataset=NULL, rank=NULL) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
-  aldex_obj <- makeAldex(dataset)
+  rank <- rank[rank %in% getRanks(dataset)]
+  if(is.null(rank)) rank <- dataset$data$proc$active_rank
+
+  aldex_obj <- makeAldex(dataset,rank = rank)
 
   numgrps <- nrow(countSamples(dataset, getSizes = T, verbose = F)[[dataset$active_factor]])
   if(numgrps==2) {

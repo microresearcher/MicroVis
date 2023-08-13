@@ -1,7 +1,7 @@
 #' Switch to a Different Factor
 #'
-#' @param dataset Microvis dataset (mvdata)
-#' @param factor_name (Optional) Name of factor to switch to
+#' @param dataset Microvis dataset (mvdata).
+#' @param factor_name (Optional) Name of factor to switch to.
 #' @param temp If set to TRUE, this will not update the active dataset.
 #'
 #' @return Dataset with new primary factor
@@ -27,9 +27,9 @@ changeFactor <- function(dataset=NULL, factor_name=NULL, temp=F) {
   }
 
   new_dataset <- dataset
-  new_dataset$active_factor <- factor_name
 
-  if(!validFactor(new_dataset)) return(dataset)
+  if(validFactor(dataset, factor_name)) new_dataset$active_factor <- factor_name
+  else stop('\nFactor has not been changed. See warning message below.\n')
 
   if(!is.null(new_dataset$name)) assign(new_dataset$name,new_dataset,1)
   return(activate(new_dataset))
@@ -42,31 +42,35 @@ changeFactor <- function(dataset=NULL, factor_name=NULL, temp=F) {
 #'     factor will be chosen.
 #'
 #' @param dataset MicroVis dataset (mvdata object)
+#' @param factor Candidate factor to switch to.
 #'
 #' @return Dataset with a new active factor.
 #' @export
 #'
-validFactor <- function(dataset) {
-  active_factor <- dataset$active_factor
+validFactor <- function(dataset, factor_name=NULL) {
   factors <- dataset$factors
+  factor_name <- factor_name[factor_name %in% names(factors)]
 
-  cat('\nCurrent active factor is',active_factor,'\n')
+  if(is.null(factor_name)) chosen_factor <- dataset$active_factor
+  else chosen_factor <- factor_name
+
+  cat('\nCurrent active factor is',chosen_factor,'\n')
 
   valid <- T
-  if(length(factors[[active_factor]]$subset) < 2) {
-    message('\nWARNING: Fewer than 2 groups remaining in ', active_factor, ' comparative analyses will not work')
+  if(length(factors[[chosen_factor]]$subset) < 2) {
+    warning('\n Fewer than 2 groups remaining in "', chosen_factor, '". Comparative analyses will not work')
     valid <- F
   }
 
   grp_sizes <- countSamples(dataset,getSizes = T)
-  if(sum(grp_sizes[[active_factor]]$Size>2)<2) {
-    message('\nERROR: This factor has fewer than 2 groups remaining with at least 3 samples each\n')
+  if(sum(grp_sizes[[chosen_factor]]$Size>2)<2) {
+    warning('\n This factor has fewer than 2 groups remaining with at least 3 samples each\n')
     valid <- F
   }
 
   # If, after trying to reset the active factor, the number of subsetted groups is still < 1
   #   then warn the user
-  # if(length(factors[[active_factor]]$subset) < 2) {
+  # if(length(factors[[dataset$active_factor]]$subset) < 2) {
   #   message('\nWARNING: Fewer than 2 groups remaining in ', active_factor, ' comparative analyses will not work')
   # }
 

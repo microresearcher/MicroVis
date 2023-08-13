@@ -57,11 +57,12 @@ makePS <- function(dataset=NULL) {
 #'
 #' @param dataset MicroVis dataset. Default is the active dataset
 #' @param factor Factor to use as condition in making the ALDEx2 object
+#' @param rank Rank at which to create ALDEx2 object
 #'
 #' @return An aldex.clr object
 #' @export
 #'
-makeAldex <- function(dataset=NULL, factor=NULL) {
+makeAldex <- function(dataset=NULL, factor=NULL, rank=NULL) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   dataset <- clearNormalization(dataset, temp = T, silent = T)
@@ -69,6 +70,8 @@ makeAldex <- function(dataset=NULL, factor=NULL) {
   factor <- setFVar(dataset)
 
   active_rank <- dataset$data$proc$active_rank
+  if(is.null(active_rank)) active_rank <- dataset$data$proc$active_rank
+
   abun <- dataset$data$proc[[active_rank]]
   abun$Other <- NULL
   abun$Unknown <- NULL
@@ -88,16 +91,19 @@ makeAldex <- function(dataset=NULL, factor=NULL) {
 #' @param dataset MicroVis dataset. Default is the active dataset
 #' @param baseline A reference group for building the DESeq dataset. If
 #'     none is selected the user will be asked to select one during function run.
+#' @param rank Rank at which to create DESeq object
 #'
 #' @return DESeq object
 #' @export
 #'
-makeDeseq <- function(dataset=NULL,baseline=NULL) {
+makeDeseq <- function(dataset=NULL,baseline=NULL,rank=NULL) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   dataset <- clearNormalization(dataset, temp = T, silent = T)
 
-  active_rank <- dataset$data$proc$active_rank
+  active_rank <- rank[rank %in% getRanks(dataset)]
+  if(is.null(active_rank)) active_rank <- dataset$data$proc$active_rank
+
   abd <- dataset$data$proc[[active_rank]]
   abd$Other <- NULL
   abd$Unknown <- NULL

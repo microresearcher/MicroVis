@@ -25,13 +25,13 @@ mvdeseq <- function(dataset=NULL,
   # else dataset_name <- dataset$name
 
   rank <- rank[rank %in% getRanks(dataset)]
-  if(is.null(rank)) rank <- dataset$data$proc$active_rank
+  if(is.null(rank)) rank <- orig_rank <- dataset$data$proc$active_rank
 
   factor <- factor[factor %in% names(dataset$factors)]
   if(is.null(factor)) factor <- dataset$active_factor
   factor <- setFVar(dataset,factor_name = factor)
 
-  if(!compareAll) dds <- DESeq2::DESeq(makeDeseq(dataset))
+  if(!compareAll) dds <- DESeq2::DESeq(makeDeseq(dataset,rank = rank))
   else dds <- DESeq2::DESeq(makeDeseq(dataset,factor$subset[1]))
 
   result_names <- DESeq2::resultsNames(dds)
@@ -48,7 +48,7 @@ mvdeseq <- function(dataset=NULL,
     comp_grp <- factor$subset[gsub('_',' ',
                                    gsub('[- ;,/]','\\.',factor$subset)) %in% comparison[1]]
 
-    cat('\nAnalyzing ',comp_grp,' vs ',base_grp)
+    cat(paste0('\nAnalyzing "',comp_grp,'" vs "',base_grp,'"'))
 
     temp <- cbind(Reference=rep(base_grp,nrow(res)),
                   Contrast=rep(comp_grp,nrow(res)),
