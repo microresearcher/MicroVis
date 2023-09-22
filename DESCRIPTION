@@ -1,7 +1,7 @@
 Package: MicroVis
 Type: Package
 Title: Microbiome Analysis and Visualization
-Version: 1.0.0
+Version: 1.1.0
 Author: Soham Ali (soham-ali@uiowa.edu)
 Maintainer: Soham Ali <soham-ali@uiowa.edu>
 Description: Package that can be used to easily perform various microbiome analyses and quickly generate publication-ready figures to visualize the data and results.
