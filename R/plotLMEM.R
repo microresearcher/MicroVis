@@ -59,8 +59,8 @@ plotLMEM <- function(dataset=NULL,
       ggpubr::theme_pubr()+
       ggrepel::geom_text_repel(alpha=1, show.legend=F)+
       scale_color_manual(values=colors)+
-      geom_vline(xintercept=c(-log2(fc), log2(fc)), col="black", alpha=0.5)+
-      geom_hline(yintercept=-log10(alpha), col="black", alpha=0.5)+
+      geom_vline(xintercept=c(-log2(fc), log2(fc)), col="black", alpha=0.5, linetype='dashed')+
+      geom_hline(yintercept=-log10(alpha), col="black", linetype='dashed')+
       labs(title=var,
            x=paste0('Log2 Fold Change from "',unique(res[[var]]$Reference),'"'),
            y='-Log10(padj)',
@@ -73,7 +73,7 @@ plotLMEM <- function(dataset=NULL,
             axis.title.x = element_text(size=20),
             axis.text.x = element_text(size=18),
             legend.title = element_blank(),
-            legend.text = element_text(size=18)
+            legend.text = element_text(size=18, margin = margin(r=20))
       )
     if(all(res[[var]]$Diff=='Not Diff')) p[[var]] <- p[[var]]+guides(shape=guide_legend(override.aes=list(size=10)))
 

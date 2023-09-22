@@ -1,11 +1,10 @@
 Package: MicroVis
 Type: Package
-Title: Analysis and Visualization of Metagenomic and other Large Datasets
+Title: Microbiome Analysis and Visualization
 Version: 1.0.0
 Author: Soham Ali (soham-ali@uiowa.edu)
 Maintainer: Soham Ali <soham-ali@uiowa.edu>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: Package that can be used to easily perform various microbiome analyses and quickly generate publication-ready figures to visualize the data and results.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -24,7 +23,6 @@ Imports:
     ape,
     grDevices,
     utils,
-    S4Vectors,
     phyloseq,
     crayon,
     grid,

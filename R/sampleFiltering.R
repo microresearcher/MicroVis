@@ -80,7 +80,7 @@ runSampleFilter <- function(dataset=NULL, temp=F, silent=F) {
   if(!is.null(factors)) grp_sizes <- countSamples(dataset, getSizes = T, verbose = !silent)
   for(f in factors) {
     grp_stats <- grp_sizes[[f$name]]
-    grps <- unfactor(grp_stats[[f$name]])
+    grps <- as.character(grp_stats[[f$name]])
     factors[[f$name]]$subset <- f$groups[f$groups %in% grps]
   }
   dataset$factors <- factors

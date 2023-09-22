@@ -23,7 +23,7 @@ makePS <- function(dataset=NULL) {
   abd$Unknown <- NULL
 
   colnames(abd) <- TaxatoASV(taxa_data,taxalist = colnames(abd), taxa_rank = rank)
-  metadata <- data.frame(lapply(dataset$metadata,function(x) if(is.factor(x)) unfactor(x) else x))
+  metadata <- data.frame(lapply(dataset$metadata, function(x) if(is.factor(x)) as.character(x) else x))
 
   sample_names <- rownames(abd)
 

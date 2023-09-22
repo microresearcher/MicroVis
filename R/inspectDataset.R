@@ -112,13 +112,13 @@ countSamples.base <- function(metadata,
   # Count groups in each stratum (up to 2 levels of stratification), if stratifying
   if(length(stratifiers)) {
     for(f in factors) {
-      if(verbose) cat(paste0('\n  by ',f,' and stratified by ',
-                             paste0(stratifiers,collapse = ' and '),':'))
-
       strata_sizes <- aggregate(as.formula(paste0('Size ~ ',
                                                   paste0(c(f,stratifiers),collapse = '+'))),
                                 metadata[c(f,stratifiers,'Size')],sum)
       if(verbose) {
+        cat(paste0('\n  by ',f,' and stratified by ',
+                   paste0(stratifiers,collapse = ' and '),':'))
+
         for(grp in unique(strata_sizes[[f]])) {
           cat(paste0('\n    ',grp,' contains ',sum(strata_sizes$Size[strata_sizes[[f]]==grp]),
                      ' samples:'))
@@ -129,7 +129,7 @@ countSamples.base <- function(metadata,
       }
       # Identify any strata that are zero in at least one group
       possible_strata <- levels(interaction(strata_sizes[c(f,stratifiers)],sep = ' and '))
-      present_strata <- unfactor(interaction(strata_sizes[c(f,stratifiers)],sep = ' and '))
+      present_strata <- as.character(interaction(strata_sizes[c(f,stratifiers)],sep = ' and '))
       zero_strata <- possible_strata[!(possible_strata %in% present_strata)]
       if(verbose & length(zero_strata)) cat(paste0('\n\n    No samples remaining in:\n      ',
                                                    paste0(zero_strata,collapse = '\n      ')))

@@ -29,7 +29,7 @@ checkGroups <- function(dataset=NULL,factor=NULL,stratifiers=NULL,min_n=3,verbos
   } else {
     for(i in 1:nrow(grp_sizes$stratified[[factor]])) {
       if(grp_sizes$stratified[[factor]][i,'Size'] < min_n) {
-        message(' ',unfactor(interaction(grp_sizes$stratified[[factor]][i,c(factor,stratifiers)],
+        message(' ',as.character(interaction(grp_sizes$stratified[[factor]][i,c(factor,stratifiers)],
                                          sep=' and ')),
                 ' has fewer than ',min_n,' samples')
         anysmallgrps <- T
