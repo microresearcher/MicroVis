@@ -40,7 +40,7 @@ plotRareCurves <- function(dataset=NULL,
   alldata <- c()
   for(i in 1:length(p)) {
     sname <- names(p)[i]
-    sdata <- data.frame(sample_size=as.numeric(str_replace(names(p[[i]]),'N','')),
+    sdata <- data.frame(sample_size=as.numeric(stringr::str_replace(names(p[[i]]),'N','')),
                         richness=p[[i]])
     sdata <- data.frame(sample=rep(sname,nrow(sdata)),sdata)
 

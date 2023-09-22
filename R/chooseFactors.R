@@ -54,7 +54,7 @@ chooseFactors <- function(dataset) {
       }
       factors[[f]] <- list()
       factors[[f]]$name <- f
-      factors[[f]]$name_text <- str_replace(f,'_',' ')
+      factors[[f]]$name_text <- stringr::str_replace(f,'_',' ')
       factors[[f]]$groups <- levels(as.factor(metadata[[f]]))
       factors[[f]]$subset <- factors[[f]]$groups
     }

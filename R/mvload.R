@@ -25,7 +25,7 @@
 #' @importFrom stats anova cov cov2cor runif IQR aggregate formula sd as.formula median na.exclude relevel p.adjust prcomp cor as.dist cutree hclust complete.cases
 #' @importFrom utils head read.csv select.list type.convert
 #' @importFrom methods show
-#' @importFrom stringr str_replace_all str_count str_split
+#' @importFrom stringr str_replace str_replace_all str_count str_split
 #' @importFrom dplyr group_by select slice_max full_join slice_min arrange between bind_rows vars
 #' @importFrom tidyr pivot_longer pivot_wider
 #' @import ggplot2
