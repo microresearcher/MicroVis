@@ -7,6 +7,14 @@
 #'
 makePS <- function(dataset=NULL) {
   # https://vaulot.github.io/tutorials/Phyloseq_tutorial.html
+  if(!requireNamespace('phyloseq', quietly = T)) {
+    stop(paste0('You need to install the "phyloseq" package to do this. This package is required for:\n - ',
+                paste('LEfSe analysis',
+                      'phylogenetic alpha diversity analysis',
+                      'unifrac beta diversity analysis',
+                      sep = '\n - ')))
+  }
+
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   if(dataset$features!='taxa') stop('Phyloseq is intended for taxonomic data only')

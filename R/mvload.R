@@ -21,13 +21,12 @@
 #' @importFrom graphics legend barplot
 #' @importFrom grid textGrob gpar
 #' @importFrom circlize colorRamp2
-#' @importFrom phyloseq phyloseq otu_table tax_table sample_data merge_phyloseq ntaxa taxa_names UniFrac
-#' @import rstudioapi
+#' @importFrom rstudioapi selectFile selectDirectory
 #' @importFrom stats anova cov cov2cor runif IQR aggregate formula sd as.formula median na.exclude relevel p.adjust prcomp cor as.dist cutree hclust complete.cases
 #' @importFrom utils head read.csv select.list type.convert
 #' @importFrom methods show
-#' @import stringr
-#' @import dplyr
+#' @importFrom stringr str_replace_all str_count str_split
+#' @importFrom dplyr group_by select slice_max full_join slice_min arrange between bind_rows vars
 #' @importFrom tidyr pivot_longer pivot_wider
 #' @import ggplot2
 #' @import ggpubr
@@ -37,7 +36,6 @@
 #' @importFrom ape rtree pcoa biplot.pcoa
 #' @importFrom grDevices dev.off png rainbow
 #' @importFrom utils View write.csv stack
-#' @importFrom S4Vectors unfactor
 #' @rawNamespace import(crayon,except=c('%+%'))
 #' @importFrom purrr reduce
 #' @importFrom scales pretty_breaks

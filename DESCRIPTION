@@ -23,7 +23,6 @@ Imports:
     ape,
     grDevices,
     utils,
-    phyloseq,
     crayon,
     grid,
     circlize,
@@ -32,6 +31,7 @@ Imports:
     magrittr,
     Hmisc,
 Suggests:
+    phyloseq,
     randomForest,
     Boruta,
     picante,
