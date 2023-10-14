@@ -18,6 +18,10 @@ mvLMEM <- function(dataset=NULL,
                    zero.handling='pseudo-count',
                    alpha=0.05,
                    is.winsor=T) {
+  if(!requireNamespace('MicrobiomeStat', quietly = T)) {
+    stop('You need to install "phyloseq" package from Bioconductor and "MicrobiomeStat" package in order to perform mixed linear model analysis.')
+  }
+
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   if(!is.null(formula)) formula <- checkFormula(dataset=dataset, formula=formula)
@@ -28,6 +32,9 @@ mvLMEM <- function(dataset=NULL,
     formula <- paste0('~',paste(vars, collapse = '+'))
   } else {
     vars <- getFormulaVars(formula)
+    na_terms <- vars[!(vars %in% colnames(dataset$metadata))]
+    if(length(na_terms)) stop(paste('The following terms are not variables (column names in metadata) in the dataset:',
+                                    paste(na_terms, sep = ',')))
     cat('\nFormula provided for analysis:\n')
   }
 
