@@ -103,6 +103,7 @@ plotPairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
               legend.key.size = unit(1,'cm'),
               legend.text = element_text(size=20))
 
+    # Show the figure only if asking user if they want to save it, otherwise all figures will be shown at the end anyway
     if(get('autosave', envir = mvEnv) | get('offerSave', envir = mvEnv)) show(p[[ft]])
 
     if(!exists('save_one_all',inherits = F)) save_one_all <- NULL
