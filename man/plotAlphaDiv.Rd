@@ -14,6 +14,8 @@ plotAlphaDiv(
   flattenFactors = FALSE,
   param = FALSE,
   showStats = TRUE,
+  width = 6,
+  height = 4.5,
   add_xaxis = F,
   separateLegend = F
 )
@@ -39,6 +41,10 @@ Defaults to the active factor}
 analysis of alpha diversity. Defaults to FALSE (nonparametrized)}
 
 \item{showStats}{Whether or not to show significance labels. Defaults to TRUE}
+
+\item{width}{Width of plot when saved, in inches. Increasing width and height will make text relatively smaller}
+
+\item{height}{Height of plot when saved, in inches. Increasing width and height will make text relatively smaller}
 
 \item{add_xaxis}{Whether to add x-axis labels. Defaults to FALSE}
 

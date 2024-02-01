@@ -207,7 +207,7 @@ chooseGrps <- function(dataset=NULL, factor_names=NULL) {
       grps <- select.list(f$groups,
                           multiple = TRUE,
                           title = 'Select groups to analyze in this factor (you can change this later)',
-                          graphics = TRUE,preselect = f$subset)
+                          graphics = TRUE, preselect = f$subset)
 
       if(isrange) grps <- unlist(lapply(grps, function(x) gsub('=',symbol,x)))
       # If no groups were selected for a given factor(meaning no samples will be selected)

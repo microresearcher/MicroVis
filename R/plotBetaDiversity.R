@@ -88,11 +88,9 @@ plotBetaDiv <- function(dataset=NULL,
                                               levels = reordered)
 
     p <- ggpubr::ggscatter(coord_data, x='Axis.1',y='Axis.2',
-                           color=stratified_factor,shape=stratified_factor,size = 3,
-                           ellipse = ellipse,ellipse.level = ci,ellipse.alpha = 0,
-                           star.plot = spokes, star.plot.lwd = 1)+
-      labs(colour=gsub('_',' and ',stratified_factor))+
-      guides(shape='none')
+                           color=stratified_factor, shape=stratified_factor, size = 3,
+                           ellipse = ellipse, ellipse.level = ci, ellipse.alpha = 0,
+                           star.plot = spokes, star.plot.lwd = 1)
 
     suffix <- paste0(suffix,'_by_',stratifier)
   }
@@ -136,16 +134,22 @@ plotBetaDiv <- function(dataset=NULL,
   }
 
   if(separateLegend) {
-    if(!exists('p_legend',inherits = F)) p_legend <- ggpubr::as_ggplot(get_legend(p))
+    if(!exists('p_legend',inherits = F)) p_legend <- ggpubr::as_ggplot(ggpubr::get_legend(p))
     p <- p+theme(legend.position = 'none')
     suffix <- paste0(suffix,'_nolegend')
-    legend_output_location <- paste0(dataset$results_path,'/Results_',Sys.Date(),'/Beta Diversity/')
-    if(exists('p_legend')) ggsave(legend_output_location,
-                                  filename="Legend.png",
+    legend_output_location <- file.path(resetResDir(dataset$results_path),
+                                        paste0('Results_',Sys.Date()),
+                                        'Beta Diversity')
+    if(exists('p_legend')) {
+      ggsave(filename = file.path(legend_output_location,
+                                            'Legend.png'),
                                   plot=p_legend,
                                   device = 'png',
                                   width = 16,
-                                  height = 6)
+                                  height = 6,
+                                  units = 'in',
+                                  dpi=600)
+    }
   }
 
   show(p)
@@ -154,7 +158,7 @@ plotBetaDiv <- function(dataset=NULL,
               factors = dataset$factors,
               active_factor = factor$name,
               stat_results = stats,
-              width = 10, height = 8,
+              width = 6, height = 4.8,
               suffix = suffix)
 
   activate(dataset)

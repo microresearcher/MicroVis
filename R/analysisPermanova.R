@@ -18,7 +18,7 @@
 mvdist <- function(dataset=NULL, method='bray', weighted=F, allFactors=T, factors=NULL) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
-  if(method=='aitch') {
+  if(tolower(method)=='aitch') {
     dataset <- transData(dataset,temp=T,silent=T,trans_method = 'clr')
     method <- 'euclidean'
   } else dataset <- transData(dataset,temp=T,silent=T,trans_method = 'none')

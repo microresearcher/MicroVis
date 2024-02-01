@@ -12,6 +12,8 @@
 #' @param param Whether to perform parametrized or nonparametrized univariate
 #'     analysis of alpha diversity. Defaults to FALSE (nonparametrized)
 #' @param showStats Whether or not to show significance labels. Defaults to TRUE
+#' @param width Width of plot when saved, in inches. Increasing width and height will make text relatively smaller
+#' @param height Height of plot when saved, in inches. Increasing width and height will make text relatively smaller
 #' @param add_xaxis Whether to add x-axis labels. Defaults to FALSE
 #' @param separateLegend Whether to separate the legend from the plot. Defaults
 #'     to FALSE
@@ -26,6 +28,7 @@ plotAlphaDiv <- function(dataset=NULL,
                          flattenFactors=FALSE,
                          param=FALSE,
                          showStats=TRUE,
+                         width=6, height=4.5,
                          add_xaxis=F, separateLegend=F) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
@@ -46,7 +49,9 @@ plotAlphaDiv <- function(dataset=NULL,
 
   # Make the initial plot. Significant difference markers will be added later
   #   if "showStats" is true
-  p <- ggpubr::ggboxplot(div_data,x=factor$name,y=tolower(method),color=factor$name,size=1)+
+  p <- ggpubr::ggboxplot(div_data, x = factor$name, y = tolower(method),
+                         color = factor$name,
+                         size = 1)+
     scale_color_manual(values=colors)+
     scale_y_continuous(expand=expansion(mult=c(.1,.1)))+
     labs(y=paste(capitalize(method),'Index'),
@@ -73,13 +78,13 @@ plotAlphaDiv <- function(dataset=NULL,
   }
 
   if(separateLegend) {
-    if(!exists('p_legend',inherits = F)) p_legend <- as_ggplot(get_legend(p))
-    p <- p+theme(legend.position = 'none')
+    if(!exists('p_legend',inherits = F)) p_legend <- ggpubr::as_ggplot(ggpubr::get_legend(p))
+    p <- p + theme(legend.position = 'none')
     suffix <- paste0(suffix,'_nolegend')
     legend_output_location <- paste0(dataset$results_path,'/Results_',Sys.Date(),'/Alpha Diversity/')
-    if(exists('p_legend')) ggsave(legend_output_location,
-                                  filename="Legend.png",
-                                  plot=p_legend,
+    if(exists('p_legend')) ggsave(path = legend_output_location,
+                                  filename = "Legend.png",
+                                  plot = p_legend,
                                   device = 'png',
                                   width = 16,
                                   height = 6)
@@ -97,10 +102,10 @@ plotAlphaDiv <- function(dataset=NULL,
                   param=param,
                   dataset_name=dataset_name)
 
-  if(!is.null(facets$x)) p <- facet(p,facet.by=facets$x,nrow=1)+
-    theme(strip.text.x = element_text(size=18))
-  if(!is.null(facets$y)) p <- facet(p,facet.by=facets$y,ncol=1)+
-    theme(strip.text.y = element_text(size=18))
+  if(!is.null(facets$x)) p <- ggpubr::facet(p, facet.by=facets$x, nrow=1)+
+    theme(strip.text.x = ggplot2::element_text(size=25))
+  if(!is.null(facets$y)) p <- ggpubr::facet(p, facet.by=facets$y, ncol=1)+
+    theme(strip.text.y = ggplot2::element_text(size=25))
 
   # Plot the figure
   if(showStats) {
@@ -134,7 +139,7 @@ plotAlphaDiv <- function(dataset=NULL,
               active_factor = factor$name,
               facets = facets,
               stat_results = stats,
-              width = 8, height = 6,
+              width = width, height = height,
               suffix = paste0('_',tolower(method)))
 
 

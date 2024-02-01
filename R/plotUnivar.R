@@ -22,6 +22,8 @@
 #' @param alpha Significance threshold. Defaults to 0.05
 #' @param param Perform parametrized analysis? Defaults to FALSE (non-parametrized
 #'     analysis by default)
+#' @param width Width of plot when saved, in inches. Increasing width and height will make text relatively smaller
+#' @param height Height of plot when saved, in inches. Increasing width and height will make text relatively smaller
 #' @param scalePlot Scale plot by log2? Defaults to FALSE
 #' @param add_xaxis Add group labels to the x-axis? Defaults to FALSE
 #' @param separateLegend Make one separate figure of just the legend instead of
@@ -42,6 +44,7 @@ plotUnivar <- function(dataset=NULL,
                        rank=NULL,
                        ftlist=NULL, unique_groups=NULL, plotAll=F,
                        alpha=0.05, param=F,
+                       width=7, height=6,
                        scalePlot=F,
                        add_xaxis=F, separateLegend=F) {
   #TODO: Need to deal with when flattenFactors is true
@@ -190,9 +193,9 @@ plotUnivar <- function(dataset=NULL,
 
     ### Facet the Plot if Applicable ###
     #----------------------------------#
-    if(!is.null(facets$x)) p <- facet(p,facet.by=facets$x,nrow=1)+
+    if(!is.null(facets$x)) p <- ggpubr::facet(p,facet.by=facets$x,nrow=1)+
       theme(strip.text.x = element_text(size=18))
-    if(!is.null(facets$y)) p <- facet(p,facet.by=facets$y,ncol=1)+
+    if(!is.null(facets$y)) p <- ggpubr::facet(p,facet.by=facets$y,ncol=1)+
       theme(strip.text.y = element_text(size=18))
 
     ### Add Significance Markers ###
@@ -240,7 +243,7 @@ plotUnivar <- function(dataset=NULL,
                                     active_factor = factor$name,
                                     facets = facets,
                                     suffix = paste0(israw,suffix),
-                                    width = 8, height = 6,
+                                    width = width, height = height,
                                     forcesave = T,
                                     verbose = F)
     }

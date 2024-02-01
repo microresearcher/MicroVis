@@ -22,6 +22,8 @@ plotUnivar(
   plotAll = F,
   alpha = 0.05,
   param = F,
+  width = 7,
+  height = 6,
   scalePlot = F,
   add_xaxis = F,
   separateLegend = F
@@ -66,6 +68,10 @@ expressed in these groups}
 
 \item{param}{Perform parametrized analysis? Defaults to FALSE (non-parametrized
 analysis by default)}
+
+\item{width}{Width of plot when saved, in inches. Increasing width and height will make text relatively smaller}
+
+\item{height}{Height of plot when saved, in inches. Increasing width and height will make text relatively smaller}
 
 \item{scalePlot}{Scale plot by log2? Defaults to FALSE}
 
