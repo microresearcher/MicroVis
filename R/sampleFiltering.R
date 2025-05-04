@@ -191,12 +191,15 @@ chooseGrps <- function(dataset=NULL, factor_names=NULL) {
   #   "$proc" tables
   factors <- dataset$factors
 
+  # If no valid factor names were provided in the function call then default to asking about all factors
+  if(!length(factor_names %in% names(factors))) factor_names <- names(factors)
+
   # These variables are just for reference so they do not need to be passed back
   #   to "dataset"
   metadata <- dataset$metadata
 
   if(length(factors)) {
-    for(f in factors) {
+    for(f in factors[names(factors) %in% factor_names]) {
       if(any(grepl('\u2264',f$groups))) {
         isrange <- T
         symbol <- paste(expression('\u2264'))
@@ -204,17 +207,18 @@ chooseGrps <- function(dataset=NULL, factor_names=NULL) {
         isrange <- T
         symbol <- paste(expression('\u2265'))
       } else isrange <- F
+      cat(paste0('Currently selected groups for "', f$name,'":\n'), paste0('  ', f$subset, '\n'), '\n')
       grps <- select.list(f$groups,
                           multiple = TRUE,
                           title = 'Select groups to analyze in this factor (you can change this later)',
-                          graphics = TRUE, preselect = f$subset)
+                          graphics = TRUE)
 
       if(isrange) grps <- unlist(lapply(grps, function(x) gsub('=',symbol,x)))
       # If no groups were selected for a given factor(meaning no samples will be selected)
       #   then default to all the groups in the factor
       if(!length(grps)) {
         grps <- f$groups
-        message('\nWARNING: No groups were selected for ', f$name, ' defaulting to all groups in this factor')
+        message('WARNING: No groups were selected for ', f$name, ' defaulting to all groups in this factor\n')
       } else if(!all(grps %in% f$groups)) {
         # This is just a safety in case some group names were changed internally
         #   In this case, the subsetted groups will not change
@@ -224,45 +228,6 @@ chooseGrps <- function(dataset=NULL, factor_names=NULL) {
     }
     dataset$factors <- factors
   }
-
-  dataset <- processDataset(dataset)
-
-  return(dataset)
-}
-
-#' Select specific samples to analyze
-#'
-#' @param dataset MicroVis dataset. Defaults to the active dataset
-#' @param samples List of samples to analyze
-#' @param includeLowQual Include samples even if they are low quality? Defaults
-#'     to FALSE
-#'
-#' @return Dataset with updated list of samples to ignore
-#' @export
-#'
-chooseSamples <- function(dataset=NULL, samples, includeLowQual=F) {
-  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
-
-  samples <- samples[samples %in% dataset$metadata$sample]
-  if(!length(samples)) stop('None of the specified samples are in the dataset')
-
-  current_samples <- mvmelt(dataset)$sample
-
-  low_quality <- dataset$data$proc$low_quality$low_quality
-  ignored_samples <- dataset$data$proc$ignored_samples
-
-  if(any(samples %in% low_quality)) {
-    if(includeLowQual) low_quality <- low_quality[!(low_quality %in% samples)]
-    else message('\nNote: The following samples are low quality at a reads threshold of ',
-                 dataset$data$proc$low_quality$reads_threshold,' and will not be included:\n',
-                 paste0(samples[samples %in% low_quality], collapse = '\t'),
-                 '\n\nTo include these samples, re-run this function with `includeLowQual=TRUE`\n')
-  }
-
-  ignored_samples <- current_samples[!(current_samples %in% samples)]
-
-  dataset$data$proc$low_quality$low_quality <- low_quality
-  dataset$data$proc$ignored_samples <- ignored_samples
 
   dataset <- processDataset(dataset)
 
@@ -399,10 +364,49 @@ addGrps <- function(dataset=NULL, factor_name=NULL, grps=NULL) {
   return(dataset)
 }
 
+#' Select specific samples to analyze
+#'
+#' @param dataset MicroVis dataset. Defaults to the active dataset
+#' @param samples List of samples to analyze
+#' @param exclude List of samples to exclude. Samples in this list will be excluded even if they are in the "samples" list.
+#' @param includeLowQual Include samples even if they are low quality? Defaults
+#'     to FALSE
+#'
+#' @return Dataset with updated list of samples to ignore
+#' @export
+#'
+chooseSamples <- function(dataset=NULL, samples, exclude=c(), includeLowQual=F) {
+  if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
+
+  samples <- samples[samples %in% dataset$metadata$sample]
+  if(!length(samples)) stop('None of the specified samples are in the dataset')
+
+  current_samples <- mvmelt(dataset)$sample
+
+  low_quality <- dataset$data$proc$low_quality$low_quality
+  ignored_samples <- dataset$data$proc$ignored_samples
+
+  if(any(samples %in% low_quality)) {
+    if(includeLowQual) low_quality <- low_quality[!(low_quality %in% samples)]
+    else message('\nNote: The following samples are low quality at a reads threshold of ',
+                 dataset$data$proc$low_quality$reads_threshold,' and will not be included:\n',
+                 paste0(samples[samples %in% low_quality], collapse = '\t'),
+                 '\n\nTo include these samples, re-run this function with `includeLowQual=TRUE`\n')
+  }
+
+  ignored_samples <- union(setdiff(current_samples, samples), exclude)
+
+  dataset$data$proc$low_quality$low_quality <- low_quality
+  dataset$data$proc$ignored_samples <- ignored_samples
+
+  dataset <- processDataset(dataset)
+
+  return(dataset)
+}
+
 #' Remove Specific Samples
 #'
 #' @param dataset MicroVis dataset (mvdata object)
-#' @param metadata_column This can be removed
 #' @param samples Vector of names of the samples to be removed
 #'
 #' @return MicroVis dataset (mvdata object) with an updated "ignored" lists of
@@ -410,7 +414,7 @@ addGrps <- function(dataset=NULL, factor_name=NULL, grps=NULL) {
 #'
 #' @export
 #'
-removeSamples <- function(dataset=NULL, metadata_column=NULL, samples) {
+removeSamples <- function(dataset=NULL, samples) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   if(is.null(samples)) {
@@ -422,10 +426,6 @@ removeSamples <- function(dataset=NULL, metadata_column=NULL, samples) {
   rank <- ft_data$proc$active_rank
   remaining_samples <- rownames(ft_data$proc[[rank]])
   ignored_samples <- ft_data$proc$ignored_samples
-
-  if(!is.null(metadata_column)) if(metadata_column %in% colnames(dataset$metadata)) {
-    samples <- dataset$metadata$sample[dataset$metadata[[metadata_column]] %in% samples]
-  }
 
   excludelist <- c()
   for(s in samples) {
@@ -455,7 +455,7 @@ removeSamples <- function(dataset=NULL, metadata_column=NULL, samples) {
 #'
 #' @export
 #'
-addSamples <- function(dataset=NULL,samples) {
+addSamples <- function(dataset=NULL, samples) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   if(is.null(samples)) {

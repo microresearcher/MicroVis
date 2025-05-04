@@ -21,7 +21,7 @@
 #'
 plotPairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
                           invert=F,
-                          rthresh=0.7, alpha=0.05, padj=T,
+                          corr_type=c('pearson','spearman'), rthresh=0.7, alpha=0.05, padj=T,
                           showstats=T) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
@@ -53,8 +53,10 @@ plotPairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
   data.paired <- data.paired[data.paired[[compare]] %in% groups,]
   ids <- ids[ids %in% colnames(data.paired)]
 
+  corr_type <- match.arg(corr_type, c('pearson','spearman'))
+
   stats <- pairedCor(ids=ids, compare=compare, fts=fts, rank=rank,
-                     rthresh=rthresh, alpha=alpha, padj=padj,
+                     corr_type=corr_type, rthresh=rthresh, alpha=alpha, padj=padj,
                      data.paired=data.paired, groups=groups)
 
   # cor_rvals <- c()
@@ -93,10 +95,11 @@ plotPairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
                                  title=ft)
     }
 
-    if(showstats) ptemp <- ptemp + ggpubr::stat_cor(size=7,show.legend=F)
+    if(showstats) ptemp <- ptemp + ggpubr::stat_cor(size=7, show.legend=F,
+                                                    cor.coef.name = ifelse(corr_type=='pearson','R','rho'))
 
     p[[ft]] <- ptemp+
-        theme(plot.title = element_text(size=25, hjust=0.5),
+        theme(plot.title = element_text(size=30, hjust=0.5),
               axis.title = element_text(size=25),
               axis.text = element_text(size=20),
               legend.title = element_blank(),

@@ -19,7 +19,7 @@ mvLMEM <- function(dataset=NULL,
                    alpha=0.05,
                    is.winsor=T) {
   if(!requireNamespace('MicrobiomeStat', quietly = T)) {
-    stop('You need to install "phyloseq" package from Bioconductor and "MicrobiomeStat" package in order to perform mixed linear model analysis.')
+    stop('You need to install "MicrobiomeStat" package in order to perform mixed linear model analysis.')
   }
 
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
@@ -35,8 +35,11 @@ mvLMEM <- function(dataset=NULL,
     na_terms <- vars[!(vars %in% colnames(dataset$metadata))]
     if(length(na_terms)) stop(paste('The following terms are not variables (column names in metadata) in the dataset:',
                                     paste(na_terms, sep = ',')))
+    terms <- parseFormula(formula)
     cat('\nFormula provided for analysis:\n')
   }
+
+  randomEffects <- grepl('\\|', formula)
 
   cat(' ',formula,'\n\n')
 
@@ -59,37 +62,86 @@ mvLMEM <- function(dataset=NULL,
                                      formula = formula,
                                      zero.handling = zero.handling,
                                      is.winsor = is.winsor,
-                                     alpha = 0.1)
+                                     alpha = alpha)
+
+  # if(randomEffects) temp <- lapply(rownames(abun), function(ft) {
+  #   fit <- suppressMessages(lme4::lmer(formula = as.formula(paste(ft,formula)),
+  #                                      data = data))
+  #   list(estimate = coef(summary(fit)), covar = stats::vcov(fit))
+  # }) else fit <- lapply(rownames(abun), function(ft) {
+  #   stats::lm(formula = as.formula(paste(ft,formula)),
+  #             data = data)
+  # })
+  #
+  # names(temp) <- rownames(abun)
+  #
+  # res <- do.call(rbind, lapply(temp, `[[`, 1))
+  # res.cov <- do.call(rbind, lapply(temp, `[[`, 2))
+  #
+  # estimate <- lapply(unique(rownames(res)), function(v) {
+  #   res.voi <- res[which(rownames(res) == x), ]
+  #   rownames(res.voi) <- NULL
+  #
+  #   if(random.effect) {
+  #     df <- res.voi[, 3]
+  #   }
+  #
+  #   log2FoldChange <- res.voi[, 1]
+  #   lfcSE <- res.voi[, 2]
+  #
+  #   bias <- suppressMessages(modeest::mlv(sqrt(nrow(md)) * log2FoldChange,
+  #                                         method = 'meanshift',
+  #                                         kernel = 'gaussian') / sqrt(nrow(md)))
+  #
+  #   log2FoldChange <- log2FoldChange - bias
+  #   stat <- log2FoldChange / lfcSE
+  #
+  #   pvalue <- 2 * pt(-abs(stat), df)
+  #   padj <- p.adjust(pvalue, method = p.adj.method)
+  #   reject <- padj <= alpha
+  #
+  #   output <- cbind.data.frame(baseMean, log2FoldChange, lfcSE, stat, pvalue, padj, reject, df)
+  #   rownames(output) <- taxa.name
+  #
+  #   return(list(bias = bias, output = output))
+  # })
 
   res <- lapply(linda.res$output, function(x) cbind(data.frame('Feature'=rownames(x)),x))
 
-  res <- lapply(vars, function(x) {
-    if(!any(grepl(x, names(res)))) stop('Some variables were not included in the linear model, possibly because one or more of the variables have too many groups.\n')
+  # Loop over only the variables that are also their own terms in the formula
+  #  Do not include those denoted as intercepts with vertical bar
+  res <- lapply(intersect(vars, terms), function(v) {
+    if(!any(grepl(v, names(res)))) stop('Some variables were not included in the linear model, possibly because one or more of the variables have too many groups.\n')
 
-    if(x %in% names(dataset$factors)) grps <- dataset$factors[[x]]$groups
-    else grps <- levels(factor(md[[x]]))
+    # If the variable was continuous then
+    if(v %in% names(dataset$factors)) grps <- dataset$factors[[v]]$groups
+    else if(is.character(md[[v]])) grps <- levels(factor(md[[v]]))
+    else grps <- c(v, '')
 
     ref_grp <- grps[[1]]
-    comp_grps <- grps[!(grps %in% ref_grp)]
+    comp_grps <- setdiff(grps, ref_grp)
 
     # Determine which dataframes in the linDA results correspond to this variable
     # linDA will automatically take the first group in each factor as the reference group
-    i <- match(paste0(x,grps[[2]]),names(res))
-    j <- i+length(grps)-2
+    i <- match(paste0(v,grps[[2]]),names(res))
+    j <- i + length(grps)-2
 
-    temp <- lapply(names(res[i:j]), function(y) cbind(data.frame('Reference'=rep(ref_grp), times=nrow(res[[y]]),
-                                                                 'Contrast'=rep(sub(x,'',y), times=nrow(res[[y]]))),
+    temp <- lapply(names(res[i:j]), function(y) cbind(data.frame('Reference' = rep(ref_grp, times=nrow(res[[y]])),
+                                                                 'Contrast' = rep(sub(v,'',y), times=nrow(res[[y]]))),
                                                       res[[y]]))
     names(temp) <- names(res[i:j])
 
     # This won't change anything if there is only one comparison group
     temp <- dplyr::bind_rows(temp)
 
+    # Get the plain fold-change values
+    temp$FC <- 2 ^ (temp$log2FoldChange)
+
     rownames(temp) <- NULL
 
     temp
   })
-  names(res) <- vars
+  names(res) <- intersect(vars, terms)
 
   if(is.null(dataset$stats$LMEM)) dataset$stats$LMEM <- list()
   if(is.null(dataset$stats$LMEM[[rank]])) dataset$stats$LMEM[[rank]] <- list()
@@ -126,7 +178,7 @@ checkFormula <- function(dataset, formula) {
   }
 
   # valid_factors <- sapply(vars, function(x) length(factors[[x]]$subset) > 1)
-  valid_vars <- sapply(vars, function(x) length(unique(md[[x]])) > 1)
+  valid_vars <- sapply(vars, function(var) length(unique(md[[var]])) > 1)
   if(!all(valid_vars)) {
     warning(' Fewer than 2 groups remaining in "', names(valid_vars)[!valid_vars], '".\n', immediate. = T)
     return(NULL)
@@ -135,8 +187,29 @@ checkFormula <- function(dataset, formula) {
   return(formula)
 }
 
-#' Extract Variables from a Formula
+#' Extract Terms from a Formula
 #'
+#' @param formula Formula as a string.
+#'
+#' @return Variables extracted from the formula in a vector
+#'
+parseFormula <- function(formula) {
+  operation_chars <- c('~' = '',
+                       '\\+' = ',',
+                       '\\-' = ',',
+                       '\\*' = ',',
+                       '\\/' = ',',
+                       '\\^' = ',',
+                       '\\(' = ',',
+                       '\\)' = ',')
+
+  terms <- unlist(strsplit(stringr::str_replace_all(formula, operation_chars),','))
+  terms <- terms[!(terms=='')]
+
+  return(terms)
+}
+
+#' Extract Variables from a Formula
 #' @param formula Formula as a string.
 #'
 #' @return Variables extracted from the formula in a vector
@@ -152,7 +225,7 @@ getFormulaVars <- function(formula) {
                        '\\)' = ',',
                        '\\|' = ',')
 
-  vars <- unlist(strsplit(stringr::str_replace_all(formula,operation_chars),','))
+  vars <- unlist(strsplit(stringr::str_replace_all(formula, operation_chars),','))
   vars <- vars[!(vars=='')]
   vars <- vars[is.na(suppressWarnings(as.numeric(vars)))]
 

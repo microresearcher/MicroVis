@@ -34,7 +34,7 @@ orderGroups <- function(dataset, reorder=F) {
   # For each factor, if there were any new groups not in the save-file, list the groups and ask user for reordering
   for(f in factors) {
     # Don't do this for the $active_factor attribute of the factors list
-    if(length(f)==1) {next}
+    if(length(f)==1) next
 
     # For this factor, make a list of the groups and their order that was loaded from the save-file
     grps_saved <- grps_saved.unlisted[grps_saved.unlisted %in% f$groups]
@@ -57,7 +57,7 @@ orderGroups <- function(dataset, reorder=F) {
       cat(paste0('\n\nCurrent group order for ',f$name_text,':'))
       cat(paste0('\t',current_order))
       change_order <- ifelse(select.list(choices = c('Keep','Change'),
-                                         title = '\n\nChange the ordering of the groups?')=='Change',TRUE,FALSE)
+                                         title = '\n  Change the ordering of the groups?')=='Change',TRUE,FALSE)
     }
 
     # If the order of groups for this factor doesn't need to be changed, the current order is the "new" order

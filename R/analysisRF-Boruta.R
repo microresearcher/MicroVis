@@ -53,7 +53,7 @@ rfboruta <- function(dataset=NULL,
   rownames(class_err) <- stringr::str_replace_all(rownames(class_err),replace_chars)
   colnames(class_err) <- stringr::str_replace_all(colnames(class_err),replace_chars)
   for(i in 1:length(levels(groups))) {
-    if(is.numeric(type.convert(substr(levels(groups)[i],1,1)))) {
+    if(is.numeric(type.convert(substr(levels(groups)[i],1,1), as.is = T))) {
       colnames(errs)[i+1] <- sub('X','',colnames(errs)[i+1])
       colnames(class_err)[i] <- sub('X','',colnames(class_err)[i])
     }

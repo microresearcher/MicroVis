@@ -20,7 +20,10 @@ plotStackedBars(
   ftlist = c(),
   plotSigs = F,
   alpha = 0.05,
-  separateLegend = F
+  orderLegendByAbun = T,
+  separateLegend = F,
+  width = 8,
+  height = 5
 )
 }
 \arguments{
@@ -64,6 +67,8 @@ at the rank}
 
 \item{alpha}{Significance threshold for selecting significant features. Defaults
 to 0.05}
+
+\item{orderLegendByAbun}{Whether to order the features by mean value. Defaults to True}
 
 \item{separateLegend}{Whether to separate the legend from the plot. Defaults
 to FALSE}

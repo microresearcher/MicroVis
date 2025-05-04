@@ -23,7 +23,7 @@ loadMDFile <- function(path_to_metadata=NA) {
   if(is.null(mdfile)) {
     message('\nERROR: No metadata file selected. No comparative analysis can be run !!!\n')
     return(NULL)
-  } else cat('\nmetadata loading from:\n',mdfile)
+  } else cat('\nmetadata loading from:\n',mdfile,'\n')
 
   metadata <- read.csv(file.path(mdfile))
 
@@ -35,7 +35,20 @@ loadMDFile <- function(path_to_metadata=NA) {
 
   colnames(metadata)[1] <- 'sample'
 
-  cat(paste0('\n\n>>> METADATA FILE LOADED SUCCESSFULLY <<<\n'))
+  # Excel writes NA values as "#N/A"
+  metadata[metadata == '#N/A'] <- NA
+
+  # Convert columns into numeric/integer if they are continuous data
+  vars.numeric <- sapply(type.convert(metadata, as.is = T), is.numeric)
+  vars.numeric <- names(vars.numeric[vars.numeric])
+  metadata[vars.numeric] <- lapply(vars.numeric, function(v) {
+    if(select.list(c('Yes','No'),
+                   title = paste('\nIs',v,'a continuous variable?'))=='Yes') {
+      type.convert(metadata[[v]], as.is = T)
+    } else as.character(metadata[[v]])
+  })
+
+  cat(paste0('\n>>> METADATA FILE LOADED SUCCESSFULLY <<<'))
 
   return(metadata)
 }

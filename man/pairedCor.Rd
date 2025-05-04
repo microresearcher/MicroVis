@@ -10,6 +10,7 @@ pairedCor(
   compare,
   fts = NULL,
   rank = NULL,
+  corr_type = c("pearson", "spearman"),
   rthresh = 0.7,
   alpha = 0.05,
   padj = T,
@@ -31,6 +32,8 @@ compare}
 
 \item{rank}{Taxonomic rank at which to perform the paired correlation. Defaults
 to the second highest rank in the dataset}
+
+\item{corr_type}{Type of correlation to perform. One of either 'pearson' or 'spearman'.}
 
 \item{rthresh}{R value cutoff for coloring the figures of each figure.
 Defaults to 0.7}

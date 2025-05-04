@@ -11,6 +11,7 @@ plotPairedCor(
   fts = NULL,
   rank = NULL,
   invert = F,
+  corr_type = c("pearson", "spearman"),
   rthresh = 0.7,
   alpha = 0.05,
   padj = T,

@@ -8,6 +8,8 @@
 #'     samples by groups. Defaults to FALSE
 #' @param allSamples Whether to plot a single graph for all the samples in the
 #'     dataset. Defaults to FALSE
+#' @param paired_ids Plot samples paired by "factor", with each pair having
+#'     a unique combination of IDs determined by this variable (as a vector)
 #' @param unfiltered Whether to use data before or after filtering out features.
 #'     Defaults to TRUE (uses data before filtering)
 #' @param label_unknown Whether to group unknown taxa separate. Defaults to TRUE
@@ -24,22 +26,22 @@
 #' @param plotSigs Plot only the significant features? Defaults to FALSE
 #' @param alpha Significance threshold for selecting significant features. Defaults
 #'     to 0.05
+#' @param orderLegendByAbun Whether to order the features by mean value. Defaults to True
 #' @param separateLegend Whether to separate the legend from the plot. Defaults
 #'     to FALSE
-#' @param paired_ids Plot samples paired by "factor", with each pair having
-#'     a unique combination of IDs determined by this variable (as a vector)
 #'
 #' @return Stacked bar plot of feature abundances of selected features with the
 #'     other features lumped into an "Other" category
 #' @export
 #'
-plotStackedBars <- function(dataset=NULL, relative=T,
-                            factor=NULL, stratify=F,
-                            bySample=F, allSamples=F, paired_ids = c(),
-                            unfiltered=T,label_unknown=T,rank=NA,
-                            top=15, top_by='mean',
-                            ftlist=c(),plotSigs=F,alpha=0.05,
-                            separateLegend=F) {
+plotStackedBars <- function(dataset = NULL, relative = T,
+                            factor = NULL, stratify = F,
+                            bySample = F, allSamples = F, paired_ids = c(),
+                            unfiltered = T, label_unknown = T, rank = NA,
+                            top = 15, top_by = 'mean',
+                            ftlist = c(), plotSigs = F, alpha = 0.05,
+                            orderLegendByAbun = T, separateLegend = F,
+                            width = 8, height = 5) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   if(is.null(dataset$name)) dataset_name <- 'active_dataset'
@@ -50,34 +52,34 @@ plotStackedBars <- function(dataset=NULL, relative=T,
   if(unfiltered) tempds <- clearProcessing(dataset, temp = T, silent = T)
   else tempds <- clearNormalization(dataset, temp = T, silent = T)
 
-  if(!(rank %in% intersect(taxaranks,names(tempds$data$proc)))) {
+  if(!(rank %in% intersect(taxaranks, names(tempds$data$proc)))) {
     rank <- tempds$data$proc$active_rank
   } else tempds$data$proc$active_rank <- rank
 
   if(label_unknown) tempds <- filterNAs(tempds,
                                         ranks = c(rank),
-                                        temp=T, silent = T)
+                                        temp = T, silent = T)
 
   data <- mvmelt(tempds)
   factor <- dataset$active_factor
   mdcolnum <- ncol(tempds$metadata)
   fts <- colnames(data[(mdcolnum+1):ncol(data)])
-  fts <- fts[!(fts %in% c('Other','Unknown'))]
-  paired_ids <- paired_ids[paired_ids %in% colnames(tempds$metadata)]
+  fts <- setdiff(fts, c('Other', 'Unknown'))
+  paired_ids <- intersect(paired_ids, colnames(tempds$metadata))
 
-  if(length(ftlist)) fig_name <- paste0('selected_',rank)
+  if(length(ftlist)) fig_name <- paste0('selected_', rank)
   else fig_name <- rank
 
   if(plotSigs) {
-    sigfts <- listsigs(dataset=dataset,
-                       factor=factor,
-                       ranks=rank,
-                       alpha=alpha,
-                       silent=T,
-                       dataset_name=dataset_name)
+    sigfts <- listsigs(dataset = dataset,
+                       factor = factor,
+                       ranks = rank,
+                       alpha = alpha,
+                       silent = T,
+                       dataset_name = dataset_name)
     if(!length(sigfts)) message('\nNo significant features were found\n')
-    else fig_name <- paste0('sig-alpha_',alpha,fig_name)
-    ftlist <- c(ftlist,sigfts)
+    else fig_name <- paste0('sig-alpha_', alpha, fig_name)
+    ftlist <- c(ftlist, sigfts)
   }
 
   # If pairing samples, this step should occur after getting a list of
@@ -96,19 +98,19 @@ plotStackedBars <- function(dataset=NULL, relative=T,
     data[[id]] <- apply(data[paired_ids], 1, paste, collapse = '_')
   } else pairedSamples <- F
 
-  ftlist <- ftlist[ftlist %in% fts]
+  ftlist <- intersect(ftlist, fts)
   if(length(ftlist)) {
-    if(length(ftlist)>1) {
-      fts <- ftlist
-    } else {
-      data$Other <- rowSums(data[fts[!(fts %in% ftlist)]])
-      data[fts[!(fts %in% ftlist)]] <- NULL
-      fts <- c(ftlist,'Other','Unknown')
-    }
-  } else if(label_unknown) fts <- c(fts,'Unknown')
+    # Override the "top" argument if specific features were asked for
+    top <- length(ftlist)
+    data$Other <- rowSums(data[setdiff(fts, ftlist)])
+    data[setdiff(fts, ftlist)] <- NULL
+    fts <- c(ftlist, 'Other')
+  }
+
+  if(label_unknown) fts <- c(fts,'Unknown')
 
   if(relative) {
-    data[fts] <- data.frame(t(apply(data[fts], 1, function(x) x/sum(x))))
+    data[fts] <- data.frame(t(apply(data[fts], 1, function(x) x/sum(x)))) * 100
     abundance_type <- 'Relative Abundance'
   } else {
     abundance_type <- 'Absolute Abundance'
@@ -144,7 +146,7 @@ plotStackedBars <- function(dataset=NULL, relative=T,
     abundance_type <- paste0('Mean ',abundance_type)
   }
 
-  if(top<length(fts)) {
+  if(top < length(setdiff(fts, c('Other', 'Unknown')))) {
     if(allSamples | !(top_by %in% c('max','min','mean','sum'))) top_by <- 'mean'
     ftstats <- data.frame(max=apply(data[fts],2,function(x) max(x)),
                           min=apply(data[fts],2,function(x) min(x)),
@@ -154,7 +156,7 @@ plotStackedBars <- function(dataset=NULL, relative=T,
 
     # If unknowns are to be included separately, make sure they don't count
     #   towards the number of named features shown
-    fts <- fts[!(fts %in% 'Unknown')]
+    fts <- setdiff(fts, 'Unknown')
 
     if(top_by=='max') low_abun <- rownames(dplyr::slice_min(ftstats, order_by=max, n=(length(fts)-top)))
     if(top_by=='min') low_abun <- rownames(dplyr::slice_min(ftstats, order_by=min, n=(length(fts)-top)))
@@ -163,33 +165,40 @@ plotStackedBars <- function(dataset=NULL, relative=T,
 
     # Add the unknown feature back to the feature list (fts) if it is to be labeled
     #   separately
-    if(label_unknown) fts <- c(fts,'Unknown')
+    if(label_unknown) fts <- c(fts, 'Unknown')
 
     if(is.null(data$Other)) data$Other <- rep(0,nrow(data))
     data$Other <- data$Other + rowSums(data[low_abun])
     data[low_abun] <- NULL
-    fts <- c(fts[!(fts %in% low_abun)],'Other','Unknown')
+    fts <- c(setdiff(fts, low_abun), 'Other')
     fig_name <- paste0('top',top,fig_name)
+  } else if(top > length(setdiff(fts, c('Other', 'Unknown')))) {
+    top <- length(setdiff(fts, c('Other', 'Unknown')))
   }
 
   data_pivoted <- data %>% tidyr::pivot_longer(all_of(fts),
-                                               names_to=rank,
-                                               values_to=abundance_type)
+                                               names_to = rank,
+                                               values_to = abundance_type)
 
-  namedfts <- unique(data_pivoted[[rank]][!(data_pivoted[[rank]] %in% c('Other','Unknown'))])
-  data_pivoted[[rank]] <- factor(data_pivoted[[rank]],
-                                 levels=c('Unknown','Other',namedfts))
+  # namedfts <- unique(data_pivoted[[rank]][!(data_pivoted[[rank]] %in% c('Other','Unknown'))])
+  namedfts <- unique(setdiff(data_pivoted[[rank]], c('Other','Unknown')))
+
+  if(orderLegendByAbun) {
+    data_pivoted[[rank]] <- factor(data_pivoted[[rank]],
+                                   levels = c(fts[order(colMeans(data[fts]), decreasing = T)]))
+  } else data_pivoted[[rank]] <- factor(data_pivoted[[rank]],
+                                        levels = c('Unknown', 'Other', namedfts))
 
   if(bySample) {
     p <- ggplot(data_pivoted, aes(x=as.numeric(factor(.data[[id]])), y=.data[[abundance_type]]))+
-      geom_area(aes(fill=.data[[rank]]))+
+      geom_area(aes(fill=.data[[rank]]), colour = 'white')+
       scale_x_continuous(id, labels = unique(data_pivoted[[id]]),
                          breaks = unique(as.numeric(factor(data_pivoted[[id]]))))+
       ggpubr::theme_pubr()+
       labs(fill=capitalize(rank))+
       facet_wrap(facets = factor, scales = 'free_x',ncol = 1)+
-      theme(axis.title = element_text(size=25),
-            axis.text = element_text(size=22),
+      theme(axis.title = element_text(size=22, margin = margin(t = 5, r = 5, unit = 'pt')),
+            axis.text = element_text(size=18),
             axis.title.x = element_blank(),
             axis.text.x = element_blank(),
             axis.ticks.x = element_blank(),
@@ -228,6 +237,11 @@ plotStackedBars <- function(dataset=NULL, relative=T,
             legend.key.size = unit(1,'cm'))
   }
 
+  if(grepl('relative', abundance_type, ignore.case = T)) {
+    p <- p+labs(y=paste(abundance_type, '(%)'))
+    data_pivoted[[abundance_type]] <- data_pivoted[[abundance_type]] / 100
+  }
+
   if(stratify) {
     p <- facet(p,facet.by=facet)+
       theme(strip.text = element_text(size = 18))
@@ -240,6 +254,7 @@ plotStackedBars <- function(dataset=NULL, relative=T,
     legend_output_location <- paste0(dataset$results_path,'/Results_',Sys.Date(),'/Stacked Bar Graphs/')
 
     show(p_legend)
+    width <- 0.6 * width
   }
 
   show(p)
@@ -248,7 +263,7 @@ plotStackedBars <- function(dataset=NULL, relative=T,
                                 filename = fig_name,
                                 factors = dataset$factors,
                                 active_factor = dataset$active_factor,
-                                width = 12, height = 8,
+                                width = width, height = height,
                                 stat_results = list(stats=data_pivoted),
                                 suffix = paste0('_',abundance_type),
                                 verbose = F)
@@ -273,27 +288,29 @@ plotStackedBars <- function(dataset=NULL, relative=T,
     colnames(total_props) <- c('Group.1','x')
   } else if(bySample) {
     total_props <- aggregate(data_pivoted[[abundance_type]][data_pivoted[[rank]] %in% namedfts],
-                             by=list(data_pivoted[[rank]][data_pivoted[[rank]] %in% namedfts]),
+                             by = list(data_pivoted[[rank]][data_pivoted[[rank]] %in% namedfts]),
                              mean)
   } else {
     total_props <- aggregate(data_pivoted[[abundance_type]][data_pivoted[[rank]] %in% namedfts],
-                             by=list(data_pivoted[[factor]][data_pivoted[[rank]] %in% namedfts]),
+                             by = list(data_pivoted[[factor]][data_pivoted[[rank]] %in% namedfts]),
                              sum)
   }
 
-  cat('\nTop',top,'features make up:\n')
-  if(allSamples | bySample) cat('',paste0(signif(100*sum(total_props$x),3),'%'),
-                                'across all samples\n')
+  if(length(ftlist)) cat('\nSelected',top,'features make up:\n')
+  else cat('\nTop',top,'features make up:\n')
+
+  if(allSamples | bySample) cat('',paste0(signif(100*sum(total_props$x),4),
+                                          '%'),'across all samples\n')
 
   if(!bySample & !allSamples) for(grp in total_props$Group.1) {
-    cat('',paste0(signif(100*mean(total_props$x[total_props$Group.1==grp]),
-                           3),'%'),'in',grp,'\n')
+    cat('',paste0(signif(100*mean(total_props$x[total_props$Group.1==grp]),4),
+                  '%'),'in',grp,'\n')
   }
 
   if('Unknown' %in% data_pivoted[[rank]]) {
     cat('\n',
         paste0(signif((100*mean(data_pivoted[[abundance_type]][data_pivoted[[rank]]=='Unknown'])),
-                      3),'%'),'of',rank,'are unknown')
+                      3),'%'),'of taxa are in an unknown',rank)
   }
 
   cat('\n\n')

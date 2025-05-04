@@ -16,7 +16,11 @@ chooseFactors <- function(dataset) {
   if(length(possible_factors) > 1) {
     cat('\n')
     print(head(metadata))
-    chosen_factors <- select.list(possible_factors,multiple=TRUE,graphics=TRUE,title='\nSelect all the potential factors you would like to compare data by:')
+    chosen_factors <- select.list(possible_factors,
+                                  multiple=TRUE,
+                                  graphics=TRUE,
+                                  title='\nSelect all the potential factors you would like to compare data by:')
+    cat('\n')
   } else chosen_factors <- possible_factors
 
   factors <- list()
@@ -26,31 +30,27 @@ chooseFactors <- function(dataset) {
     #   Also create a 'subset' element that will contain only selected groups
     #   that the user chooses
     for(f in chosen_factors) {
-      if(is.numeric(type.convert(metadata[[f]], as.is=T))) {
-        continuous <- ifelse(select.list(c('Yes','No'),
-                                         title = paste('\nIs',f,'a continuous variable?'))=='Yes',T,F)
-        if(continuous) {
-          metadata[[f]] <- as.numeric(metadata[[f]])
-          cutoffs <- -Inf
-          minval <- min(metadata[[f]],na.rm = T)
-          maxval <- max(metadata[[f]],na.rm = T)
-          prompt <- paste('Space-separated list of numbers between',minval,'and',maxval,'for cutoffs: ')
-          while(!all(dplyr::between(cutoffs, minval, maxval))) {
-            cutoffs <- as.numeric(unlist(strsplit(readline(prompt),' ')))
-          }
-          prompt <- 'Are these cutoffs the lower or upper limit?'
-          lowerlim <- ifelse(select.list(c('Lower limit',
-                                           'Upper limit'),
-                                         title = prompt)=='Lower limit',yes = T,no = F)
-          if(lowerlim) {
-            groups <- rangetotext(cut(metadata[[f]],c(cutoffs,minval,Inf),right=F))
-          } else {
-            groups <- rangetotext(cut(metadata[[f]],c(cutoffs,-Inf,maxval),right=T))
-          }
-          f <- chosen_factors[grepl(f,chosen_factors)] <- paste0(f,'_Range')
-          metadata[[f]] <- groups
-          dataset$metadata <- metadata
+      # if(is.numeric(type.convert(metadata[[f]], as.is=T))) {
+      if(is.numeric(metadata[[f]])) {
+        cutoffs <- -Inf
+        minval <- min(metadata[[f]],na.rm = T)
+        maxval <- max(metadata[[f]],na.rm = T)
+        prompt <- paste0('For "',f,'", type a space-separated list of numbers between ',minval,' and ',maxval,' for cutoffs: ')
+        while(!all(dplyr::between(cutoffs, minval, maxval))) {
+          cutoffs <- as.numeric(unlist(strsplit(readline(prompt),' ')))
         }
+        prompt <- 'Are these cutoffs the lower or upper limit?'
+        lowerlim <- ifelse(select.list(c('Lower limit',
+                                         'Upper limit'),
+                                       title = prompt)=='Lower limit',yes = T,no = F)
+        if(lowerlim) {
+          groups <- rangetotext(cut(metadata[[f]],c(cutoffs,minval,Inf),right=F))
+        } else {
+          groups <- rangetotext(cut(metadata[[f]],c(cutoffs,-Inf,maxval),right=T))
+        }
+        f <- chosen_factors[grepl(f,chosen_factors)] <- paste0(f,'_Range')
+        metadata[[f]] <- groups
+        dataset$metadata <- metadata
       }
       factors[[f]] <- list()
       factors[[f]]$name <- f

@@ -832,7 +832,7 @@ getFtStats <- function(dataset=NULL, rank=NULL, raw=T, justStats=T, doCLR=F) {
   ftstats <- data.frame(Prevalence=apply(abd, 2, function(x) sum(x>0,na.rm = T)),
                         Total_Abundance=apply(abd, 2, function(x) sum(x,na.rm = T)),
                         Mean_Abundance=apply(abd, 2, function(x) mean(x,na.rm = T)),
-                        Relative_Abundance=apply(apply(abd,1,function(x) x/sum(x,na.rm = T)),
+                        Max_Relative_Abundance=apply(apply(abd,1,function(x) x/sum(x,na.rm = T)),
                                                  1,function(x) max(x,na.rm = T)),
                         Mean_Relative_Abundance=apply(apply(abd,1,function(x) x/sum(x,na.rm = T)),
                                                  1,function(x) mean(x,na.rm = T)),

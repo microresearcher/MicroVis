@@ -4,12 +4,10 @@
 \alias{removeSamples}
 \title{Remove Specific Samples}
 \usage{
-removeSamples(dataset = NULL, metadata_column = NULL, samples)
+removeSamples(dataset = NULL, samples)
 }
 \arguments{
 \item{dataset}{MicroVis dataset (mvdata object)}
-
-\item{metadata_column}{This can be removed}
 
 \item{samples}{Vector of names of the samples to be removed}
 }

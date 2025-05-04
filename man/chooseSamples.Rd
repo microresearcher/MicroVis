@@ -4,12 +4,14 @@
 \alias{chooseSamples}
 \title{Select specific samples to analyze}
 \usage{
-chooseSamples(dataset = NULL, samples, includeLowQual = F)
+chooseSamples(dataset = NULL, samples, exclude = c(), includeLowQual = F)
 }
 \arguments{
 \item{dataset}{MicroVis dataset. Defaults to the active dataset}
 
 \item{samples}{List of samples to analyze}
+
+\item{exclude}{List of samples to exclude. Samples in this list will be excluded even if they are in the "samples" list.}
 
 \item{includeLowQual}{Include samples even if they are low quality? Defaults
 to FALSE}
