@@ -41,6 +41,10 @@ adiv <- function(dataset=NULL, method='chao1', rooted=F) {
 #' @export
 #'
 phyloDiversity <- function(dataset=NULL, rooted=F) {
+  if(!requireNamespace('picante', quietly = T)) {
+    stop(paste0('You need to install the "picante" package to do this. This package is required for phylogenic distance analysis.\nInstall this package with the following command:\n  install.packages("picante")'))
+  }
+
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   dataset <- clearFeatureFilt(dataset, temp=T, silent=T)

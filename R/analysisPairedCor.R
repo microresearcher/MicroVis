@@ -1,29 +1,34 @@
 #' Correlate abundance of features between paired samples
 #'
 #' @param dataset MicroVis dataset. Defaults to the active dataset
+#' @param data.paired (Alternative to dataset) Provide a dataframe with data already paired according to
+#'     "ids" and "compare"
+#' @param groups (Needed if specifying data.paired) Groups being compared.
 #' @param ids Column(s) that uniquely identify each pair of samples
 #' @param compare Column with the 2 groups to correlate between. Each pair of
 #'     samples has a sample in each of the two groups in this column. If there
 #'     are more than 2 groups in the column, user will be asked to select 2 to
 #'     compare
-#' @param fts Vector of features to correlate between the two sets
-#' @param rank Taxonomic rank at which to perform the paired correlation. Defaults
+#' @param fts (Optional) Specify vector of features to correlate between the two sets
+#' @param rank (Optional) Specify taxonomic rank at which to perform the paired correlation. Defaults
 #'     to the second highest rank in the dataset
-#' @param corr_type Type of correlation to perform. One of either 'pearson' or 'spearman'.
-#' @param alpha Significance threshold. Defaults to 0.05
-#' @param padj Adjust the p-values for multiple testing? Defaults to TRUE
-#' @param rthresh R value cutoff for coloring the figures of each figure.
+#' @param corr_type (Optional) Specify type of correlation to perform. One of either 'pearson' or 'spearman'.
+#' @param alpha (Optional) Specify significance threshold. Defaults to 0.05
+#' @param padj (Optional) Adjust the p-values for multiple testing? Defaults to TRUE
+#' @param rthresh (Optional) Specify R value cutoff for coloring the figures of each figure.
 #'     Defaults to 0.7
-#' @param data.paired Provide a dataframe with data already paired according to
-#'     "ids" and "compare"
-#' @param groups If providing a data.paired dataframe, must provide groups as well
+#' @param forPlot (Optional) Whether to return input data used in calculations, for purposes of generating plots. Defaults to FALSE.
 #'
 #' @return Scatter plot with trendline
 #' @export
 #'
-pairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
-                      corr_type=c('pearson','spearman'), rthresh=0.7, alpha=0.05, padj=T,
-                      data.paired=NULL, groups=NULL) {
+pairedCor <- function(dataset=NULL,
+                      data.paired=NULL, groups=NULL,
+                      ids, compare,
+                      fts=NULL, rank=NULL,
+                      corr_type=c('pearson','spearman'),
+                      rthresh=0.7, alpha=0.05, padj=T,
+                      forPlot=F) {
   if(is.null(data.paired)) {
     if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
@@ -52,11 +57,15 @@ pairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
     ids <- ids[ids %in% colnames(data.paired)]
   } else if(length(groups)!=2) {
     stop('Must specify 2 groups within ',compare,' to correlate')
-  }
-  else if(any(is.na(data.paired %>% tidyr::pivot_wider(id_cols = ids,
+  } else if(any(is.na(data.paired %>% tidyr::pivot_wider(id_cols = ids,
                                                        names_from = compare,
                                                        values_from = 'sample')))) {
     stop('Data for each ',paste0(ids,collapse = '-'),' must have exactly 2 values for ',compare)
+  } else {
+    # the results column is normally named by rank, but in this case name it whatever the
+    rank <- 'Metric'
+    # mdcols is not set anywhere if data.paired is provided
+    mdcols <- NULL
   }
 
   fts <- fts[fts %in% colnames(data.paired)]
@@ -91,5 +100,14 @@ pairedCor <- function(dataset=NULL, ids, compare, fts=NULL, rank=NULL,
     if(!is.null(dataset$name)) assign(dataset$name,dataset,1)
   }
 
-  return(stats)
+  if(forPlot) {
+    return(list(stats = stats,
+                data.paired = data.paired,
+                groups = groups,
+                ids = ids,
+                compare = compare,
+                fts = fts,
+                rank = rank,
+                corr_type = corr_type))
+  } else return(stats)
 }

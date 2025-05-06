@@ -93,7 +93,7 @@ parseStratifiers <- function(primary_factor, factors, stratify, facet.x, facet.y
     }
 
   } else if(facet.x==TRUE) {
-    facets$x <- select.list(avail_factors,graphics = TRUE, title = 'Horizontal facet')
+    facets$x <- select.list(avail_factors,graphics = TRUE, title = 'Horizontal facet (enter 0 for none)')
     avail_factors <- avail_factors[avail_factors != facets$x]
     if(!length(avail_factors)) {
       facets$txt <- nameStratification(c(facets$x,facets$y))
@@ -101,7 +101,7 @@ parseStratifiers <- function(primary_factor, factors, stratify, facet.x, facet.y
     }
 
   } else if(facet.y==TRUE) {
-    facets$y <- select.list(avail_factors,graphics = TRUE, title = 'Vertical facet')
+    facets$y <- select.list(avail_factors,graphics = TRUE, title = 'Vertical facet (enter 0 for none)')
     avail_factors <- avail_factors[avail_factors != facets$y]
     if(!length(avail_factors)) {
       facets$txt <- nameStratification(c(facets$x,facets$y))

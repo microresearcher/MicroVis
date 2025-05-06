@@ -52,7 +52,10 @@ plotBetaDiv <- function(dataset=NULL,
   if(!exists('stratifier',inherits = F)) stratifier <- NULL
 
   # Calculate beta-diversity
-  bdiv_results <- bdiv(dataset,stratifier=stratifier,method=method)
+  bdiv_results <- bdiv(dataset,
+                       stratifier=stratifier,
+                       method=method,
+                       weighted=weighted)
   coord_tab <- bdiv_results$dist$coord_tab
   stats <- list()
   stats$stats <- bdiv_results$pnova
@@ -65,6 +68,9 @@ plotBetaDiv <- function(dataset=NULL,
   coord_data <- cleanData(merge(dataset$metadata, coord_tab), factor)
 
   if(is.null(coord_data)) return(message('ERROR: Something went wrong with beta-diversity analysis'))
+
+  # indicate whether weighted or unweighted in the filename if method was unifrac
+  if(method=='unifrac') method <- ifelse(weighted, paste0('weighted_unifrac'), method)
 
   suffix <- paste0('_bdiv_',method)
 

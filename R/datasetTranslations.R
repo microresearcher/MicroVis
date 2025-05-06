@@ -54,7 +54,9 @@ makePS <- function(dataset=NULL) {
   phylodata <- phyloseq::phyloseq(abd,tax,samples)
 
   # Make tree and add to phyloseq object
-  tree <- ape::rtree(ntaxa(phylodata), rooted=TRUE, tip.label=taxa_names(phylodata))
+  tree <- ape::rtree(phyloseq::ntaxa(phylodata),
+                     rooted=TRUE,
+                     tip.label=phyloseq::taxa_names(phylodata))
   phylodata <- phyloseq::merge_phyloseq(phylodata,tree)
   if(exists('tree')) {cat('\nPhylogenetic tree created successfully!\n')}
 

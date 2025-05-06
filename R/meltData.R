@@ -1,24 +1,30 @@
 #' Melt the metadata and abundance table at a given rank for the desired features
 #'
-#' @param dataset MicroVis dataset (mvdata object). If not specified,
-#'     defaults to active dataset.
-#' @param rank Get abundance table of features at this rank. Defaults to active
-#'     rank.
-#' @param features Get the abundance data of certain features only. Defaults to
-#'     all features.
-#' @param min_n Passed to cleanData() to limit to samples that belong to groups
-#'     with at least 3 samples
+#' @param dataset MicroVis dataset (mvdata object). If not specified, defaults to active dataset.
+#' @param rank (Optional) Get abundance table of features at this rank. Defaults to active rank.
+#' @param features (Optional) Get the abundance data of certain features only. Defaults to all features.
+#' @param metric (Alternative) Dataframe of sample metrics (e.g. diversity metrices) to merge  with sample metadata instead of the features.
+#' @param min_n Passed to cleanData() to limit to samples that belong to groups with at least 3 samples
 #'
 #' @return Table of merged metadata and abundance table
 #' @export
 #'
-mvmelt <- function(dataset=NULL,rank=NULL,features=NULL,min_n=3) {
+mvmelt <- function(dataset=NULL,
+                   rank=NULL,
+                   features=NULL,
+                   metric=NULL,
+                   min_n=3) {
   if(is.null(dataset)) dataset <- get('active_dataset',envir = mvEnv)
 
   rank <- rank[rank %in% getRanks(dataset)]
   if(is.null(rank)) rank <- dataset$data$proc$active_rank
 
   md <- dataset$metadata
+
+  if(length(metric) & any(metric$sample %in% md$sample)) {
+    merged <- merge(md, metric, by='sample')
+    return(merged)
+  }
 
   abun <- dataset$data$proc[[rank]]
 
@@ -46,7 +52,7 @@ mvmelt <- function(dataset=NULL,rank=NULL,features=NULL,min_n=3) {
   }
 
   abun$sample <- rownames(abun)
-  merged <- merge(md,abun,by='sample')
+  merged <- merge(md, abun, by='sample')
   for(f in names(dataset$factors)) merged <- cleanData(merged,dataset$factors[[f]])
 
   return(merged)
