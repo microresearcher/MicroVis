@@ -188,8 +188,10 @@ chooseGrps <- function(dataset=NULL, factor_names=NULL) {
   # This function alters these variables, so they will need to be passed back to
   #   "dataset" at the end before "dataset" is returned. We use the original
   #   abundance table because other functions permanently remove groups from the
-  #   "$proc" tables
+  #   "$proc" abundance tables
   factors <- dataset$factors
+  # If dataset contains no factors, then just return the dataset
+  if(!length(factors)) return(dataset)
 
   # If no valid factor names were provided in the function call then default to asking about all factors
   if(!length(factor_names %in% names(factors))) factor_names <- names(factors)
@@ -198,41 +200,41 @@ chooseGrps <- function(dataset=NULL, factor_names=NULL) {
   #   to "dataset"
   metadata <- dataset$metadata
 
-  if(length(factors)) {
-    for(f in factors[names(factors) %in% factor_names]) {
-      if(any(grepl('\u2264',f$groups))) {
-        isrange <- T
-        symbol <- paste(expression('\u2264'))
-      } else if(any(grepl('\u2265',f$groups))) {
-        isrange <- T
-        symbol <- paste(expression('\u2265'))
-      } else isrange <- F
-      cat(paste0('Currently selected groups for "', f$name,'":\n'), paste0('  ', f$subset, '\n'), '\n')
-      grps <- select.list(f$groups,
-                          multiple = TRUE,
-                          title = 'Select groups to analyze in this factor (you can change this later)',
-                          graphics = TRUE)
+  for(f in factors[names(factors) %in% factor_names]) {
+    if(any(grepl('\u2264',f$groups))) {
+      isrange <- T
+      symbol <- paste(expression('\u2264'))
+    } else if(any(grepl('\u2265',f$groups))) {
+      isrange <- T
+      symbol <- paste(expression('\u2265'))
+    } else isrange <- F
+    message(paste0('Currently selected groups for "', f$name,'":'), paste0('\n  ', f$subset))
+    grps <- select.list(f$groups,
+                        multiple = TRUE,
+                        title = 'Select groups to analyze in this factor. Press Enter to keep current groups.',
+                        graphics = TRUE)
 
-      if(isrange) grps <- unlist(lapply(grps, function(x) gsub('=',symbol,x)))
-      # If no groups were selected for a given factor(meaning no samples will be selected)
-      #   then default to all the groups in the factor
-      if(!length(grps)) {
-        grps <- f$groups
-        message('WARNING: No groups were selected for ', f$name, ' defaulting to all groups in this factor\n')
-      } else if(!all(grps %in% f$groups)) {
-        # This is just a safety in case some group names were changed internally
-        #   In this case, the subsetted groups will not change
-        grps <- f$groups
-      }
-      factors[[f$name]]$subset <- grps
+    if(isrange) grps <- unlist(lapply(grps, function(x) gsub('=',symbol,x)))
+    # If no groups were selected for a given factor(meaning no samples will be selected)
+    #   then default to all the groups in the factor
+    if(!length(grps)) {
+      grps <- f$subset
+      cat(paste0('Keeping the same groups for "',f$name,'"\n\n'))
+      # message('WARNING: No groups were selected for ', f$name, ' defaulting to all groups in this factor\n')
+    } else if(!all(grps %in% f$groups)) {
+      # This is just a safety in case some group names were changed internally
+      #   In this case, the subsetted groups will not change
+      grps <- f$groups
     }
-    dataset$factors <- factors
+    factors[[f$name]]$subset <- grps
   }
+  dataset$factors <- factors
 
   dataset <- processDataset(dataset)
 
   return(dataset)
 }
+
 
 #' Remove Groups
 #'
