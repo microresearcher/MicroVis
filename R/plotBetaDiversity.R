@@ -101,8 +101,6 @@ plotBetaDiv <- function(dataset=NULL,
     suffix <- paste0(suffix,'_by_',stratifier)
   }
 
-  suffix <- paste0(suffix,'_',dataset$data$proc$active_rank)
-
   if(showStats) {
     r2 <- paste('R2:', round(stats$stats$R2[1],3))
     pval <- paste('Pr(>F):',stats$stats$`Pr(>F)`[1])

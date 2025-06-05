@@ -257,10 +257,6 @@ runFeatureFilter <- function(dataset=NULL, temp=F, silent=F) {
   }
 
   ft_data <- makeRankTabs(ft_data)
-  # No need for the unranked table anymore, as all downstream data manipulation
-  #   (i.e. normalization methods) will be performed separately on each ranked
-  #   abundance table
-  ft_data$proc$unranked <- NULL
   dataset$data <- ft_data
 
   return(dataset)

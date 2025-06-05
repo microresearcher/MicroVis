@@ -23,8 +23,7 @@ mvdist <- function(dataset=NULL, method='bray', weighted=F, allFactors=T, factor
     method <- 'euclidean'
   } else dataset <- transData(dataset,temp=T,silent=T,trans_method = 'none')
 
-  rank <- dataset$data$proc$active_rank
-  abd <- dataset$data$proc[[rank]]
+  abd <- dataset$data$proc$unranked
   abd$Other <- NULL
   abd$Unknown <- NULL
 

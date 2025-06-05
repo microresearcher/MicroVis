@@ -14,8 +14,7 @@ adiv <- function(dataset=NULL, method='chao1', rooted=F) {
 
   method <- tolower(method)
 
-  rank <- dataset$data$proc$active_rank
-  abd <- clearProcessing(dataset, temp = T, silent = T)$data$proc[[rank]]
+  abd <- clearProcessing(dataset, temp = T, silent = T)$data$proc$unranked
 
   sample_names <- rownames(abd)
 
