@@ -3,12 +3,12 @@
 #' @param dataset MicroVis dataset. Defaults to the active dataset
 #' @param data.paired (Alternative to dataset) Provide a dataframe with data already paired according to
 #'     "ids" and "compare"
-#' @param groups (Needed if specifying data.paired) Groups being compared.
 #' @param ids Column(s) that uniquely identify each pair of samples
 #' @param compare Column with the 2 groups to correlate between. Each pair of
 #'     samples has a sample in each of the two groups in this column. If there
 #'     are more than 2 groups in the column, user will be asked to select 2 to
 #'     compare
+#' @param groups (Needed if specifying data.paired) Groups being compared.
 #' @param fts (Optional) Specify vector of features to correlate between the two sets
 #' @param invert (Optional) Switch the x and y axes?
 #' @param corr_type (Optional) Specify method of calculating correlation. Either Pearson or Spearman. Defaults to Pearson.

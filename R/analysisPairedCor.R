@@ -3,12 +3,12 @@
 #' @param dataset MicroVis dataset. Defaults to the active dataset
 #' @param data.paired (Alternative to dataset) Provide a dataframe with data already paired according to
 #'     "ids" and "compare"
-#' @param groups (Needed if specifying data.paired) Groups being compared.
 #' @param ids Column(s) that uniquely identify each pair of samples
 #' @param compare Column with the 2 groups to correlate between. Each pair of
 #'     samples has a sample in each of the two groups in this column. If there
 #'     are more than 2 groups in the column, user will be asked to select 2 to
 #'     compare
+#' @param groups (Needed if specifying data.paired) Groups being compared.
 #' @param fts (Optional) Specify vector of features to correlate between the two sets
 #' @param rank (Optional) Specify taxonomic rank at which to perform the paired correlation. Defaults
 #'     to the second highest rank in the dataset
@@ -58,8 +58,8 @@ pairedCor <- function(dataset=NULL,
   } else if(length(groups)!=2) {
     stop('Must specify 2 groups within ',compare,' to correlate')
   } else if(any(is.na(data.paired %>% tidyr::pivot_wider(id_cols = ids,
-                                                       names_from = compare,
-                                                       values_from = 'sample')))) {
+                                                         names_from = compare,
+                                                         values_from = 'sample')))) {
     stop('Data for each ',paste0(ids,collapse = '-'),' must have exactly 2 values for ',compare)
   } else {
     # the results column is normally named by rank, but in this case name it whatever the
